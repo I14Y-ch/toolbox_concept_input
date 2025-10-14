@@ -518,11 +518,20 @@ def read_csv_with_encoding_fallback(file, **kwargs):
     
     # Read the file content as bytes
     if hasattr(file, 'read'):
+        # Save the current position
+        initial_position = file.tell() if hasattr(file, 'tell') else 0
         content = file.read()
+        
+        # Reset file pointer for potential re-use
+        if hasattr(file, 'seek'):
+            try:
+                file.seek(initial_position)
+            except:
+                pass
+        
         if isinstance(content, str):
             # Already decoded, use directly
-            file.seek(0)
-            return pd.read_csv(file, **kwargs)
+            return pd.read_csv(StringIO(content), **kwargs)
     else:
         content = file
     
@@ -618,7 +627,12 @@ def upload_file():
                 elif file and file.filename.lower().endswith('.csv'):
                     df = read_csv_with_encoding_fallback(file, sep=None, engine='python')
                 else:
-                    return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'})
+                    return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'}), 400
+            except ValueError as e:
+                # Specific error for encoding/parsing issues
+                import traceback
+                traceback.print_exc()
+                return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
             except Exception as e:
                 import traceback
                 traceback.print_exc()
