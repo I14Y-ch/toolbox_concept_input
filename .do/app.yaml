@@ -1,0 +1,21 @@
+name: i14y-auto-import
+services:
+  - name: web
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: I14Y-ch/concept-import
+    build_command: pip install -r requirements.txt
+    run_command: >
+      python -c "import debug_info; debug_info.print_debug_info()" &&
+      gunicorn --worker-tmp-dir /dev/shm --bind 0.0.0.0:8080 
+      --pythonpath /home/app/concept-import 
+      "concept_import.wsgi:application"
+    http_port: 8080
+    envs:
+      - key: FLASK_SECRET_KEY
+        value: "yfzxpZD6YmIM0t/qZiyLNj8dXZygULjB2moGpl4rVhI="
+        type: SECRET
+      - key: FLASK_DEBUG
+        value: "False"
+        type: GENERAL

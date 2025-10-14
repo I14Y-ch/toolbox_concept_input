@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Concept Import</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        /* Additional styles for multi-step form */
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+        #agency-selection {
+            display: none;
+            margin-top: 20px;
+        }
+        #error-container {
+            color: red;
+            margin-top: 20px;
+        }
+        .loading {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Dataset Auto Import</h1>
+        </header>
+        
+        <!-- Step 1: Token input -->
+        <div id="step1" class="step active">
+            <fieldset>
+                <legend>API Token</legend>
+                <div class="form-group">
+                    <label for="token">Enter your I14Y API Token:</label>
+                    <input type="text" id="token" name="token" required>
+                </div>
+                <button id="verify-token-btn" type="button">Verify Token</button>
+                <div id="token-loading" class="loading">Verifying token...</div>
+            </fieldset>
+            
+            <!-- Agency selection will appear here if needed -->
+            <div id="agency-selection">
+                <fieldset>
+                    <legend>Select Agency</legend>
+                    <div class="form-group">
+                        <label for="selected-agency">Select your organization:</label>
+                        <select id="selected-agency" name="selected_agency" required>
+                            <option value="">-- Select an agency --</option>
+                            <!-- Options will be added dynamically -->
+                        </select>
+                    </div>
+                    <button id="select-agency-btn" type="button">Continue</button>
+                </fieldset>
+            </div>
+        </div>
+        
+        <!-- Step 2: Full form -->
+        <div id="step2" class="step">
+            <form id="upload-form" method="post" enctype="multipart/form-data">
+                <!-- Hidden fields to carry over from step 1 -->
+                <input type="hidden" id="form-token" name="token">
+                <input type="hidden" id="form-agency" name="selected_agency">
+                
+                <fieldset>
+                    <legend>File Upload</legend>
+                    <div class="form-group">
+                        <label for="file">Data File (Excel or CSV):</label>
+                        <input type="file" id="file" name="file" accept=".xlsx,.xls,.csv" required>
+                    </div>
+                </fieldset>
+                
+                <fieldset>
+                    <legend>Concept Information</legend>
+                    <div class="form-group">
+                        <label for="responsible_person">Responsible Person (email):</label>
+                        <input type="email" id="responsible_person" name="responsible_person" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="responsible_deputy">Deputy Person (email):</label>
+                        <input type="email" id="responsible_deputy" name="responsible_deputy" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="theme">Theme:</label>
+                        <select id="theme" name="theme" required>
+                            <option value="">Select a theme...</option>
+                            {% for code, name in themes.items() %}
+                            <option value="{{ code }}">{{ code }} - {{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </fieldset>
+
+                <button type="submit">Analyze File</button>
+            </form>
+        </div>
+        
+        <div id="error-container"></div>
+    </div>
+
+    <script>
+        // Step 1: Token verification
+        document.getElementById('verify-token-btn').addEventListener('click', async () => {
+            const token = document.getElementById('token').value.trim();
+            if (!token) {
+                document.getElementById('error-container').innerHTML = '<p class="error">Please enter a valid token</p>';
+                return;
+            }
+            
+            document.getElementById('error-container').innerHTML = '';
+            document.getElementById('token-loading').style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/verify-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token })
+                });
+                
+                document.getElementById('token-loading').style.display = 'none';
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    document.getElementById('error-container').innerHTML = `<p class="error">${data.error || 'Invalid token'}</p>`;
+                    return;
+                }
+                
+                // Store token in hidden field for step 2
+                document.getElementById('form-token').value = token;
+                
+                // If user email is available, prefill the responsible person field
+                if (data.user_email) {
+                    document.getElementById('responsible_person').value = data.user_email;
+                }
+                
+                // Check if we need to show agency selection
+                if (data.agencies && data.agencies.length > 1) {
+                    // Multiple agencies - show selection
+                    const select = document.getElementById('selected-agency');
+                    // Clear existing options except first placeholder
+                    select.innerHTML = '<option value="">-- Select an agency --</option>';
+                    
+                    // Add agency options
+                    data.agencies.forEach(agency => {
+                        const option = document.createElement('option');
+                        option.value = agency.identifier;
+                        option.textContent = `${agency.name.de} (${agency.identifier})`;
+                        select.appendChild(option);
+                    });
+                    
+                    // Show the agency selection
+                    document.getElementById('agency-selection').style.display = 'block';
+                } else if (data.agencies && data.agencies.length === 1) {
+                    // Single agency - use it automatically
+                    document.getElementById('form-agency').value = data.agencies[0].identifier;
+                    // Proceed to step 2
+                    goToStep2();
+                } else {
+                    document.getElementById('error-container').innerHTML = '<p class="error">No agencies found for this token</p>';
+                }
+            } catch (error) {
+                document.getElementById('token-loading').style.display = 'none';
+                document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        });
+        
+        // Handle agency selection
+        document.getElementById('select-agency-btn').addEventListener('click', () => {
+            const agencySelect = document.getElementById('selected-agency');
+            const selectedAgency = agencySelect.value;
+            
+            if (!selectedAgency) {
+                document.getElementById('error-container').innerHTML = '<p class="error">Please select an agency</p>';
+                return;
+            }
+            
+            // Store selected agency
+            document.getElementById('form-agency').value = selectedAgency;
+            
+            // Go to step 2
+            goToStep2();
+        });
+        
+        // Function to advance to step 2
+        function goToStep2() {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('error-container').innerHTML = '';
+        }
+        
+        // Handle final form submission
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                // Check if response is redirect
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+                
+                // For JSON responses
+                const data = await response.json();
+                if (data.error) {
+                    document.getElementById('error-container').innerHTML = `<p class="error">${data.error}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

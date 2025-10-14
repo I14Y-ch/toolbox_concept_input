@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Results - Dataset Auto Import</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Analysis Results</h1>
+            <nav class="navigation">
+                <a href="{{ url_for('upload_file') }}" class="nav-link">&larr; Back to Upload</a>
+            </nav>
+        </header>
+        
+        <div id="results">
+            <h2>Detected Columns</h2>
+            <div class="columns-list">
+                {% for col in columns %}
+                <div class="column-item">
+                    <div class="column-summary">
+                        <h3>{{ col.name }}</h3>
+                        <p class="type-badge {{ col.type|lower }}">{{ col.type }} {% if col.is_codelist %}(Codelist){% endif %}</p>
+                    </div>
+                    <div class="column-actions">
+                        <a href="{{ url_for('view_concept', index=loop.index0) }}" class="action-link">
+                            View Details & Create Concept
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

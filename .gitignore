@@ -1,0 +1,15 @@
+# Ignore session data directory
+session_data/
+*.pkl
+
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+.env.local
