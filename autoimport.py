@@ -481,47 +481,52 @@ def fetch_user_agencies(token):
         # Try alternative approach - fetch all agencies and let user choose
         return fetch_agencies()
 
-def read_csv_with_encoding_fallback(file_obj, sep=None, engine='python'):
+def read_csv_with_encoding_fallback(file, **kwargs):
     """
-    Read CSV file with automatic encoding detection fallback.
-    First tries to detect encoding with chardet, then falls back to common encodings.
+    Try to read CSV with different encodings
     """
-    # Reset file pointer to beginning
-    file_obj.seek(0)
+    from io import StringIO, BytesIO
+    
+    # Read the file content as bytes
+    if hasattr(file, 'read'):
+        content = file.read()
+        if isinstance(content, str):
+            # Already decoded, use directly
+            file.seek(0)
+            return pd.read_csv(file, **kwargs)
+    else:
+        content = file
+    
+    # Ensure content is bytes
+    if isinstance(content, str):
+        content = content.encode('utf-8')
     
     # Try to detect encoding with chardet if available
     try:
         import chardet
-        raw_data = file_obj.read()
-        detected = chardet.detect(raw_data)
-        if detected['encoding'] and detected['confidence'] > 0.7:
-            # Reset file pointer and try detected encoding first
-            file_obj.seek(0)
+        detected = chardet.detect(content)
+        if detected and detected.get('encoding'):
+            encoding = detected['encoding']
             try:
-                df = pd.read_csv(file_obj, sep=sep, engine=engine, encoding=detected['encoding'])
-                return df
-            except (UnicodeDecodeError, UnicodeError):
-                pass  # Fall back to manual encoding tries
+                text_content = content.decode(encoding)
+                return pd.read_csv(StringIO(text_content), **kwargs)
+            except (UnicodeDecodeError, Exception):
+                pass
     except ImportError:
-        pass  # chardet not available, use fallback
+        pass
     
-    # Fallback: try common encodings manually
-    encodings_to_try = ['utf-8', 'cp1252', 'latin1', 'iso-8859-1', 'utf-16', 'utf-32']
+    # Fallback to trying common encodings
+    encodings = ['utf-8', 'cp1252', 'latin1', 'iso-8859-1', 'utf-16', 'utf-32']
     
-    for encoding in encodings_to_try:
+    for encoding in encodings:
         try:
-            # Reset file pointer to beginning
-            file_obj.seek(0)
-            df = pd.read_csv(file_obj, sep=sep, engine=engine, encoding=encoding)
-            return df
-        except UnicodeDecodeError:
+            text_content = content.decode(encoding)
+            return pd.read_csv(StringIO(text_content), **kwargs)
+        except (UnicodeDecodeError, LookupError):
             continue
-        except Exception as e:
-            # For other errors (like parsing errors), don't try other encodings
-            raise e
     
-    # If all encodings failed, raise the last error
-    raise UnicodeDecodeError("Could not decode CSV file with any of the attempted encodings")
+    # If all encodings fail, raise an error
+    raise ValueError("Could not decode the CSV file with any supported encoding")
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -1668,7 +1673,7 @@ def get_known_code_mappings():
         "Finnland": "FI", "Finland": "FI", "Finlande": "FI", "Finlandia": "FI",
         "Portugal": "PT", "Portogallo": "PT",
         "Griechenland": "GR", "Greece": "GR", "Grèce": "GR", "Grecia": "GR",
-        "Polen": "PL", "Poland": "PL", "Pologne": "PL", "Polonia": "PL",
+        "Polen": "PL", "Poland": "PL", "Pologne": "PL",
         "Tschechien": "CZ", "Czech Republic": "CZ", "République tchèque": "CZ", "Repubblica Ceca": "CZ",
         "Ungarn": "HU", "Hungary": "HU", "Hongrie": "HU", "Ungheria": "HU",
         "Russland": "RU", "Russia": "RU", "Russie": "RU", "Russia": "RU",
