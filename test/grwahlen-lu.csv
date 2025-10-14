@@ -1,0 +1,898 @@
+"jahr";"gnr";"gemeinde";"partei";"partei_kurz";"sex";"kand_status";"gewaehlt";"stand";"record_id"
+"2020";"1001";"Doppleschwand";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";1
+"2020";"1001";"Doppleschwand";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";2
+"2020";"1001";"Doppleschwand";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";3
+"2020";"1002";"Entlebuch";"SVP";"SVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";4
+"2020";"1002";"Entlebuch";"Freie Wählergruppe (parteilos)";"Andere";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";5
+"2020";"1002";"Entlebuch";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";6
+"2020";"1002";"Entlebuch";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";7
+"2020";"1002";"Entlebuch";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";8
+"2020";"1004";"Flühli";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";9
+"2020";"1004";"Flühli";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";10
+"2020";"1004";"Flühli";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";11
+"2020";"1004";"Flühli";"-";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";12
+"2020";"1004";"Flühli";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";13
+"2020";"1004";"Flühli";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";14
+"2020";"1005";"Hasle";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";15
+"2020";"1005";"Hasle";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";16
+"2020";"1005";"Hasle";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";17
+"2020";"1005";"Hasle";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";18
+"2020";"1005";"Hasle";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";19
+"2020";"1007";"Romoos";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";20
+"2020";"1007";"Romoos";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";21
+"2020";"1007";"Romoos";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";22
+"2020";"1008";"Schüpfheim";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";23
+"2020";"1008";"Schüpfheim";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";24
+"2020";"1008";"Schüpfheim";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";25
+"2020";"1008";"Schüpfheim";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";26
+"2020";"1008";"Schüpfheim";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";27
+"2020";"1009";"Werthenstein";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";28
+"2020";"1009";"Werthenstein";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";29
+"2020";"1009";"Werthenstein";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";30
+"2020";"1009";"Werthenstein";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";31
+"2020";"1009";"Werthenstein";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";32
+"2020";"1010";"Escholzmatt-Marbach";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";33
+"2020";"1010";"Escholzmatt-Marbach";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";34
+"2020";"1010";"Escholzmatt-Marbach";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";35
+"2020";"1010";"Escholzmatt-Marbach";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";36
+"2020";"1010";"Escholzmatt-Marbach";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";37
+"2020";"1021";"Aesch";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";38
+"2020";"1021";"Aesch";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";39
+"2020";"1021";"Aesch";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";40
+"2020";"1021";"Aesch";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";41
+"2020";"1021";"Aesch";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";42
+"2020";"1021";"Aesch";"parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";43
+"2020";"1021";"Aesch";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";44
+"2020";"1023";"Ballwil";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";45
+"2020";"1023";"Ballwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";46
+"2020";"1023";"Ballwil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";47
+"2020";"1023";"Ballwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";48
+"2020";"1023";"Ballwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";49
+"2020";"1023";"Ballwil";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";50
+"2020";"1024";"Emmen";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";51
+"2020";"1024";"Emmen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";52
+"2020";"1024";"Emmen";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";53
+"2020";"1024";"Emmen";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";54
+"2020";"1024";"Emmen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";55
+"2020";"1024";"Emmen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";56
+"2020";"1025";"Ermensee";"CVP";"CVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";57
+"2020";"1025";"Ermensee";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";58
+"2020";"1025";"Ermensee";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";59
+"2020";"1025";"Ermensee";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";60
+"2020";"1026";"Eschenbach";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";61
+"2020";"1026";"Eschenbach";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";62
+"2020";"1026";"Eschenbach";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";63
+"2020";"1026";"Eschenbach";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";64
+"2020";"1026";"Eschenbach";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";65
+"2020";"1030";"Hitzkirch";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";66
+"2020";"1030";"Hitzkirch";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";67
+"2020";"1030";"Hitzkirch";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";68
+"2020";"1030";"Hitzkirch";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";69
+"2020";"1030";"Hitzkirch";"FDP";"FDP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";70
+"2020";"1030";"Hitzkirch";"SVP";"SVP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";71
+"2020";"1030";"Hitzkirch";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";72
+"2020";"1031";"Hochdorf";"FDP.Die Liberalen Hochdorf";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";73
+"2020";"1031";"Hochdorf";"CVP Hochdorf";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";74
+"2020";"1031";"Hochdorf";"Parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";75
+"2020";"1031";"Hochdorf";"VAH/Grüne";"Grüne";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";76
+"2020";"1031";"Hochdorf";"FDP.Die Liberalen Hochdorf";"FDP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";77
+"2020";"1031";"Hochdorf";"CVP Hochdorf";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";78
+"2020";"1031";"Hochdorf";"SP Hochdorf";"SP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";79
+"2020";"1031";"Hochdorf";"CVP Hochdorf";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";80
+"2020";"1031";"Hochdorf";"SVP Hochdorf";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";81
+"2020";"1031";"Hochdorf";"CVP Hochdorf";"CVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";82
+"2020";"1032";"Hohenrain";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";83
+"2020";"1032";"Hohenrain";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";84
+"2020";"1032";"Hohenrain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";85
+"2020";"1032";"Hohenrain";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";86
+"2020";"1032";"Hohenrain";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";87
+"2020";"1033";"Inwil";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";88
+"2020";"1033";"Inwil";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";89
+"2020";"1033";"Inwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";90
+"2020";"1033";"Inwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";91
+"2020";"1033";"Inwil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";92
+"2020";"1037";"Rain";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";93
+"2020";"1037";"Rain";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";94
+"2020";"1037";"Rain";"FDP.Die Liberalen";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";95
+"2020";"1037";"Rain";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";96
+"2020";"1037";"Rain";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";97
+"2020";"1039";"Römerswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";98
+"2020";"1039";"Römerswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";99
+"2020";"1039";"Römerswil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";100
+"2020";"1039";"Römerswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";101
+"2020";"1039";"Römerswil";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";102
+"2020";"1040";"Rothenburg";"CVP Rothenburg";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";103
+"2020";"1040";"Rothenburg";"FDP.Die Liberalen Rothenburg";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";104
+"2020";"1040";"Rothenburg";"Parteifreie Rothenburg";"Andere";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";105
+"2020";"1040";"Rothenburg";"CVP Rothenburg";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";106
+"2020";"1040";"Rothenburg";"SP Rothenburg";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";107
+"2020";"1041";"Schongau";"parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";108
+"2020";"1041";"Schongau";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";109
+"2020";"1041";"Schongau";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";110
+"2020";"1041";"Schongau";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";111
+"2020";"1041";"Schongau";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";112
+"2020";"1051";"Adligenswil";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";113
+"2020";"1051";"Adligenswil";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";114
+"2020";"1051";"Adligenswil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";115
+"2020";"1051";"Adligenswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";116
+"2020";"1051";"Adligenswil";"SP";"SP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";117
+"2020";"1051";"Adligenswil";"glp";"GLP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";118
+"2020";"1052";"Buchrain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";119
+"2020";"1052";"Buchrain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";120
+"2020";"1052";"Buchrain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";121
+"2020";"1052";"Buchrain";"SP";"SP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";122
+"2020";"1052";"Buchrain";"SP";"SP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";123
+"2020";"1052";"Buchrain";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";124
+"2020";"1052";"Buchrain";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";125
+"2020";"1053";"Dierikon";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";126
+"2020";"1053";"Dierikon";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";127
+"2020";"1053";"Dierikon";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";128
+"2020";"1053";"Dierikon";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";129
+"2020";"1053";"Dierikon";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";130
+"2020";"1054";"Ebikon";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";131
+"2020";"1054";"Ebikon";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";132
+"2020";"1054";"Ebikon";"GLP";"GLP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";133
+"2020";"1054";"Ebikon";"FDP";"FDP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";134
+"2020";"1054";"Ebikon";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";135
+"2020";"1054";"Ebikon";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";136
+"2020";"1054";"Ebikon";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";137
+"2020";"1054";"Ebikon";"SP";"SP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";138
+"2020";"1055";"Gisikon";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";139
+"2020";"1055";"Gisikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";140
+"2020";"1055";"Gisikon";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";141
+"2020";"1055";"Gisikon";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";142
+"2020";"1055";"Gisikon";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";143
+"2020";"1055";"Gisikon";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";144
+"2020";"1056";"Greppen";"IG Greppen";"Andere";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";145
+"2020";"1056";"Greppen";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";146
+"2020";"1056";"Greppen";"SVP";"SVP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";147
+"2020";"1056";"Greppen";"Parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";148
+"2020";"1056";"Greppen";"IG Greppen";"Andere";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";149
+"2020";"1056";"Greppen";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";150
+"2020";"1057";"Honau";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";151
+"2020";"1057";"Honau";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";152
+"2020";"1057";"Honau";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";153
+"2020";"1058";"Horw";"FDP.Die Liberalen Horw";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";154
+"2020";"1058";"Horw";"SVP";"SVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";155
+"2020";"1058";"Horw";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";156
+"2020";"1058";"Horw";"L20";"Andere";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";157
+"2020";"1058";"Horw";"L20";"Andere";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";158
+"2020";"1058";"Horw";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";159
+"2020";"1059";"Kriens";"SP";"SP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";160
+"2020";"1059";"Kriens";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";161
+"2020";"1059";"Kriens";"CVP";"CVP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";162
+"2020";"1059";"Kriens";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";163
+"2020";"1059";"Kriens";"Grüne";"Grüne";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";164
+"2020";"1059";"Kriens";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";165
+"2020";"1059";"Kriens";"SP";"SP";"f";"bisher";"nein";"Nach 1. und 2. Wahlgang";166
+"2020";"1059";"Kriens";"FDP";"FDP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";167
+"2020";"1059";"Kriens";"CVP";"CVP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";168
+"2020";"1059";"Kriens";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";169
+"2020";"1061";"Luzern";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";170
+"2020";"1061";"Luzern";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";171
+"2020";"1061";"Luzern";"Grüne";"Grüne";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";172
+"2020";"1061";"Luzern";"SP";"SP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";173
+"2020";"1061";"Luzern";"glp";"GLP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";174
+"2020";"1061";"Luzern";"JUSO plus";"SP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";175
+"2020";"1061";"Luzern";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";176
+"2020";"1061";"Luzern";"Parteilose Schweizer";"Andere";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";177
+"2020";"1061";"Luzern";"JG";"Grüne";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";178
+"2020";"1061";"Luzern";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";179
+"2020";"1062";"Malters";"SP";"SP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";180
+"2020";"1062";"Malters";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";181
+"2020";"1062";"Malters";"Interessengemeinschaft Malters IGM";"Andere";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";182
+"2020";"1062";"Malters";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";183
+"2020";"1062";"Malters";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";184
+"2020";"1062";"Malters";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";185
+"2020";"1062";"Malters";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";186
+"2020";"1063";"Meggen";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";187
+"2020";"1063";"Meggen";"glp";"GLP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";188
+"2020";"1063";"Meggen";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";189
+"2020";"1063";"Meggen";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";190
+"2020";"1063";"Meggen";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";191
+"2020";"1063";"Meggen";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";192
+"2020";"1063";"Meggen";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";193
+"2020";"1063";"Meggen";"Grüne";"Grüne";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";194
+"2020";"1064";"Meierskappel";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";195
+"2020";"1064";"Meierskappel";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";196
+"2020";"1064";"Meierskappel";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";197
+"2020";"1064";"Meierskappel";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";198
+"2020";"1064";"Meierskappel";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";199
+"2020";"1065";"Root";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";200
+"2020";"1065";"Root";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";201
+"2020";"1065";"Root";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";202
+"2020";"1065";"Root";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";203
+"2020";"1065";"Root";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";204
+"2020";"1066";"Schwarzenberg";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";205
+"2020";"1066";"Schwarzenberg";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";206
+"2020";"1066";"Schwarzenberg";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";207
+"2020";"1066";"Schwarzenberg";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";208
+"2020";"1066";"Schwarzenberg";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";209
+"2020";"1067";"Udligenswil";"unparteiisch";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";210
+"2020";"1067";"Udligenswil";"Grunliberale Partei (glp)";"GLP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";211
+"2020";"1067";"Udligenswil";"Sophie Gisler (parteilos)";"parteilos";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";212
+"2020";"1067";"Udligenswil";"Freie Wähler-Karin Henseler";"Andere";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";213
+"2020";"1067";"Udligenswil";"CVP Udligenswil";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";214
+"2020";"1067";"Udligenswil";"CVP Udligenswil";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";215
+"2020";"1067";"Udligenswil";"FDP.Die Liberalen Udligenswil";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";216
+"2020";"1067";"Udligenswil";"FDP.Die Liberalen Udligenswil";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";217
+"2020";"1068";"Vitznau";"parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";218
+"2020";"1068";"Vitznau";"parteilos";"parteilos";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";219
+"2020";"1068";"Vitznau";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";220
+"2020";"1068";"Vitznau";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";221
+"2020";"1068";"Vitznau";"Grünliberale (glp)";"GLP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";222
+"2020";"1068";"Vitznau";"FDP.Die  Liberalen
+";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";223
+"2020";"1069";"Weggis";"Forum Weggis";"Andere";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";224
+"2020";"1069";"Weggis";"Überparteiliches Komitee Roger Dähler";"Andere";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";225
+"2020";"1069";"Weggis";"FDP.Die Liberalen Weggis";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";226
+"2020";"1069";"Weggis";"Christlichdemokratische Volkspartei (CVP) Weg";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";227
+"2020";"1069";"Weggis";"FDP.Die Liberalen Weggis";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";228
+"2020";"1069";"Weggis";"Weggis in Bewegung";"Andere";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";229
+"2020";"1069";"Weggis";"Christlichdemokratische Volkspartei (CVP) Weg";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";230
+"2020";"1081";"Beromünster";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";231
+"2020";"1081";"Beromünster";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";232
+"2020";"1081";"Beromünster";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";233
+"2020";"1081";"Beromünster";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";234
+"2020";"1081";"Beromünster";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";235
+"2020";"1082";"Büron";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";236
+"2020";"1082";"Büron";"überparteilich";"Andere";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";237
+"2020";"1082";"Büron";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";238
+"2020";"1082";"Büron";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";239
+"2020";"1082";"Büron";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";240
+"2020";"1083";"Buttisholz";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";241
+"2020";"1083";"Buttisholz";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";242
+"2020";"1083";"Buttisholz";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";243
+"2020";"1083";"Buttisholz";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";244
+"2020";"1083";"Buttisholz";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";245
+"2020";"1084";"Eich";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";246
+"2020";"1084";"Eich";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";247
+"2020";"1084";"Eich";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";248
+"2020";"1084";"Eich";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";249
+"2020";"1084";"Eich";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";250
+"2020";"1085";"Geuensee";"Parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";251
+"2020";"1085";"Geuensee";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";252
+"2020";"1085";"Geuensee";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";253
+"2020";"1085";"Geuensee";"SP";"SP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";254
+"2020";"1085";"Geuensee";"FDP";"FDP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";255
+"2020";"1085";"Geuensee";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";256
+"2020";"1085";"Geuensee";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";257
+"2020";"1086";"Grosswangen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";258
+"2020";"1086";"Grosswangen";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";259
+"2020";"1086";"Grosswangen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";260
+"2020";"1086";"Grosswangen";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";261
+"2020";"1086";"Grosswangen";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";262
+"2020";"1088";"Hildisrieden";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";263
+"2020";"1088";"Hildisrieden";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";264
+"2020";"1088";"Hildisrieden";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";265
+"2020";"1088";"Hildisrieden";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";266
+"2020";"1088";"Hildisrieden";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";267
+"2020";"1089";"Knutwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";268
+"2020";"1089";"Knutwil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";269
+"2020";"1089";"Knutwil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";270
+"2020";"1089";"Knutwil";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";271
+"2020";"1089";"Knutwil";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";272
+"2020";"1089";"Knutwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";273
+"2020";"1091";"Mauensee";"Parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";274
+"2020";"1091";"Mauensee";"Parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";275
+"2020";"1091";"Mauensee";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";276
+"2020";"1091";"Mauensee";"SP";"SP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";277
+"2020";"1091";"Mauensee";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";278
+"2020";"1091";"Mauensee";"SP";"SP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";279
+"2020";"1093";"Neuenkirch";"SVP Neuenkirch";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";280
+"2020";"1093";"Neuenkirch";"FDP Neuenkirch";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";281
+"2020";"1093";"Neuenkirch";"CVP Neuenkirch";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";282
+"2020";"1093";"Neuenkirch";"CVP Neuenkirch";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";283
+"2020";"1093";"Neuenkirch";"CVP Neuenkirch";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";284
+"2020";"1093";"Neuenkirch";"FDP Neuenkirch";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";285
+"2020";"1094";"Nottwil";"FDP";"FDP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";286
+"2020";"1094";"Nottwil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";287
+"2020";"1094";"Nottwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";288
+"2020";"1094";"Nottwil";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";289
+"2020";"1094";"Nottwil";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";290
+"2020";"1094";"Nottwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";291
+"2020";"1095";"Oberkirch";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";292
+"2020";"1095";"Oberkirch";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";293
+"2020";"1095";"Oberkirch";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";294
+"2020";"1095";"Oberkirch";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";295
+"2020";"1095";"Oberkirch";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";296
+"2020";"1095";"Oberkirch";"parteilos";"parteilos";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";297
+"2020";"1097";"Rickenbach";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";298
+"2020";"1097";"Rickenbach";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";299
+"2020";"1097";"Rickenbach";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";300
+"2020";"1097";"Rickenbach";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";301
+"2020";"1097";"Rickenbach";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";302
+"2020";"1097";"Rickenbach";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";303
+"2020";"1098";"Ruswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";304
+"2020";"1098";"Ruswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";305
+"2020";"1098";"Ruswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";306
+"2020";"1098";"Ruswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";307
+"2020";"1098";"Ruswil";"SP";"SP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";308
+"2020";"1099";"Schenkon";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";309
+"2020";"1099";"Schenkon";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";310
+"2020";"1099";"Schenkon";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";311
+"2020";"1099";"Schenkon";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";312
+"2020";"1099";"Schenkon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";313
+"2020";"1100";"Schlierbach";"parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";314
+"2020";"1100";"Schlierbach";"FDP (bisher parteilos)";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";315
+"2020";"1100";"Schlierbach";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";316
+"2020";"1102";"Sempach";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";317
+"2020";"1102";"Sempach";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";318
+"2020";"1102";"Sempach";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";319
+"2020";"1102";"Sempach";"CVP";"CVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";320
+"2020";"1102";"Sempach";"CVP";"CVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";321
+"2020";"1102";"Sempach";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";322
+"2020";"1102";"Sempach";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";323
+"2020";"1103";"Sursee";"SP/Gewerbe Region Sursee";"SP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";324
+"2020";"1103";"Sursee";"CVP/Gewerbe Region Sursee";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";325
+"2020";"1103";"Sursee";"FDP/Gewerbe Region Sursee";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";326
+"2020";"1103";"Sursee";"CVP/Sursee bewegt";"CVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";327
+"2020";"1103";"Sursee";"FDP/Gewerbe Region Sursee";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";328
+"2020";"1103";"Sursee";"CVP/Gewerbe Region Sursee";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";329
+"2020";"1104";"Triengen";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";330
+"2020";"1104";"Triengen";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";331
+"2020";"1104";"Triengen";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";332
+"2020";"1104";"Triengen";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";333
+"2020";"1104";"Triengen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";334
+"2020";"1104";"Triengen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";335
+"2020";"1107";"Wolhusen";"FDP.Die Liberalen";"FDP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";336
+"2020";"1107";"Wolhusen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";337
+"2020";"1107";"Wolhusen";"Parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";338
+"2020";"1107";"Wolhusen";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";339
+"2020";"1107";"Wolhusen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";340
+"2020";"1107";"Wolhusen";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";341
+"2020";"1107";"Wolhusen";"FDP.Die Liberalen";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";342
+"2020";"1107";"Wolhusen";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";343
+"2020";"1121";"Alberswil";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";344
+"2020";"1121";"Alberswil";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";345
+"2020";"1121";"Alberswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";346
+"2020";"1122";"Altbüron";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";347
+"2020";"1122";"Altbüron";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";348
+"2020";"1122";"Altbüron";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";349
+"2020";"1122";"Altbüron";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";350
+"2020";"1122";"Altbüron";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";351
+"2020";"1123";"Altishofen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";352
+"2020";"1123";"Altishofen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";353
+"2020";"1123";"Altishofen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";354
+"2020";"1123";"Altishofen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";355
+"2020";"1123";"Altishofen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";356
+"2020";"1125";"Dagmersellen";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";357
+"2020";"1125";"Dagmersellen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";358
+"2020";"1125";"Dagmersellen";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";359
+"2020";"1125";"Dagmersellen";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";360
+"2020";"1125";"Dagmersellen";"FDP";"FDP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";361
+"2020";"1125";"Dagmersellen";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";362
+"2020";"1127";"Egolzwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";363
+"2020";"1127";"Egolzwil";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";364
+"2020";"1127";"Egolzwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";365
+"2020";"1127";"Egolzwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";366
+"2020";"1127";"Egolzwil";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";367
+"2020";"1128";"Ettiswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";368
+"2020";"1128";"Ettiswil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";369
+"2020";"1128";"Ettiswil";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";370
+"2020";"1128";"Ettiswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";371
+"2020";"1128";"Ettiswil";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";372
+"2020";"1129";"Fischbach";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";373
+"2020";"1129";"Fischbach";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";374
+"2020";"1129";"Fischbach";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";375
+"2020";"1131";"Grossdietwil";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";376
+"2020";"1131";"Grossdietwil";"Parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";377
+"2020";"1131";"Grossdietwil";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";378
+"2020";"1131";"Grossdietwil";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";379
+"2020";"1131";"Grossdietwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";380
+"2020";"1131";"Grossdietwil";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";381
+"2020";"1132";"Hergiswil";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";382
+"2020";"1132";"Hergiswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";383
+"2020";"1132";"Hergiswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";384
+"2020";"1132";"Hergiswil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";385
+"2020";"1132";"Hergiswil";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";386
+"2020";"1135";"Luthern";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";387
+"2020";"1135";"Luthern";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";388
+"2020";"1135";"Luthern";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";389
+"2020";"1135";"Luthern";"CVP";"CVP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";390
+"2020";"1135";"Luthern";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";391
+"2020";"1135";"Luthern";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";392
+"2020";"1135";"Luthern";"CVP";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";393
+"2020";"1136";"Menznau";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";394
+"2020";"1136";"Menznau";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";395
+"2020";"1136";"Menznau";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";396
+"2020";"1136";"Menznau";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";397
+"2020";"1136";"Menznau";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";398
+"2020";"1137";"Nebikon";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";399
+"2020";"1137";"Nebikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";400
+"2020";"1137";"Nebikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";401
+"2020";"1137";"Nebikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";402
+"2020";"1137";"Nebikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";403
+"2020";"1139";"Pfaffnau";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";404
+"2020";"1139";"Pfaffnau";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";405
+"2020";"1139";"Pfaffnau";"IG UPS";"Andere";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";406
+"2020";"1139";"Pfaffnau";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";407
+"2020";"1139";"Pfaffnau";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";408
+"2020";"1139";"Pfaffnau";"parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";409
+"2020";"1140";"Reiden";"ig-reiden";"Andere";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";410
+"2020";"1140";"Reiden";"ig-reiden";"Andere";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";411
+"2020";"1140";"Reiden";"SVP Reiden";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";412
+"2020";"1140";"Reiden";"CVP Reiden";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";413
+"2020";"1140";"Reiden";"CVP Reiden";"CVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";414
+"2020";"1140";"Reiden";"ig-reiden";"Andere";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";415
+"2020";"1140";"Reiden";"FDP.Die Liberalen Reiden";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";416
+"2020";"1142";"Roggliswil";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";417
+"2020";"1142";"Roggliswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";418
+"2020";"1142";"Roggliswil";"parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";419
+"2020";"1143";"Schötz";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";420
+"2020";"1143";"Schötz";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";421
+"2020";"1143";"Schötz";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";422
+"2020";"1143";"Schötz";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";423
+"2020";"1143";"Schötz";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";424
+"2020";"1145";"Ufhusen";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";425
+"2020";"1145";"Ufhusen";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";426
+"2020";"1145";"Ufhusen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";427
+"2020";"1145";"Ufhusen";"IG Zukunft Ufhusen";"Andere";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";428
+"2020";"1145";"Ufhusen";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";429
+"2020";"1146";"Wauwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";430
+"2020";"1146";"Wauwil";"SVP";"SVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";431
+"2020";"1146";"Wauwil";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";432
+"2020";"1146";"Wauwil";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";433
+"2020";"1146";"Wauwil";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";434
+"2020";"1147";"Wikon";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";435
+"2020";"1147";"Wikon";"Parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";436
+"2020";"1147";"Wikon";"CVP";"CVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";437
+"2020";"1147";"Wikon";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";438
+"2020";"1147";"Wikon";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";439
+"2020";"1150";"Zell";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";440
+"2020";"1150";"Zell";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";441
+"2020";"1150";"Zell";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";442
+"2020";"1150";"Zell";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";443
+"2020";"1150";"Zell";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";444
+"2020";"1151";"Willisau";"CVP";"CVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";445
+"2020";"1151";"Willisau";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";446
+"2020";"1151";"Willisau";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";447
+"2020";"1151";"Willisau";"CVP";"CVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";448
+"2020";"1151";"Willisau";"SP";"SP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";449
+"2024";"1001";"Doppleschwand";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";450
+"2024";"1001";"Doppleschwand";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";451
+"2024";"1001";"Doppleschwand";"die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";452
+"2024";"1002";"Entlebuch";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";453
+"2024";"1002";"Entlebuch";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";454
+"2024";"1002";"Entlebuch";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";455
+"2024";"1002";"Entlebuch";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";456
+"2024";"1002";"Entlebuch";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";457
+"2024";"1002";"Entlebuch";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";458
+"2024";"1004";"Flühli";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";459
+"2024";"1004";"Flühli";"-";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";460
+"2024";"1004";"Flühli";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";461
+"2024";"1004";"Flühli";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";462
+"2024";"1004";"Flühli";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";463
+"2024";"1005";"Hasle";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";464
+"2024";"1005";"Hasle";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";465
+"2024";"1005";"Hasle";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";466
+"2024";"1005";"Hasle";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";467
+"2024";"1005";"Hasle";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";468
+"2024";"1007";"Romoos";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";469
+"2024";"1007";"Romoos";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";470
+"2024";"1007";"Romoos";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";471
+"2024";"1008";"Schüpfheim";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";472
+"2024";"1008";"Schüpfheim";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";473
+"2024";"1008";"Schüpfheim";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";474
+"2024";"1008";"Schüpfheim";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";475
+"2024";"1008";"Schüpfheim";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";476
+"2024";"1009";"Werthenstein";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";477
+"2024";"1009";"Werthenstein";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";478
+"2024";"1009";"Werthenstein";"die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";479
+"2024";"1009";"Werthenstein";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";480
+"2024";"1009";"Werthenstein";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";481
+"2024";"1010";"Escholzmatt-Marbach";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";482
+"2024";"1010";"Escholzmatt-Marbach";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";483
+"2024";"1010";"Escholzmatt-Marbach";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";484
+"2024";"1010";"Escholzmatt-Marbach";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";485
+"2024";"1010";"Escholzmatt-Marbach";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";486
+"2024";"1021";"Aesch";"keine";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";487
+"2024";"1021";"Aesch";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";488
+"2024";"1021";"Aesch";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";489
+"2024";"1021";"Aesch";"keine";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";490
+"2024";"1021";"Aesch";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";491
+"2024";"1023";"Ballwil";"SVP";"SVP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";492
+"2024";"1023";"Ballwil";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";493
+"2024";"1023";"Ballwil";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";494
+"2024";"1023";"Ballwil";"Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";495
+"2024";"1023";"Ballwil";"Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";496
+"2024";"1024";"Emmen";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";497
+"2024";"1024";"Emmen";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";498
+"2024";"1024";"Emmen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";499
+"2024";"1024";"Emmen";"GLP";"GLP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";500
+"2024";"1024";"Emmen";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";501
+"2024";"1024";"Emmen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";502
+"2024";"1024";"Emmen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";503
+"2024";"1024";"Emmen";"FeE";"Andere";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";504
+"2024";"1025";"Ermensee";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";505
+"2024";"1025";"Ermensee";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";506
+"2024";"1025";"Ermensee";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";507
+"2024";"1025";"Ermensee";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";508
+"2024";"1025";"Ermensee";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";509
+"2024";"1025";"Ermensee";"parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";510
+"2024";"1026";"Eschenbach";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";511
+"2024";"1026";"Eschenbach";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";512
+"2024";"1026";"Eschenbach";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";513
+"2024";"1026";"Eschenbach";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";514
+"2024";"1026";"Eschenbach";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";515
+"2024";"1030";"Hitzkirch";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";516
+"2024";"1030";"Hitzkirch";"FDP";"FDP";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";517
+"2024";"1030";"Hitzkirch";"Parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";518
+"2024";"1030";"Hitzkirch";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";519
+"2024";"1030";"Hitzkirch";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";520
+"2024";"1030";"Hitzkirch";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";521
+"2024";"1031";"Hochdorf";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";522
+"2024";"1031";"Hochdorf";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";523
+"2024";"1031";"Hochdorf";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";524
+"2024";"1031";"Hochdorf";"SP";"SP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";525
+"2024";"1031";"Hochdorf";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";526
+"2024";"1031";"Hochdorf";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";527
+"2024";"1032";"Hohenrain";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";528
+"2024";"1032";"Hohenrain";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";529
+"2024";"1032";"Hohenrain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";530
+"2024";"1032";"Hohenrain";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";531
+"2024";"1032";"Hohenrain";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";532
+"2024";"1033";"Inwil";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";533
+"2024";"1033";"Inwil";"die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";534
+"2024";"1033";"Inwil";"die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";535
+"2024";"1033";"Inwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";536
+"2024";"1033";"Inwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";537
+"2024";"1037";"Rain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";538
+"2024";"1037";"Rain";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";539
+"2024";"1037";"Rain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";540
+"2024";"1037";"Rain";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";541
+"2024";"1037";"Rain";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";542
+"2024";"1039";"Römerswil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";543
+"2024";"1039";"Römerswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";544
+"2024";"1039";"Römerswil";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";545
+"2024";"1039";"Römerswil";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";546
+"2024";"1039";"Römerswil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";547
+"2024";"1040";"Rothenburg";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";548
+"2024";"1040";"Rothenburg";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";549
+"2024";"1040";"Rothenburg";"Parteifrei";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";550
+"2024";"1040";"Rothenburg";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";551
+"2024";"1040";"Rothenburg";"GLP";"GLP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";552
+"2024";"1040";"Rothenburg";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";553
+"2024";"1040";"Rothenburg";"SP";"SP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";554
+"2024";"1041";"Schongau";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";555
+"2024";"1041";"Schongau";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";556
+"2024";"1041";"Schongau";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";557
+"2024";"1041";"Schongau";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";558
+"2024";"1041";"Schongau";"Parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";559
+"2024";"1051";"Adligenswil";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";560
+"2024";"1051";"Adligenswil";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";561
+"2024";"1051";"Adligenswil";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";562
+"2024";"1051";"Adligenswil";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";563
+"2024";"1051";"Adligenswil";"SP";"SP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";564
+"2024";"1052";"Buchrain";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";565
+"2024";"1052";"Buchrain";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";566
+"2024";"1052";"Buchrain";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";567
+"2024";"1052";"Buchrain";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";568
+"2024";"1052";"Buchrain";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";569
+"2024";"1052";"Buchrain";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";570
+"2024";"1053";"Dierikon";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";571
+"2024";"1053";"Dierikon";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";572
+"2024";"1053";"Dierikon";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";573
+"2024";"1053";"Dierikon";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";574
+"2024";"1053";"Dierikon";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";575
+"2024";"1054";"Ebikon";"parteiunabhängig";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";576
+"2024";"1054";"Ebikon";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";577
+"2024";"1054";"Ebikon";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";578
+"2024";"1054";"Ebikon";"parteilos";"parteilos";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";579
+"2024";"1054";"Ebikon";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";580
+"2024";"1054";"Ebikon";"SP";"SP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";581
+"2024";"1054";"Ebikon";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";582
+"2024";"1054";"Ebikon";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";583
+"2024";"1055";"Gisikon";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";584
+"2024";"1055";"Gisikon";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";585
+"2024";"1055";"Gisikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";586
+"2024";"1055";"Gisikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";587
+"2024";"1055";"Gisikon";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";588
+"2024";"1056";"Greppen";"IG Grepp";"Andere";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";589
+"2024";"1056";"Greppen";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";590
+"2024";"1056";"Greppen";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";591
+"2024";"1056";"Greppen";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";592
+"2024";"1056";"Greppen";"IG Grepp";"Andere";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";593
+"2024";"1056";"Greppen";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";594
+"2024";"1056";"Greppen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";595
+"2024";"1058";"Horw";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";596
+"2024";"1058";"Horw";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";597
+"2024";"1058";"Horw";"L20";"Andere";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";598
+"2024";"1058";"Horw";"L20";"Andere";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";599
+"2024";"1058";"Horw";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";600
+"2024";"1058";"Horw";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";601
+"2024";"1059";"Kriens";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";602
+"2024";"1059";"Kriens";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";603
+"2024";"1059";"Kriens";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";604
+"2024";"1059";"Kriens";"Grüne";"Grüne";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";605
+"2024";"1059";"Kriens";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";606
+"2024";"1061";"Luzern";"Junge Mitte";"Mitte";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";607
+"2024";"1061";"Luzern";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";608
+"2024";"1061";"Luzern";"junge GLP";"GLP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";609
+"2024";"1061";"Luzern";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";610
+"2024";"1061";"Luzern";"Grüne";"Grüne";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";611
+"2024";"1061";"Luzern";"Parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";612
+"2024";"1061";"Luzern";"Junge Grüne";"Grüne";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";613
+"2024";"1061";"Luzern";"SP";"SP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";614
+"2024";"1061";"Luzern";"Jungfreisinnige";"FDP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";615
+"2024";"1061";"Luzern";"Juso";"SP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";616
+"2024";"1061";"Luzern";"GLP";"GLP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";617
+"2024";"1061";"Luzern";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";618
+"2024";"1061";"Luzern";"SP";"SP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";619
+"2024";"1062";"Malters";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";620
+"2024";"1062";"Malters";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";621
+"2024";"1062";"Malters";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";622
+"2024";"1062";"Malters";"IGM";"Andere";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";623
+"2024";"1062";"Malters";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";624
+"2024";"1062";"Malters";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";625
+"2024";"1063";"Meggen";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";626
+"2024";"1063";"Meggen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";627
+"2024";"1063";"Meggen";"-";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";628
+"2024";"1063";"Meggen";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";629
+"2024";"1063";"Meggen";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";630
+"2024";"1063";"Meggen";"Die Mitte";"Mitte";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";631
+"2024";"1063";"Meggen";"glp";"GLP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";632
+"2024";"1063";"Meggen";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";633
+"2024";"1063";"Meggen";"SP";"SP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";634
+"2024";"1064";"Meierskappel";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";635
+"2024";"1064";"Meierskappel";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";636
+"2024";"1064";"Meierskappel";"GLP";"GLP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";637
+"2024";"1064";"Meierskappel";"parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";638
+"2024";"1064";"Meierskappel";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";639
+"2024";"1064";"Meierskappel";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";640
+"2024";"1065";"Root";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";641
+"2024";"1065";"Root";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";642
+"2024";"1065";"Root";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";643
+"2024";"1065";"Root";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";644
+"2024";"1065";"Root";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";645
+"2024";"1066";"Schwarzenberg";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";646
+"2024";"1066";"Schwarzenberg";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";647
+"2024";"1066";"Schwarzenberg";"FDP.Die Liberalen";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";648
+"2024";"1066";"Schwarzenberg";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";649
+"2024";"1066";"Schwarzenberg";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";650
+"2024";"1067";"Udligenswil";"ohne";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";651
+"2024";"1067";"Udligenswil";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";652
+"2024";"1067";"Udligenswil";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";653
+"2024";"1067";"Udligenswil";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";654
+"2024";"1067";"Udligenswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";655
+"2024";"1068";"Vitznau";"Parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";656
+"2024";"1068";"Vitznau";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";657
+"2024";"1068";"Vitznau";"Parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";658
+"2024";"1068";"Vitznau";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";659
+"2024";"1068";"Vitznau";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";660
+"2024";"1069";"Weggis";"Roger Dähler - unser Gemeindepräsident";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";661
+"2024";"1069";"Weggis";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";662
+"2024";"1069";"Weggis";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";663
+"2024";"1069";"Weggis";"FDP.Die Liberalen";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";664
+"2024";"1069";"Weggis";"Parteilos und Fraktionslos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";665
+"2024";"1069";"Weggis";"Die Mitte";"Mitte";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";666
+"2024";"1069";"Weggis";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";667
+"2024";"1081";"Beromünster";"Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";668
+"2024";"1081";"Beromünster";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";669
+"2024";"1081";"Beromünster";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";670
+"2024";"1081";"Beromünster";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";671
+"2024";"1081";"Beromünster";"SP";"SP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";672
+"2024";"1081";"Beromünster";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";673
+"2024";"1082";"Büron";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";674
+"2024";"1082";"Büron";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";675
+"2024";"1082";"Büron";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";676
+"2024";"1082";"Büron";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";677
+"2024";"1082";"Büron";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";678
+"2024";"1083";"Buttisholz";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";679
+"2024";"1083";"Buttisholz";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";680
+"2024";"1083";"Buttisholz";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";681
+"2024";"1083";"Buttisholz";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";682
+"2024";"1083";"Buttisholz";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";683
+"2024";"1084";"Eich";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";684
+"2024";"1084";"Eich";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";685
+"2024";"1084";"Eich";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";686
+"2024";"1084";"Eich";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";687
+"2024";"1084";"Eich";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";688
+"2024";"1085";"Geuensee";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";689
+"2024";"1085";"Geuensee";"FDP";"FDP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";690
+"2024";"1085";"Geuensee";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";691
+"2024";"1085";"Geuensee";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";692
+"2024";"1085";"Geuensee";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";693
+"2024";"1085";"Geuensee";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";694
+"2024";"1085";"Geuensee";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";695
+"2024";"1086";"Grosswangen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";696
+"2024";"1086";"Grosswangen";"Die Mitte";"Mitte";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";697
+"2024";"1086";"Grosswangen";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";698
+"2024";"1086";"Grosswangen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";699
+"2024";"1086";"Grosswangen";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";700
+"2024";"1086";"Grosswangen";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";701
+"2024";"1086";"Grosswangen";"Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";702
+"2024";"1088";"Hildisrieden";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";703
+"2024";"1088";"Hildisrieden";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";704
+"2024";"1088";"Hildisrieden";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";705
+"2024";"1088";"Hildisrieden";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";706
+"2024";"1088";"Hildisrieden";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";707
+"2024";"1089";"Knutwil";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";708
+"2024";"1089";"Knutwil";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";709
+"2024";"1089";"Knutwil";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";710
+"2024";"1089";"Knutwil";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";711
+"2024";"1089";"Knutwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";712
+"2024";"1091";"Mauensee";"GLP";"GLP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";713
+"2024";"1091";"Mauensee";"Parteilos";"parteilos";"f";"bisher";"nein";"Nach 1. und 2. Wahlgang";714
+"2024";"1091";"Mauensee";"Parteilos";"parteilos";"f";"bisher";"nein";"Nach 1. und 2. Wahlgang";715
+"2024";"1091";"Mauensee";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";716
+"2024";"1091";"Mauensee";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";717
+"2024";"1091";"Mauensee";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";718
+"2024";"1091";"Mauensee";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";719
+"2024";"1093";"Neuenkirch";;"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";720
+"2024";"1093";"Neuenkirch";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";721
+"2024";"1093";"Neuenkirch";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";722
+"2024";"1093";"Neuenkirch";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";723
+"2024";"1093";"Neuenkirch";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";724
+"2024";"1094";"Nottwil";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";725
+"2024";"1094";"Nottwil";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";726
+"2024";"1094";"Nottwil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";727
+"2024";"1094";"Nottwil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";728
+"2024";"1094";"Nottwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";729
+"2024";"1095";"Oberkirch";"FDP.Die Liberalen";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";730
+"2024";"1095";"Oberkirch";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";731
+"2024";"1095";"Oberkirch";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";732
+"2024";"1095";"Oberkirch";"FDP.Die Liberalen";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";733
+"2024";"1095";"Oberkirch";"Nachhaltiges Oberkirch";"Andere";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";734
+"2024";"1097";"Rickenbach";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";735
+"2024";"1097";"Rickenbach";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";736
+"2024";"1097";"Rickenbach";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";737
+"2024";"1097";"Rickenbach";"parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";738
+"2024";"1097";"Rickenbach";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";739
+"2024";"1098";"Ruswil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";740
+"2024";"1098";"Ruswil";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";741
+"2024";"1098";"Ruswil";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";742
+"2024";"1098";"Ruswil";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";743
+"2024";"1098";"Ruswil";"SP";"SP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";744
+"2024";"1098";"Ruswil";"FDP";"FDP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";745
+"2024";"1099";"Schenkon";"die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";746
+"2024";"1099";"Schenkon";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";747
+"2024";"1099";"Schenkon";"SVP";"SVP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";748
+"2024";"1099";"Schenkon";"die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";749
+"2024";"1099";"Schenkon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";750
+"2024";"1100";"Schlierbach";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";751
+"2024";"1100";"Schlierbach";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";752
+"2024";"1100";"Schlierbach";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";753
+"2024";"1102";"Sempach";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";754
+"2024";"1102";"Sempach";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";755
+"2024";"1102";"Sempach";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";756
+"2024";"1102";"Sempach";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";757
+"2024";"1102";"Sempach";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";758
+"2024";"1103";"Sursee";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";759
+"2024";"1103";"Sursee";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";760
+"2024";"1103";"Sursee";"Die Mitte";"Mitte";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";761
+"2024";"1103";"Sursee";"Grüne";"Grüne";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";762
+"2024";"1103";"Sursee";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";763
+"2024";"1103";"Sursee";"SP";"SP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";764
+"2024";"1104";"Triengen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";765
+"2024";"1104";"Triengen";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";766
+"2024";"1104";"Triengen";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";767
+"2024";"1104";"Triengen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";768
+"2024";"1104";"Triengen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";769
+"2024";"1107";"Wolhusen";"SP";"SP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";770
+"2024";"1107";"Wolhusen";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";771
+"2024";"1107";"Wolhusen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";772
+"2024";"1107";"Wolhusen";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";773
+"2024";"1107";"Wolhusen";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";774
+"2024";"1107";"Wolhusen";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";775
+"2024";"1121";"Alberswil";"die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";776
+"2024";"1121";"Alberswil";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";777
+"2024";"1121";"Alberswil";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";778
+"2024";"1122";"Altbüron";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";779
+"2024";"1122";"Altbüron";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";780
+"2024";"1122";"Altbüron";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";781
+"2024";"1122";"Altbüron";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";782
+"2024";"1122";"Altbüron";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";783
+"2024";"1122";"Altbüron";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";784
+"2024";"1123";"Altishofen";"die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";785
+"2024";"1123";"Altishofen";"die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";786
+"2024";"1123";"Altishofen";"die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";787
+"2024";"1123";"Altishofen";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";788
+"2024";"1123";"Altishofen";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";789
+"2024";"1125";"Dagmersellen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";790
+"2024";"1125";"Dagmersellen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";791
+"2024";"1125";"Dagmersellen";"FDP.Die Liberalen";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";792
+"2024";"1125";"Dagmersellen";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";793
+"2024";"1125";"Dagmersellen";"FDP.Die Liberalen";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";794
+"2024";"1127";"Egolzwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";795
+"2024";"1127";"Egolzwil";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";796
+"2024";"1127";"Egolzwil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";797
+"2024";"1127";"Egolzwil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";798
+"2024";"1127";"Egolzwil";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";799
+"2024";"1128";"Ettiswil";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";800
+"2024";"1128";"Ettiswil";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";801
+"2024";"1128";"Ettiswil";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";802
+"2024";"1128";"Ettiswil";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";803
+"2024";"1128";"Ettiswil";"die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";804
+"2024";"1129";"Fischbach";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";805
+"2024";"1129";"Fischbach";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";806
+"2024";"1129";"Fischbach";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";807
+"2024";"1131";"Grossdietwil";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";808
+"2024";"1131";"Grossdietwil";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";809
+"2024";"1131";"Grossdietwil";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";810
+"2024";"1131";"Grossdietwil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";811
+"2024";"1131";"Grossdietwil";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";812
+"2024";"1132";"Hergiswil";"SVP";"SVP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";813
+"2024";"1132";"Hergiswil";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";814
+"2024";"1132";"Hergiswil";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";815
+"2024";"1132";"Hergiswil";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";816
+"2024";"1132";"Hergiswil";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";817
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";818
+"2024";"1135";"Luthern";;"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";819
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";820
+"2024";"1135";"Luthern";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";821
+"2024";"1135";"Luthern";;"parteilos";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";822
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";823
+"2024";"1135";"Luthern";"Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";824
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";825
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";826
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";827
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";828
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";829
+"2024";"1135";"Luthern";;"parteilos";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";830
+"2024";"1135";"Luthern";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";831
+"2024";"1135";"Luthern";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";832
+"2024";"1135";"Luthern";;"parteilos";"m";"bisher";"nein";"Nach 1. und 2. Wahlgang";833
+"2024";"1136";"Menznau";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";834
+"2024";"1136";"Menznau";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";835
+"2024";"1136";"Menznau";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";836
+"2024";"1136";"Menznau";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";837
+"2024";"1136";"Menznau";"parteilos";"parteilos";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";838
+"2024";"1136";"Menznau";"FDP.Die Liberalen";"FDP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";839
+"2024";"1136";"Menznau";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";840
+"2024";"1137";"Nebikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";841
+"2024";"1137";"Nebikon";"FDP";"FDP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";842
+"2024";"1137";"Nebikon";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";843
+"2024";"1137";"Nebikon";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";844
+"2024";"1137";"Nebikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";845
+"2024";"1137";"Nebikon";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";846
+"2024";"1139";"Pfaffnau";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";847
+"2024";"1139";"Pfaffnau";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";848
+"2024";"1139";"Pfaffnau";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";849
+"2024";"1139";"Pfaffnau";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";850
+"2024";"1139";"Pfaffnau";"Parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";851
+"2024";"1140";"Reiden";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";852
+"2024";"1140";"Reiden";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";853
+"2024";"1140";"Reiden";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";854
+"2024";"1140";"Reiden";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";855
+"2024";"1140";"Reiden";"FDP.Die Liberalen";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";856
+"2024";"1142";"Roggliswil";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";857
+"2024";"1142";"Roggliswil";"parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";858
+"2024";"1142";"Roggliswil";"die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";859
+"2024";"1142";"Roggliswil";"parteilos";"parteilos";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";860
+"2024";"1142";"Roggliswil";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";861
+"2024";"1143";"Schötz";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";862
+"2024";"1143";"Schötz";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";863
+"2024";"1143";"Schötz";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";864
+"2024";"1143";"Schötz";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";865
+"2024";"1143";"Schötz";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";866
+"2024";"1145";"Ufhusen";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";867
+"2024";"1145";"Ufhusen";"Die Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";868
+"2024";"1145";"Ufhusen";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";869
+"2024";"1145";"Ufhusen";"parteilos";"parteilos";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";870
+"2024";"1145";"Ufhusen";;"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";871
+"2024";"1145";"Ufhusen";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";872
+"2024";"1145";"Ufhusen";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";873
+"2024";"1146";"Wauwil";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";874
+"2024";"1146";"Wauwil";"FDP";"FDP";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";875
+"2024";"1146";"Wauwil";"SVP";"SVP";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";876
+"2024";"1146";"Wauwil";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";877
+"2024";"1146";"Wauwil";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";878
+"2024";"1146";"Wauwil";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";879
+"2024";"1146";"Wauwil";"parteilos";"parteilos";"m";"neu";"nein";"Nach 1. und 2. Wahlgang";880
+"2024";"1147";"Wikon";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";881
+"2024";"1147";"Wikon";"Mitte";"Mitte";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";882
+"2024";"1147";"Wikon";"Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";883
+"2024";"1147";"Wikon";"SVP";"SVP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";884
+"2024";"1147";"Wikon";"parteilos";"parteilos";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";885
+"2024";"1150";"Zell";"Die Mitte";"Mitte";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";886
+"2024";"1150";"Zell";"FDP";"FDP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";887
+"2024";"1150";"Zell";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";888
+"2024";"1150";"Zell";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";889
+"2024";"1150";"Zell";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";890
+"2024";"1151";"Willisau";"Die Mitte";"Mitte";"m";"neu";"ja";"Nach 1. und 2. Wahlgang";891
+"2024";"1151";"Willisau";"Die Mitte";"Mitte";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";892
+"2024";"1151";"Willisau";"FDP";"FDP";"f";"bisher";"ja";"Nach 1. und 2. Wahlgang";893
+"2024";"1151";"Willisau";"FDP";"FDP";"m";"bisher";"ja";"Nach 1. und 2. Wahlgang";894
+"2024";"1151";"Willisau";"SVP";"SVP";"f";"neu";"nein";"Nach 1. und 2. Wahlgang";895
+"2024";"1151";"Willisau";"SP";"SP";"f";"neu";"ja";"Nach 1. und 2. Wahlgang";896

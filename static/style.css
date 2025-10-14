@@ -988,3 +988,88 @@ select:focus {
         max-width: 950px; /* Wider container on larger screens */
     }
 }
+
+/* Agency Selection Styles */
+#agency-selection {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#agency-selection h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+#agency-selection p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.agency-list {
+    margin-bottom: 20px;
+}
+
+.agency-option {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background-color: white;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.agency-option:hover {
+    border-color: #007bff;
+    background-color: #f8f9ff;
+}
+
+.agency-option input[type="radio"] {
+    margin-right: 12px;
+    transform: scale(1.2);
+}
+
+.agency-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.agency-option input[type="radio"]:checked + .agency-name {
+    color: #007bff;
+    font-weight: 600;
+}
+
+#agency-form .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 10px;
+}
+
+#agency-form .btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+#agency-form .btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+#agency-form .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+#agency-form .btn-secondary:hover {
+    background-color: #545b62;
+}

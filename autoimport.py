@@ -582,6 +582,7 @@ def upload_file():
             token = request.form.get('token')
             if not token:
                 return jsonify({'error': 'API token is required'}), 400
+            
             # Check if an agency was selected or needs to be selected
             selected_agency = request.form.get('selected_agency')
             if not selected_agency:
@@ -592,11 +593,13 @@ def upload_file():
                     return jsonify({'error': 'Could not fetch any agencies with the provided token. Please verify your token is correct.'})
                 
                 if len(agencies) > 1:
-                    # If multiple agencies, show selection screen
-                    return render_template('select_agency.html', 
-                                           agencies=agencies, 
-                                           token=token,
-                                           themes=VALID_THEMES)
+                    # Return JSON with agency selection data instead of HTML template
+                    return jsonify({
+                        'needs_agency_selection': True,
+                        'agencies': agencies,
+                        'token': token,
+                        'themes': VALID_THEMES
+                    })
                 else:
                     # If only one agency, use it automatically
                     selected_agency = agencies[0]['identifier']
@@ -683,8 +686,11 @@ def upload_file():
             # Store only the session ID in the actual session cookie
             session['session_data_id'] = session_id
             
-            # Redirect to results page
-            return redirect(url_for('results'))
+            # Return JSON success response instead of redirect
+            return jsonify({
+                'success': True,
+                'redirect_url': url_for('results')
+            })
             
         except Exception as e:
             # Catch any unhandled errors and return JSON

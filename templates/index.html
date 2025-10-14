@@ -216,10 +216,25 @@
                 // Check content type before parsing
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
-                    // For JSON responses
                     const data = await response.json();
+                    
+                    // Handle agency selection
+                    if (data.needs_agency_selection) {
+                        // Show agency selection UI
+                        showAgencySelection(data.agencies, data.token, data.themes);
+                        return;
+                    }
+                    
+                    // Handle success redirect
+                    if (data.success && data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                        return;
+                    }
+                    
+                    // Handle errors
                     if (data.error) {
                         document.getElementById('error-container').innerHTML = `<p class="error">${data.error}</p>`;
+                        return;
                     }
                 } else if (contentType && contentType.includes('text/html')) {
                     // If we get HTML back, it's likely an error page
@@ -242,6 +257,92 @@
                 document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
             }
         });
+        
+        function showAgencySelection(agencies, token, themes) {
+            // Hide the upload form
+            document.getElementById('upload-form').style.display = 'none';
+            
+            // Create agency selection UI
+            const agencyContainer = document.createElement('div');
+            agencyContainer.id = 'agency-selection';
+            agencyContainer.innerHTML = `
+                <h2>Select Agency</h2>
+                <p>Please select the agency you want to use for this concept import:</p>
+                <form id="agency-form">
+                    <input type="hidden" name="token" value="${token}">
+                    <input type="hidden" name="file" value="">
+                    <input type="hidden" name="responsible_person" value="">
+                    <input type="hidden" name="responsible_deputy" value="">
+                    <input type="hidden" name="theme" value="">
+                    
+                    <div class="agency-list">
+                        ${agencies.map(agency => `
+                            <label class="agency-option">
+                                <input type="radio" name="selected_agency" value="${agency.identifier}" required>
+                                <span class="agency-name">${agency.name.de}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Continue with Selected Agency</button>
+                    <button type="button" onclick="cancelAgencySelection()" class="btn btn-secondary">Cancel</button>
+                </form>
+            `;
+            
+            // Copy values from original form
+            const originalForm = document.getElementById('upload-form');
+            agencyContainer.querySelector('input[name="file"]').value = originalForm.querySelector('input[name="file"]').value;
+            agencyContainer.querySelector('input[name="responsible_person"]').value = originalForm.querySelector('input[name="responsible_person"]').value;
+            agencyContainer.querySelector('input[name="responsible_deputy"]').value = originalForm.querySelector('input[name="responsible_deputy"]').value;
+            agencyContainer.querySelector('input[name="theme"]').value = originalForm.querySelector('select[name="theme"]').value;
+            
+            // Insert after the upload form
+            originalForm.parentNode.insertBefore(agencyContainer, originalForm.nextSibling);
+            
+            // Handle agency form submission
+            document.getElementById('agency-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const agencyFormData = new FormData(e.target);
+                
+                try {
+                    const response = await fetch('/', {
+                        method: 'POST',
+                        body: agencyFormData
+                    });
+                    
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const data = await response.json();
+                        
+                        if (data.success && data.redirect_url) {
+                            window.location.href = data.redirect_url;
+                            return;
+                        }
+                        
+                        if (data.error) {
+                            document.getElementById('error-container').innerHTML = `<p class="error">${data.error}</p>`;
+                            return;
+                        }
+                    } else {
+                        document.getElementById('error-container').innerHTML = `<p class="error">Unexpected response format. Please try again.</p>`;
+                    }
+                } catch (error) {
+                    console.error('Agency selection error:', error);
+                    document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                }
+            });
+        }
+        
+        function cancelAgencySelection() {
+            // Remove agency selection UI
+            const agencyContainer = document.getElementById('agency-selection');
+            if (agencyContainer) {
+                agencyContainer.remove();
+            }
+            
+            // Show the upload form again
+            document.getElementById('upload-form').style.display = 'block';
+        }
     </script>
 </body>
 </html>
