@@ -213,12 +213,32 @@
                     return;
                 }
                 
-                // For JSON responses
-                const data = await response.json();
-                if (data.error) {
-                    document.getElementById('error-container').innerHTML = `<p class="error">${data.error}</p>`;
+                // Check content type before parsing
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    // For JSON responses
+                    const data = await response.json();
+                    if (data.error) {
+                        document.getElementById('error-container').innerHTML = `<p class="error">${data.error}</p>`;
+                    }
+                } else if (contentType && contentType.includes('text/html')) {
+                    // If we get HTML back, it's likely an error page
+                    const htmlText = await response.text();
+                    // Try to extract error message from HTML or show generic error
+                    if (!response.ok) {
+                        document.getElementById('error-container').innerHTML = `<p class="error">Server error occurred. Please check the file format and try again.</p>`;
+                    } else {
+                        // This shouldn't happen, but handle it
+                        document.getElementById('error-container').innerHTML = `<p class="error">Unexpected response format. Please try again.</p>`;
+                    }
+                } else {
+                    // Unknown content type
+                    const text = await response.text();
+                    console.error('Unexpected response:', text);
+                    document.getElementById('error-container').innerHTML = `<p class="error">Unexpected server response. Please try again.</p>`;
                 }
             } catch (error) {
+                console.error('Upload error:', error);
                 document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
             }
         });

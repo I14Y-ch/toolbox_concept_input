@@ -577,114 +577,120 @@ def upload_file():
         return render_template('index.html', themes=VALID_THEMES)
     
     if request.method == 'POST':
-        # Get the token from the form
-        token = request.form.get('token')
-        if not token:
-            return jsonify({'error': 'API token is required'})
-        
-        # Check if an agency was selected or needs to be selected
-        selected_agency = request.form.get('selected_agency')
-        if not selected_agency:
-            # Fetch agencies for this user
-            agencies = fetch_user_agencies(token)
-            
-            if not agencies:
-                return jsonify({'error': 'Could not fetch any agencies with the provided token. Please verify your token is correct.'})
-            
-            if len(agencies) > 1:
-                # If multiple agencies, show selection screen
-                return render_template('select_agency.html', 
-                                       agencies=agencies, 
-                                       token=token,
-                                       themes=VALID_THEMES)
-            else:
-                # If only one agency, use it automatically
-                selected_agency = agencies[0]['identifier']
-        
-        # Now we have the token and selected agency
-        if 'file' not in request.files:
-            return jsonify({'error': 'No file part'})
-        
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({'error': 'No selected file'})
-        
         try:
-            if file and file.filename.lower().endswith(('.xlsx', '.xls')):
-                df = pd.read_excel(file)
-            elif file and file.filename.lower().endswith('.csv'):
-                df = read_csv_with_encoding_fallback(file, sep=None, engine='python')
-            else:
-                return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'})
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
-        
-        columns_info = []
-        form_data = {
-            'responsible_person': request.form.get('responsible_person'),
-            'responsible_deputy': request.form.get('responsible_deputy'),
-            'publisher_id': selected_agency,  # We use the selected agency as publisher ID
-            'theme': request.form.get('theme')
-        }
-        
-        # Validate new required fields
-        if not all(form_data.values()):
-            return jsonify({'error': 'All concept information fields are required'})
-        
-        # Validate theme
-        if form_data['theme'] not in VALID_THEMES:
-            return jsonify({'error': 'Invalid theme code'})
-        
-        # Process columns but avoid storing large datasets in session
-        for column in df.columns:
-            analysis = analyze_column_type(df[column])
+            # Get the token from the form
+            token = request.form.get('token')
+            if not token:
+                return jsonify({'error': 'API token is required'}), 400
+            # Check if an agency was selected or needs to be selected
+            selected_agency = request.form.get('selected_agency')
+            if not selected_agency:
+                # Fetch agencies for this user
+                agencies = fetch_user_agencies(token)
+                
+                if not agencies:
+                    return jsonify({'error': 'Could not fetch any agencies with the provided token. Please verify your token is correct.'})
+                
+                if len(agencies) > 1:
+                    # If multiple agencies, show selection screen
+                    return render_template('select_agency.html', 
+                                           agencies=agencies, 
+                                           token=token,
+                                           themes=VALID_THEMES)
+                else:
+                    # If only one agency, use it automatically
+                    selected_agency = agencies[0]['identifier']
             
-            # Create a simplified column info that takes less space
-            column_info = {
-                'name': column,
-                'type': analysis['type'],
-                'is_codelist': analysis['is_codelist']
+            # Now we have the token and selected agency
+            if 'file' not in request.files:
+                return jsonify({'error': 'No file part'})
+            
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'error': 'No selected file'})
+            
+            try:
+                if file and file.filename.lower().endswith(('.xlsx', '.xls')):
+                    df = pd.read_excel(file)
+                elif file and file.filename.lower().endswith('.csv'):
+                    df = read_csv_with_encoding_fallback(file, sep=None, engine='python')
+                else:
+                    return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'})
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
+            
+            columns_info = []
+            form_data = {
+                'responsible_person': request.form.get('responsible_person'),
+                'responsible_deputy': request.form.get('responsible_deputy'),
+                'publisher_id': selected_agency,  # We use the selected agency as publisher ID
+                'theme': request.form.get('theme')
             }
             
-            # Only store essential data for codelists
-            if analysis['is_codelist']:
-                # Limit the amount of data we store in the session
-                column_info.update({
-                    'unique_values': analysis['unique_values'][:20],  # Limit to 20 values
-                    'value_counts': {str(k): v for k, v in list(analysis['value_counts'].items())[:20]},
-                    'code_type': analysis['code_type'],
-                    'min_length': analysis['min_length'],
-                    'max_length': analysis['max_length'],
-                    'unique_count': analysis['unique_count']
-                })
+            # Validate new required fields
+            if not all(form_data.values()):
+                return jsonify({'error': 'All concept information fields are required'})
             
-            # Add pattern and format if they exist
-            if 'pattern' in analysis:
-                column_info['pattern'] = analysis['pattern']
+            # Validate theme
+            if form_data['theme'] not in VALID_THEMES:
+                return jsonify({'error': 'Invalid theme code'})
             
-            if 'format' in analysis:
-                column_info['format'] = analysis['format']
+            # Process columns but avoid storing large datasets in session
+            for column in df.columns:
+                analysis = analyze_column_type(df[column])
+                
+                # Create a simplified column info that takes less space
+                column_info = {
+                    'name': column,
+                    'type': analysis['type'],
+                    'is_codelist': analysis['is_codelist']
+                }
+                
+                # Only store essential data for codelists
+                if analysis['is_codelist']:
+                    # Limit the amount of data we store in the session
+                    column_info.update({
+                        'unique_values': analysis['unique_values'][:20],  # Limit to 20 values
+                        'value_counts': {str(k): v for k, v in list(analysis['value_counts'].items())[:20]},
+                        'code_type': analysis['code_type'],
+                        'min_length': analysis['min_length'],
+                        'max_length': analysis['max_length'],
+                        'unique_count': analysis['unique_count']
+                    })
+                
+                # Add pattern and format if they exist
+                if 'pattern' in analysis:
+                    column_info['pattern'] = analysis['pattern']
+                
+                if 'format' in analysis:
+                    column_info['format'] = analysis['format']
+                
+                columns_info.append(column_info)
             
-            columns_info.append(column_info)
-        
-        # Store only minimal data in the session
-        session_data = {
-            'columns': columns_info,
-            'form_data': form_data,
-            'token': token,
-            # We no longer need dataset_id or dataset_metadata
-        }
-        
-        # Save the full data to a file
-        session_id = save_session_data(session_data)
-        
-        # Store only the session ID in the actual session cookie
-        session['session_data_id'] = session_id
-        
-        # Redirect to results page
-        return redirect(url_for('results'))
+            # Store only minimal data in the session
+            session_data = {
+                'columns': columns_info,
+                'form_data': form_data,
+                'token': token,
+                # We no longer need dataset_id or dataset_metadata
+            }
+            
+            # Save the full data to a file
+            session_id = save_session_data(session_data)
+            
+            # Store only the session ID in the actual session cookie
+            session['session_data_id'] = session_id
+            
+            # Redirect to results page
+            return redirect(url_for('results'))
+            
+        except Exception as e:
+            # Catch any unhandled errors and return JSON
+            import traceback
+            traceback.print_exc()
+            return jsonify({'error': f'An error occurred while processing the file: {str(e)}'}), 500
     
     return render_template('index.html', themes=VALID_THEMES)
 
