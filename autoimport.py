@@ -23,6 +23,35 @@ import openai
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_LENGTH
 app.secret_key = config.FLASK_SECRET_KEY  # Use config value from environment
+
+# Add error handlers to return JSON instead of HTML for API requests
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    """Handle file too large error"""
+    return jsonify({'error': 'File too large. Maximum file size is 16MB.'}), 413
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    """Handle internal server errors"""
+    import traceback
+    traceback.print_exc()
+    # Check if this is an API request (JSON expected)
+    if request.path.startswith('/api/') or request.is_json or request.accept_mimetypes.accept_json:
+        return jsonify({'error': 'Internal server error. Please try again or contact support.'}), 500
+    # Otherwise return HTML error page
+    return "Internal Server Error", 500
+
+@app.errorhandler(Exception)
+def handle_exception(error):
+    """Handle any unhandled exceptions"""
+    import traceback
+    traceback.print_exc()
+    # Check if this is an API request or file upload
+    if request.path.startswith('/api/') or request.is_json or request.accept_mimetypes.accept_json or request.path == '/':
+        return jsonify({'error': f'An error occurred: {str(error)}'}), 500
+    # Otherwise re-raise to let Flask handle it
+    raise error
+
 # Create a directory to store session data files
 SESSION_DATA_DIR = os.path.join(tempfile.gettempdir(), 'i14y-concept-import-sessions')
 if not os.path.exists(SESSION_DATA_DIR):
@@ -483,7 +512,7 @@ def fetch_user_agencies(token):
 
 def read_csv_with_encoding_fallback(file, **kwargs):
     """
-    Try to read CSV with different encodings
+    Try to read CSV with different encodings and delimiters
     """
     from io import StringIO, BytesIO
     
@@ -502,31 +531,44 @@ def read_csv_with_encoding_fallback(file, **kwargs):
         content = content.encode('utf-8')
     
     # Try to detect encoding with chardet if available
+    detected_encoding = None
     try:
         import chardet
         detected = chardet.detect(content)
         if detected and detected.get('encoding'):
-            encoding = detected['encoding']
-            try:
-                text_content = content.decode(encoding)
-                return pd.read_csv(StringIO(text_content), **kwargs)
-            except (UnicodeDecodeError, Exception):
-                pass
+            detected_encoding = detected['encoding']
     except ImportError:
         pass
     
-    # Fallback to trying common encodings
+    # Build list of encodings to try, prioritizing detected encoding
     encodings = ['utf-8', 'cp1252', 'latin1', 'iso-8859-1', 'utf-16', 'utf-32']
+    if detected_encoding and detected_encoding not in encodings:
+        encodings.insert(0, detected_encoding)
+    elif detected_encoding:
+        # Move detected encoding to front
+        encodings.remove(detected_encoding)
+        encodings.insert(0, detected_encoding)
     
+    # Try each encoding
+    last_error = None
     for encoding in encodings:
         try:
             text_content = content.decode(encoding)
+            # Try to read with pandas
             return pd.read_csv(StringIO(text_content), **kwargs)
-        except (UnicodeDecodeError, LookupError):
+        except (UnicodeDecodeError, LookupError) as e:
+            last_error = e
+            continue
+        except Exception as e:
+            # Pandas error (e.g., parsing error)
+            last_error = e
             continue
     
-    # If all encodings fail, raise an error
-    raise ValueError("Could not decode the CSV file with any supported encoding")
+    # If all encodings fail, raise an error with details
+    if last_error:
+        raise ValueError(f"Could not decode or parse the CSV file. Last error: {str(last_error)}")
+    else:
+        raise ValueError("Could not decode the CSV file with any supported encoding")
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -567,12 +609,17 @@ def upload_file():
         if file.filename == '':
             return jsonify({'error': 'No selected file'})
         
-        if file and file.filename.lower().endswith(('.xlsx', '.xls')):
-            df = pd.read_excel(file)
-        elif file and file.filename.lower().endswith('.csv'):
-            df = read_csv_with_encoding_fallback(file, sep=None, engine='python')
-        else:
-            return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'})
+        try:
+            if file and file.filename.lower().endswith(('.xlsx', '.xls')):
+                df = pd.read_excel(file)
+            elif file and file.filename.lower().endswith('.csv'):
+                df = read_csv_with_encoding_fallback(file, sep=None, engine='python')
+            else:
+                return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'})
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
         
         columns_info = []
         form_data = {
