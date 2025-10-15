@@ -1,19 +1,28 @@
 # I14Y AutoImport
 
-A tool to facilitate the description of existing datasets by guiding users through importing column metadata to I14Y.
+A web tool to help describe and publish metadata for existing datasets by guiding users through importing column information to the I14Y platform. Supports both Excel (.xlsx) and CSV (.csv) files.
 
 ## Overview
 
-I14Y AutoImport analyzes Excel files, automatically detects column types, patterns, and codelists, then guides users through publishing these concepts to the I14Y platform. The tool streamlines metadata management for data catalog entries.
+I14Y AutoImport analyzes Excel and CSV files, automatically detects column types, patterns, and codelists, then guides users through publishing these concepts to the I14Y platform. The tool streamlines metadata management for data catalog entries.
+
+**AI-Powered Description Generation**:  
+Optionally, users can leverage AI to automatically generate dataset descriptions. This feature uses OpenAI's language models to create summaries based on the dataset's content and structure.
+
+**Keyword Extraction**:  
+The tool automatically extracts keywords from the dataset by analyzing column names, detected patterns, and frequently occurring values. These keywords help improve discoverability and metadata quality.
 
 ## Features
 
-- **Automatic Data Analysis**: Detects column types, patterns, and codelists from Excel files
+- **Excel & CSV Support**: Upload and process both Excel (.xlsx) and CSV (.csv) files
+- **Automatic Data Analysis**: Detects column types, patterns, and codelists from uploaded files
 - **Smart Type Detection**: Identifies dates, numbers, text fields, and codelists with appropriate patterns
 - **Multilingual Support**: Facilitates translation into German, French, Italian, and English
 - **Codelist Generation**: Automatically generates standardized codes for codelist values
 - **I14Y Integration**: Direct publishing to I14Y using API tokens
 - **Step-by-Step Wizard**: User-friendly interface guides through the entire process
+- **AI Description Generation**: Uses OpenAI to generate dataset descriptions on demand
+- **Automatic Keyword Extraction**: Extracts relevant keywords from dataset structure and content
 
 ## Deployment
 
@@ -64,13 +73,18 @@ python run.py
 1. **Obtain I14Y API Token** from the I14Y platform
 2. **Enter API Token** in the first screen
 3. **Select Your Organization** if you're associated with multiple agencies
-4. **Upload Excel File** (*.xlsx format)
+4. **Upload Data File**: Choose either Excel (.xlsx) or CSV (.csv) format
 5. **Review Column Analysis** results
 6. **Enrich Concepts** for each column:
    - Edit generated descriptions
    - Translate to required languages
    - Generate and refine codes for codelists
 7. **Publish** the concepts to I14Y
+
+## Supported File Formats
+
+- **Excel (.xlsx)**: All sheets and columns are analyzed
+- **CSV (.csv)**: All columns are analyzed; ensure proper delimiter and encoding
 
 ## Column Type Detection
 
