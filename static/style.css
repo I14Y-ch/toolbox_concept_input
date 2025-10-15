@@ -989,8 +989,8 @@ select:focus {
     }
 }
 
-/* Agency Selection Styles */
-#agency-selection {
+/* Agency Selection Content Styles */
+.agency-selection-content {
     margin-top: 30px;
     padding: 25px;
     background-color: #f8f9fa;
@@ -999,15 +999,10 @@ select:focus {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-#agency-selection h2 {
-    color: #333;
-    margin-bottom: 10px;
-    font-size: 24px;
-}
-
-#agency-selection p {
+.agency-selection-content p {
     color: #666;
     margin-bottom: 20px;
+    font-size: 16px;
 }
 
 .agency-list {

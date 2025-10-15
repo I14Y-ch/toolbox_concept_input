@@ -754,7 +754,7 @@ def view_concept(index):
                           form_data=session_data['form_data'],
                           token=session_data.get('token', ''))  # Pass token to template
 
-def generate_concept_json(column, form_data, description, params=None, translations=None, dataset_metadata=None, keywords=None):
+def generate_concept_json(column, form_data, description, params=None, translations=None, dataset_metadata=None, keywords=None, custom_identifier=None):
     """Generate a concept JSON based on column information and user inputs"""
     # Default params if none provided
     if not params:
@@ -807,8 +807,11 @@ def generate_concept_json(column, form_data, description, params=None, translati
     elif column['type'] == "Date":
         concept_type = "Date"  # Changed from "DateTime" to "Date"
     
-    # Create identifier with proper format
-    identifier = column['name'].replace(' ', '_').upper()
+    # Create identifier with proper format - use custom identifier if provided
+    if custom_identifier and custom_identifier.strip():
+        identifier = custom_identifier.strip().upper()
+    else:
+        identifier = column['name'].replace(' ', '_').upper()
     
     # Build data object with exact field ordering
     data = {"conceptType": concept_type}
@@ -1360,6 +1363,9 @@ def submit_concept():
         # Get keywords from the request
         keywords = data.get('keywords', '')
         
+        # Get custom identifier from the request
+        custom_identifier = data.get('identifier', '')
+        
         # Generate the concept JSON
         concept = generate_concept_json(
             column, 
@@ -1368,7 +1374,8 @@ def submit_concept():
             params, 
             translations, 
             session_data.get('dataset_metadata'),
-            keywords
+            keywords,
+            custom_identifier
         )
         
         # Validate the generated concept
