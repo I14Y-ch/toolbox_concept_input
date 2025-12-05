@@ -426,7 +426,7 @@ def fmt_to_readable(fmt):
 def fetch_agencies():
     """Fetch available agencies from I14Y API"""
     try:
-        response = requests.get("https://input.i14y.admin.ch/api/Agent", timeout=10)
+        response = requests.get("https://core.i14y.c.bfs.admin.ch//api/Agent", timeout=10)
         if response.status_code == 200:
             agencies = response.json()
             # Sort agencies by German name for better UI
@@ -489,7 +489,7 @@ def fetch_user_agencies(token):
     if not auth_token.startswith('Bearer '):
         auth_token = f'Bearer {auth_token}'
     
-    url = "https://input.i14y.admin.ch/api/Agent/user"
+    url = "https://core.i14y.c.bfs.admin.ch//api/Agent/user"
     headers = {
         'accept': 'application/json',
         'Authorization': auth_token
@@ -1433,7 +1433,7 @@ def submit_concept():
                         # Generate I14Y web interface URL
                         i14y_url = None
                         if concept_guid:
-                            i14y_url = f"https://input.i14y.admin.ch/catalog/concepts/{concept_guid}"
+                            i14y_url = f"https://core.i14y.c.bfs.admin.ch//catalog/concepts/{concept_guid}"
                         
                         return jsonify({
                             'success': True,
@@ -1465,7 +1465,7 @@ def submit_concept():
                 concept_guid = location_parts[-1]
                 
                 # Generate I14Y web interface URL
-                i14y_url = f"https://input.i14y.admin.ch/catalog/concepts/{concept_guid}"
+                i14y_url = f"https://core.i14y.c.bfs.admin.ch//catalog/concepts/{concept_guid}"
                 
                 # Update the column in session data if we have an index
                 if index is not None and 'session_data_id' in session:
