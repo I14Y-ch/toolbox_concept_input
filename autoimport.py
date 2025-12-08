@@ -511,11 +511,68 @@ def fmt_to_readable(fmt):
     }
     return mapping.get(fmt, fmt)
 
+def fetch_user_agencies_from_api(token):
+    """Fetch user's agencies from the I14Y API"""
+    try:
+        # Clean the token
+        clean_token = token.strip()
+        if clean_token.upper().startswith('BEARER '):
+            clean_token = clean_token[7:].strip()
+        
+        # Call the I14Y API to get the user's agencies
+        url = 'https://core.i14y.c.bfs.admin.ch/api/Agents/'
+        headers = {
+            'accept': 'application/json',
+            'Authorization': f'Bearer {clean_token}'
+        }
+        
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            agents_data = response.json()
+            
+            # Parse the response - expecting a list of agents
+            agencies = []
+            if isinstance(agents_data, list):
+                for agent in agents_data:
+                    # Extract identifier and name from the agent object
+                    identifier = agent.get('identifier')
+                    name = agent.get('name', {})
+                    
+                    if identifier:
+                        # If name is not a multilingual object, convert it
+                        if isinstance(name, str):
+                            name = simple_multilingual(name)
+                        
+                        agencies.append({
+                            'identifier': identifier,
+                            'name': name
+                        })
+            
+            # Sort agencies by German name for better UI
+            if agencies:
+                agencies.sort(key=lambda x: x.get('name', {}).get('de', '').lower())
+                return agencies
+        else:
+            print(f"Failed to fetch agencies from API: {response.status_code}")
+            print(f"Response: {response.text}")
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+    
+    return []
+
 def fetch_user_agencies(token):
     """Extract agencies from the JWT token"""
     if not token:
         return []
     
+    # First try to fetch from the I14Y API (more authoritative)
+    agencies = fetch_user_agencies_from_api(token)
+    if agencies:
+        return agencies
+    
+    # Fallback to extracting from JWT token
     try:
         # Remove "BEARER " or "Bearer " prefix if present (case-insensitive)
         jwt_token = token.strip()
@@ -633,8 +690,13 @@ def upload_file():
             if not token:
                 return jsonify({'error': 'API token is required'}), 400
             
-            # Extract agencies from the token
-            agencies = fetch_user_agencies(token)
+            # Clean the token by removing Bearer prefix if present
+            clean_token = token.strip()
+            if clean_token.upper().startswith('BEARER '):
+                clean_token = clean_token[7:].strip()  # Remove "BEARER " (7 characters)
+            
+            # Extract agencies from the cleaned token
+            agencies = fetch_user_agencies(clean_token)
             
             if not agencies:
                 return jsonify({'error': 'Could not extract agencies from the provided token. Please verify your token is correct.'}), 400
@@ -731,7 +793,7 @@ def upload_file():
         session_data = {
             'columns': columns_info,
             'form_data': form_data,
-            'token': token,
+            'token': clean_token,
             'dataset_file': {
                 'path': dataset_path,
                 'type': dataset_suffix,
@@ -2134,16 +2196,17 @@ def verify_token():
     
     token = data['token']
     
-    # Extract user email and agencies from token
+    # Clean the token by removing Bearer prefix if present
+    clean_token = token.strip()
+    if clean_token.upper().startswith('BEARER '):
+        clean_token = clean_token[7:].strip()
+    
+    # Extract user email and agency label from token
     user_email = None
+    token_agency_label = None
     try:
-        # Remove "BEARER " or "Bearer " prefix if present
-        jwt_token = token.strip()
-        if jwt_token.upper().startswith('BEARER '):
-            jwt_token = jwt_token[7:].strip()
-        
         # JWT tokens are in format: header.payload.signature
-        token_parts = jwt_token.split('.')
+        token_parts = clean_token.split('.')
         if len(token_parts) >= 2:
             # Decode the payload part
             payload = token_parts[1]
@@ -2153,11 +2216,20 @@ def verify_token():
             
             # Extract email
             user_email = payload_data.get('email', payload_data.get('upn', payload_data.get('preferred_username')))
+            
+            # Extract agency label from token
+            # Format: "6517609\\i14y-test-organisation"
+            agency_strings = payload_data.get('agencies', [])
+            if agency_strings and len(agency_strings) > 0:
+                agency_str = agency_strings[0]
+                parts = agency_str.split('\\')
+                if len(parts) >= 2:
+                    token_agency_label = parts[1]  # Get the label part
     except Exception:
         pass
     
-    # Use the fetch_user_agencies function which properly parses the agencies
-    agencies = fetch_user_agencies(token)
+    # Fetch agencies from the I14Y API (authoritative source)
+    agencies = fetch_user_agencies(clean_token)
     
     if not agencies:
         return jsonify({
@@ -2165,12 +2237,32 @@ def verify_token():
             'error': 'Could not extract agencies from the provided token. Please verify your token is correct.'
         }), 400
     
-    # Return the agencies and the extracted email
-    return jsonify({
+    # Find the preselected agency by matching the label from token with agency names
+    preselected_agency = None
+    if token_agency_label:
+        for agency in agencies:
+            # Check if the label matches any of the multilingual names
+            agency_name = agency.get('name', {})
+            if isinstance(agency_name, dict):
+                # Check all language variants
+                for lang_name in agency_name.values():
+                    if isinstance(lang_name, str) and lang_name.lower() == token_agency_label.lower():
+                        preselected_agency = agency['identifier']
+                        break
+            if preselected_agency:
+                break
+    
+    # Return the agencies, email, and preselected agency
+    response_data = {
         'success': True,
         'agencies': agencies,
         'user_email': user_email
-    })
+    }
+    
+    if preselected_agency:
+        response_data['preselected_agency'] = preselected_agency
+    
+    return jsonify(response_data)
 
 if __name__ == '__main__':
     print("Starting I14Y AutoImport application...")

@@ -158,6 +158,11 @@
                         select.appendChild(option);
                     });
                     
+                    // Preselect agency if available
+                    if (data.preselected_agency) {
+                        select.value = data.preselected_agency;
+                    }
+                    
                     // Show the agency selection
                     document.getElementById('agency-selection').style.display = 'block';
                 } else if (data.agencies && data.agencies.length === 1) {

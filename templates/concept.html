@@ -1867,7 +1867,7 @@
                     // Create I14Y URL for concept
                     let i14yUrl = null;
                     if (conceptGuid) {
-                        i14yUrl = `https://core.i14y.c.bfs.admin.ch/catalog/concepts/${conceptGuid}/description`;
+                        i14yUrl = `https://input.i14y.admin.ch/catalog/concepts/${conceptGuid}/description`;
                     } else if (result.i14y_url) {
                         i14yUrl = result.i14y_url;
                     }
@@ -1965,7 +1965,7 @@
                             }
                             
                             // Codelist entries added successfully
-                            const codelistUrl = `https://core.i14y.c.bfs.admin.ch/catalog/concepts/${conceptGuid}`;
+                            const codelistUrl = `https://input.i14y.admin.ch/catalog/concepts/${conceptGuid}`;
                             showStatus('success', `Successfully published concept with ${entries.length} codelist entries!`, codelistUrl);
                         }
                     }
