@@ -789,6 +789,131 @@ def get_default_description(index):
     
     return jsonify({'description': description})
 
+@app.route('/api/submit-concept', methods=['POST'])
+def submit_concept():
+    """Submit a concept to the I14Y API"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired'}), 404
+    
+    # Get the concept data from the request
+    data = request.get_json() or {}
+    
+    # Extract required data
+    index = data.get('index')
+    if index is None or index < 0 or index >= len(session_data.get('columns', [])):
+        return jsonify({'error': 'Invalid column index'}), 400
+    
+    column = session_data['columns'][index]
+    form_data = session_data['form_data']
+    token = session_data.get('token', '')
+    
+    # Extract concept parameters
+    title = data.get('title', '')
+    description = data.get('description', '')
+    translations = data.get('translations', {})
+    keywords = data.get('keywords', '')
+    custom_identifier = data.get('identifier', '')
+    
+    # Extract type-specific parameters
+    params = {}
+    if column['type'] == 'Number':
+        params['min_value'] = data.get('min_value', 0)
+        params['max_value'] = data.get('max_value', 999)
+        params['decimals'] = data.get('decimals', 0)
+        params['unit'] = data.get('unit', '')
+    elif column['type'] == 'String':
+        params['max_length'] = data.get('max_length', 255)
+        params['min_length'] = data.get('min_length', 0)
+        params['pattern'] = data.get('pattern', '')
+    elif column['type'] == 'Date':
+        params['pattern'] = data.get('pattern', 'YYYY-MM-DD')
+    
+    # Generate the concept JSON
+    concept_json = generate_concept_json(
+        column=column,
+        form_data=form_data,
+        description=description,
+        params=params,
+        translations=translations,
+        keywords=keywords,
+        custom_identifier=custom_identifier
+    )
+    
+    # Prepare the API request
+    url = 'https://api.i14y.admin.ch/api/partner/v1/concepts'
+    headers = {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, json=concept_json)
+        
+        # Handle different response codes
+        if response.status_code == 201:  # Created
+            # Extract location header for concept GUID
+            location = response.headers.get('Location', '')
+            return jsonify({
+                'success': True,
+                'message': 'Concept created successfully',
+                'location': location
+            })
+        
+        elif response.status_code == 409:  # Conflict - concept already exists
+            try:
+                conflict_data = response.json()
+                return jsonify({
+                    'success': True,
+                    'message': 'Concept already exists',
+                    'conflict': True,
+                    'existing_concept': conflict_data
+                })
+            except:
+                return jsonify({
+                    'success': False,
+                    'message': 'Concept already exists but could not parse conflict details'
+                }), 409
+        
+        else:
+            # Handle other error codes
+            error_message = "Unknown error"
+            try:
+                error_data = response.json()
+                if isinstance(error_data, dict):
+                    error_message = error_data.get('message', error_data.get('error', response.text))
+                else:
+                    error_message = str(error_data)
+            except:
+                error_message = response.text
+            
+            return jsonify({
+                'success': False,
+                'message': f"API error: {error_message}",
+                'status': response.status_code
+            }), response.status_code
+    
+    except requests.RequestException as e:
+        return jsonify({
+            'success': False,
+            'message': f'Network error: {str(e)}'
+        }), 500
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'message': f'Internal error: {str(e)}'
+        }), 500
+
 @app.route('/results', methods=['GET'])
 def results():
     if 'session_data_id' not in session:
@@ -936,6 +1061,7 @@ def generate_concept_json(column, form_data, description, params=None, translati
     if column['is_codelist']:
         # Use "String" instead of "Text" - matching the exact enum values from the API
         value_type = "Numeric" if column['code_type'] == 'numeric' else "String"
+        data["codeListEntryDefaultSortProperty"] = "Code"
         data["codeListEntryValueType"] = value_type
         data["codeListEntryValueMaxLength"] = column.get('max_length', 0)
     
