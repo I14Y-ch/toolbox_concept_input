@@ -908,6 +908,11 @@ def submit_concept():
         custom_identifier=custom_identifier
     )
     
+    # Debug: Log the keywords being sent
+    print(f"DEBUG - Translations received: {translations}")
+    print(f"DEBUG - Keywords string: {keywords}")
+    print(f"DEBUG - Generated concept_json keywords: {concept_json.get('data', {}).get('keywords', [])}")
+    
     # Prepare the API request
     url = 'https://api.i14y.admin.ch/api/partner/v1/concepts'
     headers = {
@@ -1063,20 +1068,14 @@ def generate_concept_json(column, form_data, description, params=None, translati
     if not params:
         params = {}
     
-    # Handle keywords - use provided keywords or generate defaults
-    if keywords and keywords.strip():
-        # Parse keywords string into multilingual objects
-        keyword_list = []
-        for kw in keywords.split(','):
-            kw = kw.strip()
-            if kw:
-                keyword_list.append(simple_multilingual(kw))
-        concept_keywords = keyword_list
-    elif translations and translations.get('keywords'):
+    # Handle keywords - prioritize multilingual translations over simple keyword string
+    if translations and translations.get('keywords'):
         # Use keywords from translations if available
         # translations['keywords'] is an object like: {de: "kw1, kw2", en: "kw1, kw2", ...}
         concept_keywords = []
         keywords_trans = translations['keywords']
+        
+        print(f"DEBUG - Processing keywords from translations: {keywords_trans}")
         
         # Parse keywords per language
         keywords_by_lang = {}
@@ -1086,6 +1085,8 @@ def generate_concept_json(column, form_data, description, params=None, translati
                 keywords_by_lang[lang] = [kw.strip() for kw in keywords_trans[lang].split(',') if kw.strip()]
             else:
                 keywords_by_lang[lang] = []
+        
+        print(f"DEBUG - Parsed keywords by language: {keywords_by_lang}")
         
         # Find the maximum number of keywords across all languages
         max_keywords = max(len(keywords_by_lang[lang]) for lang in keywords_by_lang)
@@ -1103,6 +1104,16 @@ def generate_concept_json(column, form_data, description, params=None, translati
             # Only add if at least one language has content
             if any(keyword_obj.values()):
                 concept_keywords.append(keyword_obj)
+        
+        print(f"DEBUG - Final concept_keywords: {concept_keywords}")
+    elif keywords and keywords.strip():
+        # Parse keywords string into multilingual objects (fallback)
+        keyword_list = []
+        for kw in keywords.split(','):
+            kw = kw.strip()
+            if kw:
+                keyword_list.append(simple_multilingual(kw))
+        concept_keywords = keyword_list
     else:
         # Generate keywords from column name parts (fallback)
         concept_keywords = []
@@ -2215,8 +2226,9 @@ def verify_token():
     if clean_token.upper().startswith('BEARER '):
         clean_token = clean_token[7:].strip()
     
-    # Extract user email and agency label from token
+    # Extract user email and agency identifier from token
     user_email = None
+    token_agency_identifier = None
     token_agency_label = None
     try:
         # JWT tokens are in format: header.payload.signature
@@ -2231,15 +2243,21 @@ def verify_token():
             # Extract email
             user_email = payload_data.get('email', payload_data.get('upn', payload_data.get('preferred_username')))
             
-            # Extract agency label from token
+            # Extract agency identifier and label from token
             # Format: "6517609\\i14y-test-organisation"
             agency_strings = payload_data.get('agencies', [])
             if agency_strings and len(agency_strings) > 0:
                 agency_str = agency_strings[0]
                 parts = agency_str.split('\\')
                 if len(parts) >= 2:
-                    token_agency_label = parts[1]  # Get the label part
-    except Exception:
+                    token_agency_identifier = parts[0]  # Get the identifier part (e.g., "6517609")
+                    token_agency_label = parts[1]  # Get the label part (e.g., "i14y-test-organisation")
+                elif len(parts) == 1:
+                    token_agency_identifier = parts[0]  # Only identifier provided
+    except Exception as e:
+        print(f"Error extracting agency from token: {e}")
+        import traceback
+        traceback.print_exc()
         pass
     
     # Fetch agencies from the I14Y API (authoritative source)
@@ -2251,20 +2269,43 @@ def verify_token():
             'error': 'Could not extract agencies from the provided token. Please verify your token is correct.'
         }), 400
     
-    # Find the preselected agency by matching the label from token with agency names
+    # Find the preselected agency by matching the identifier or label from token with agencies
     preselected_agency = None
-    if token_agency_label:
+    if token_agency_identifier or token_agency_label:
+        print(f"Looking for agency - Identifier: {token_agency_identifier}, Label: {token_agency_label}")
+        print(f"Available agencies: {[{'id': a['identifier'], 'name': a.get('name', {})} for a in agencies]}")
+        
         for agency in agencies:
-            # Check if the label matches any of the multilingual names
+            agency_id = agency.get('identifier')
             agency_name = agency.get('name', {})
-            if isinstance(agency_name, dict):
+            
+            # Try to match the label from token against the agency identifier (most common case)
+            # In JWT format "6517609\\i14y-test-organisation", the second part is the actual agency ID
+            if token_agency_label and agency_id == token_agency_label:
+                preselected_agency = agency_id
+                print(f"Matched agency by label to identifier: {agency_id}")
+                break
+            
+            # Also try to match by the first part (identifier) in case format is different
+            if token_agency_identifier and agency_id == token_agency_identifier:
+                preselected_agency = agency_id
+                print(f"Matched agency by identifier: {agency_id}")
+                break
+            
+            # Finally, try to match by label against the agency name in different languages
+            if token_agency_label and isinstance(agency_name, dict):
                 # Check all language variants
                 for lang_name in agency_name.values():
                     if isinstance(lang_name, str) and lang_name.lower() == token_agency_label.lower():
-                        preselected_agency = agency['identifier']
+                        preselected_agency = agency_id
+                        print(f"Matched agency by name: {agency_id} ({lang_name})")
                         break
+            
             if preselected_agency:
                 break
+        
+        if not preselected_agency:
+            print(f"No matching agency found for identifier '{token_agency_identifier}' or label '{token_agency_label}'")
     
     # Return the agencies, email, and preselected agency
     response_data = {

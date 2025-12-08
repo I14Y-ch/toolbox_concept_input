@@ -143,6 +143,9 @@
                     document.getElementById('responsible_person').value = data.user_email;
                 }
                 
+                // Debug logging
+                console.log('Token verification response:', data);
+                
                 // Check if we need to show agency selection
                 if (data.agencies && data.agencies.length > 1) {
                     // Multiple agencies - show selection
@@ -160,7 +163,11 @@
                     
                     // Preselect agency if available
                     if (data.preselected_agency) {
+                        console.log('Preselecting agency:', data.preselected_agency);
                         select.value = data.preselected_agency;
+                        console.log('Selected value after setting:', select.value);
+                    } else {
+                        console.log('No preselected agency provided');
                     }
                     
                     // Show the agency selection
