@@ -423,166 +423,120 @@ def fmt_to_readable(fmt):
     }
     return mapping.get(fmt, fmt)
 
-def fetch_agencies():
-    """Fetch available agencies from I14Y API"""
-    try:
-        response = requests.get("https://core.i14y.c.bfs.admin.ch/api/Agent", timeout=10)
-        if response.status_code == 200:
-            agencies = response.json()
-            # Sort agencies by German name for better UI
-            agencies.sort(key=lambda x: x.get('name', {}).get('de', '').lower())
-            return agencies
-        else:
-            return []
-    except Exception:
-        return []
-
-def fetch_dataset_metadata(dataset_id, token):
-    """Fetch metadata for a dataset from the I14Y API"""
-    url = f'https://api.i14y.admin.ch/api/partner/v1/datasets/{dataset_id}'
-    headers = {
-        'accept': 'text/plain',
-        'Authorization': token
-    }
-    try:
-        response = requests.get(url, headers=headers, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            return data
-        else:
-            return None
-    except Exception:
-        return None
-
-def detect_language(text):
-    """
-    Detect the language of the given text.
-    Supports multiple languages including German, French, Italian, and English.
-    """
-    if not text or not detect:
-        return 'DE'  # Default to German if text is empty or langdetect not available
-    
-    try:
-        # Map language codes to what DeepL expects
-        lang_map = {
-            'de': 'DE',  # German
-            'en': 'EN',  # English
-            'fr': 'FR',  # French
-            'it': 'IT',  # Italian
-        }
-        
-        # Detect language using langdetect
-        detected = detect(text)
-        
-        # Return appropriate code or default to German
-        return lang_map.get(detected, 'DE')
-    except Exception:
-        return 'DE'  # Default to German if detection fails
-
 def fetch_user_agencies(token):
-    """Fetch agencies assigned to the user based on their token"""
+    """Extract agencies from the JWT token"""
     if not token:
         return []
     
-    # Properly format the token - ensure it has 'Bearer ' prefix but avoid double prefixing
-    auth_token = token.strip()
-    if not auth_token.startswith('Bearer '):
-        auth_token = f'Bearer {auth_token}'
-    
-    url = "https://core.i14y.c.bfs.admin.ch/api/Agent/user"
-    headers = {
-        'accept': 'application/json',
-        'Authorization': auth_token
-    }
-    
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        # Remove "BEARER " or "Bearer " prefix if present (case-insensitive)
+        jwt_token = token.strip()
+        if jwt_token.upper().startswith('BEARER '):
+            jwt_token = jwt_token[7:].strip()  # Remove "BEARER " (7 characters)
         
-        if response.status_code == 200:
-            agencies = response.json()
-            # Sort agencies by German name for better UI
-            agencies.sort(key=lambda x: x.get('name', {}).get('de', '').lower())
-            return agencies
-        else:
-            # Try alternative approach - fetch all agencies and let user choose
-            return fetch_agencies()
-    except Exception:
-        # Try alternative approach - fetch all agencies and let user choose
-        return fetch_agencies()
+        # JWT tokens are in format: header.payload.signature
+        token_parts = jwt_token.split('.')
+        if len(token_parts) >= 2:
+            # Decode the payload part
+            payload = token_parts[1]
+            payload += '=' * ((4 - len(payload) % 4) % 4)  # Add padding
+            decoded_payload = base64.b64decode(payload).decode('utf-8')
+            payload_data = json.loads(decoded_payload)
+            
+            # Extract agencies - they come as simple strings like "6517609\\i14y-test-organisation"
+            agency_strings = payload_data.get('agencies', [])
+            
+            if agency_strings:
+                # Convert agency strings to proper agency objects
+                agencies = []
+                for agency_str in agency_strings:
+                    # Split by backslash to get identifier and name
+                    # The format is: "identifier\\name" or just "identifier"
+                    parts = agency_str.split('\\')
+                    if len(parts) >= 2:
+                        identifier = parts[0]
+                        name = parts[1]
+                    else:
+                        identifier = agency_str
+                        name = agency_str
+                    
+                    # Create agency object with multilingual name
+                    agencies.append({
+                        'identifier': identifier,
+                        'name': simple_multilingual(name)
+                    })
+                
+                # Sort agencies by German name for better UI
+                agencies.sort(key=lambda x: x.get('name', {}).get('de', '').lower())
+                return agencies
+    except Exception as e:
+        # Log the error for debugging
+        import traceback
+        traceback.print_exc()
+    
+    return []
+
+def fetch_agencies_authenticated(token):
+    """Kept for compatibility - just calls fetch_user_agencies"""
+    return fetch_user_agencies(token)
+
+def fetch_agencies():
+    """Deprecated - agencies are now extracted from token"""
+    return []
 
 def read_csv_with_encoding_fallback(file, **kwargs):
-    """
-    Try to read CSV with different encodings and delimiters
-    """
-    from io import StringIO, BytesIO
+    """Read CSV content trying multiple encodings and delimiters."""
+    from io import StringIO
     
-    # Read the file content as bytes
     if hasattr(file, 'read'):
-        # Save the current position
-        initial_position = file.tell() if hasattr(file, 'tell') else 0
+        pos = file.tell() if hasattr(file, 'tell') else 0
         content = file.read()
-        
-        # Reset file pointer for potential re-use
         if hasattr(file, 'seek'):
             try:
-                file.seek(initial_position)
-            except:
+                file.seek(pos)
+            except Exception:
                 pass
-        
-        if isinstance(content, str):
-            # Already decoded, use directly
-            return pd.read_csv(StringIO(content), **kwargs)
     else:
         content = file
     
-    # Ensure content is bytes
     if isinstance(content, str):
-        content = content.encode('utf-8')
+        return pd.read_csv(StringIO(content), **kwargs)
     
-    # Try to detect encoding with chardet if available
+    if isinstance(content, bytes):
+        raw_bytes = content
+    else:
+        raw_bytes = str(content).encode('utf-8')
+    
     detected_encoding = None
     try:
         import chardet
-        detected = chardet.detect(content)
+        detected = chardet.detect(raw_bytes)
         if detected and detected.get('encoding'):
             detected_encoding = detected['encoding']
     except ImportError:
         pass
     
-    # Build list of encodings to try, prioritizing detected encoding
     encodings = ['utf-8', 'cp1252', 'latin1', 'iso-8859-1', 'utf-16', 'utf-32']
-    if detected_encoding and detected_encoding not in encodings:
-        encodings.insert(0, detected_encoding)
-    elif detected_encoding:
-        # Move detected encoding to front
-        encodings.remove(detected_encoding)
+    if detected_encoding:
+        if detected_encoding in encodings:
+            encodings.remove(detected_encoding)
         encodings.insert(0, detected_encoding)
     
-    # Try each encoding
     last_error = None
     for encoding in encodings:
         try:
-            text_content = content.decode(encoding)
-            # Try to read with pandas
-            return pd.read_csv(StringIO(text_content), **kwargs)
-        except (UnicodeDecodeError, LookupError) as e:
-            last_error = e
-            continue
-        except Exception as e:
-            # Pandas error (e.g., parsing error)
-            last_error = e
+            text = raw_bytes.decode(encoding)
+            return pd.read_csv(StringIO(text), **kwargs)
+        except Exception as exc:
+            last_error = exc
             continue
     
-    # If all encodings fail, raise an error with details
-    if last_error:
-        raise ValueError(f"Could not decode or parse the CSV file. Last error: {str(last_error)}")
-    else:
-        raise ValueError("Could not decode the CSV file with any supported encoding")
+    raise ValueError(f"Could not decode or parse the CSV file. Last error: {last_error}")
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'GET':
-        # We don't need to fetch agencies upfront anymore, as we'll fetch them based on the token
+        # We don't need to fetch agencies upfront anymore
         return render_template('index.html', themes=VALID_THEMES)
     
     if request.method == 'POST':
@@ -592,26 +546,31 @@ def upload_file():
             if not token:
                 return jsonify({'error': 'API token is required'}), 400
             
+            # Extract agencies from the token
+            agencies = fetch_user_agencies(token)
+            
+            if not agencies:
+                return jsonify({'error': 'Could not extract agencies from the provided token. Please verify your token is correct.'}), 400
+            
             # Check if an agency was selected or needs to be selected
             selected_agency = request.form.get('selected_agency')
             if not selected_agency:
-                # Fetch agencies for this user
-                agencies = fetch_user_agencies(token)
-                
-                if not agencies:
-                    return jsonify({'error': 'Could not fetch any agencies with the provided token. Please verify your token is correct.'})
-                
-                if len(agencies) > 1:
-                    # Return JSON with agency selection data instead of HTML template
+                if len(agencies) == 1:
+                    # If only one agency, use it automatically
+                    selected_agency = agencies[0]['identifier']
+                else:
+                    # If multiple agencies, return selection data
                     return jsonify({
                         'needs_agency_selection': True,
                         'agencies': agencies,
                         'token': token,
                         'themes': VALID_THEMES
                     })
-                else:
-                    # If only one agency, use it automatically
-                    selected_agency = agencies[0]['identifier']
+            
+            # Validate that the selected agency is in the user's agencies
+            valid_agency_ids = [agency['identifier'] for agency in agencies]
+            if selected_agency not in valid_agency_ids:
+                return jsonify({'error': 'Selected agency is not available for this user'}), 400
             
             # Now we have the token and selected agency
             if 'file' not in request.files:
@@ -1437,7 +1396,7 @@ def submit_concept():
                         
                         return jsonify({
                             'success': True,
-                            'status': 200,  # Return 200 OK instead of 409 since this is expected
+                            'status': 200,
                             'message': f'Concept "{concept_id}" already exists in I14Y and will be used',
                             'conflict': True,
                             'existing_concept': existing_concept,
@@ -1448,7 +1407,7 @@ def submit_concept():
             # Default conflict response if we couldn't get details
             return jsonify({
                 'success': True,
-                'status': 200,  # Return 200 OK instead of 409
+                'status': 200,  # Return 200 OK instead of 409 since this is expected
                 'message': 'Concept already exists in I14Y and will be used',
                 'conflict': True
             })
@@ -1750,16 +1709,13 @@ def get_known_code_mappings():
         "Schweden": "SE", "Sweden": "SE", "Suède": "SE", "Svezia": "SE",
         "Norwegen": "NO", "Norway": "NO", "Norvège": "NO", "Norvegia": "NO",
         "Dänemark": "DK", "Denmark": "DK", "Danemark": "DK", "Danimarca": "DK",
-        "Finnland": "FI", "Finland": "FI", "Finlande": "FI", "Finlandia": "FI",
+        "Finnland": "FI", "Finland": "FI",
         "Portugal": "PT", "Portogallo": "PT",
         "Griechenland": "GR", "Greece": "GR", "Grèce": "GR", "Grecia": "GR",
         "Polen": "PL", "Poland": "PL", "Pologne": "PL",
         "Tschechien": "CZ", "Czech Republic": "CZ", "République tchèque": "CZ", "Repubblica Ceca": "CZ",
         "Ungarn": "HU", "Hungary": "HU", "Hongrie": "HU", "Ungheria": "HU",
         "Russland": "RU", "Russia": "RU", "Russie": "RU", "Russia": "RU",
-        "China": "CN", "Chine": "CN", "Cina": "CN",
-        "Japan": "JP", "Japon": "JP", "Giapponese": "JP",
-        "Indien": "IN", "India": "IN", "Inde": "IN", "India": "IN",
         "Brasilien": "BR", "Brazil": "BR", "Brésil": "BR", "Brasile": "BR",
         "Australien": "AU", "Australia": "AU", "Australie": "AU", "Australia": "AU",
         "Kanada": "CA", "Canada": "CA", "Canada": "CA", "Canada": "CA",
@@ -2065,47 +2021,56 @@ def translate_text():
 @app.route('/api/verify-token', methods=['POST'])
 def verify_token():
     """Verify token and return associated agencies"""
-    data = request.json
+    # Try to get data from both form and JSON
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+    
     if not data or 'token' not in data:
         return jsonify({'success': False, 'error': 'Token is required'}), 400
     
     token = data['token']
     
-    # Extract user email from token if possible
+    # Extract user email and agencies from token
     user_email = None
     try:
+        # Remove "BEARER " or "Bearer " prefix if present
+        jwt_token = token.strip()
+        if jwt_token.upper().startswith('BEARER '):
+            jwt_token = jwt_token[7:].strip()
+        
         # JWT tokens are in format: header.payload.signature
-        # We only need the payload part
-        token_parts = token.split('.')
+        token_parts = jwt_token.split('.')
         if len(token_parts) >= 2:
-            # Decode the payload part (second part of the token)
-            # Add padding if needed
+            # Decode the payload part
             payload = token_parts[1]
             payload += '=' * ((4 - len(payload) % 4) % 4)  # Add padding
             decoded_payload = base64.b64decode(payload).decode('utf-8')
             payload_data = json.loads(decoded_payload)
             
-            # Extract email - it could be in different fields depending on the token issuer
+            # Extract email
             user_email = payload_data.get('email', payload_data.get('upn', payload_data.get('preferred_username')))
     except Exception:
-        # If token decoding fails, just continue without the email
         pass
     
-    # Fetch agencies for this user
+    # Use the fetch_user_agencies function which properly parses the agencies
     agencies = fetch_user_agencies(token)
     
     if not agencies:
         return jsonify({
             'success': False, 
-            'error': 'Could not fetch any agencies with the provided token. Please verify your token is correct.'
+            'error': 'Could not extract agencies from the provided token. Please verify your token is correct.'
         }), 400
     
     # Return the agencies and the extracted email
     return jsonify({
         'success': True,
         'agencies': agencies,
-        'user_email': user_email  # Include the email in the response
+        'user_email': user_email
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    print("Starting I14Y AutoImport application...")
+    print("Server will be available at: http://127.0.0.1:5000")
+    app.run(debug=True, host='0.0.0.0', port=5000)
