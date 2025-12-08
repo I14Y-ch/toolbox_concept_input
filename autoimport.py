@@ -766,6 +766,29 @@ def manual_cleanup():
     except Exception as e:
         return jsonify({'error': f'Cleanup failed: {str(e)}'}), 500
 
+@app.route('/api/get-default-description/<int:index>', methods=['GET'])
+def get_default_description(index):
+    """Generate a default description for a concept"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired'}), 404
+    
+    if index < 0 or index >= len(session_data.get('columns', [])):
+        return jsonify({'error': 'Invalid column index'}), 400
+    
+    column = session_data['columns'][index]
+    
+    # Generate default description in German (default language)
+    description = generate_default_description(column, lang='de')
+    
+    return jsonify({'description': description})
+
 @app.route('/results', methods=['GET'])
 def results():
     if 'session_data_id' not in session:
@@ -828,8 +851,12 @@ def save_concept_data(index):
     if index < 0 or index >= len(session_data.get('columns', [])):
         return jsonify({'error': 'Invalid column index'}), 400
     
-    # Get the data from the request
-    data = request.get_json() or {}
+    # Get the data from the request - handle both JSON and other content types
+    try:
+        data = request.get_json() or {}
+    except Exception:
+        # If JSON parsing fails, try to get form data
+        data = request.form.to_dict() or {}
     
     # Initialize concept_data dict if it doesn't exist
     if 'concept_data' not in session_data:
