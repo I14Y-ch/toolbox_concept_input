@@ -1074,21 +1074,35 @@ def generate_concept_json(column, form_data, description, params=None, translati
         concept_keywords = keyword_list
     elif translations and translations.get('keywords'):
         # Use keywords from translations if available
+        # translations['keywords'] is an object like: {de: "kw1, kw2", en: "kw1, kw2", ...}
         concept_keywords = []
         keywords_trans = translations['keywords']
-        # Get all non-empty keywords from different languages
-        all_keywords = set()
+        
+        # Parse keywords per language
+        keywords_by_lang = {}
         for lang in ['de', 'en', 'fr', 'it', 'rm']:
             if keywords_trans.get(lang) and keywords_trans[lang].strip():
-                # Split by comma and add each keyword
-                for kw in keywords_trans[lang].split(','):
-                    kw = kw.strip()
-                    if kw:
-                        all_keywords.add(kw)
+                # Split by comma to get individual keywords
+                keywords_by_lang[lang] = [kw.strip() for kw in keywords_trans[lang].split(',') if kw.strip()]
+            else:
+                keywords_by_lang[lang] = []
         
-        # Create multilingual objects for each unique keyword
-        for kw in all_keywords:
-            concept_keywords.append(simple_multilingual(kw))
+        # Find the maximum number of keywords across all languages
+        max_keywords = max(len(keywords_by_lang[lang]) for lang in keywords_by_lang)
+        
+        # Create multilingual keyword objects
+        for i in range(max_keywords):
+            keyword_obj = {}
+            for lang in ['de', 'en', 'fr', 'it', 'rm']:
+                if i < len(keywords_by_lang[lang]):
+                    keyword_obj[lang] = keywords_by_lang[lang][i]
+                else:
+                    # If a language has fewer keywords, use the German one as fallback
+                    keyword_obj[lang] = keywords_by_lang['de'][i] if i < len(keywords_by_lang['de']) else ''
+            
+            # Only add if at least one language has content
+            if any(keyword_obj.values()):
+                concept_keywords.append(keyword_obj)
     else:
         # Generate keywords from column name parts (fallback)
         concept_keywords = []
