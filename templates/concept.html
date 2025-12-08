@@ -249,19 +249,39 @@
                                 <thead>
                                     <tr>
                                         <th>Code</th>
-                                        <th>Label DE</th>
-                                        <th>Label FR</th>
-                                        <th>Label IT</th>
-                                        <th>Label EN</th>
+                                        <th>
+                                            <div class="table-header-with-import">
+                                                <span>Label DE</span>
+                                                <button class="btn-import-column" data-lang="de" title="Import from column">📥</button>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-with-import">
+                                                <span>Label FR</span>
+                                                <button class="btn-import-column" data-lang="fr" title="Import from column">📥</button>
+                                                <button class="btn-translate-column" data-lang="fr" title="Translate from DE">🌐</button>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-with-import">
+                                                <span>Label IT</span>
+                                                <button class="btn-import-column" data-lang="it" title="Import from column">📥</button>
+                                                <button class="btn-translate-column" data-lang="it" title="Translate from DE">🌐</button>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="table-header-with-import">
+                                                <span>Label EN</span>
+                                                <button class="btn-import-column" data-lang="en" title="Import from column">📥</button>
+                                                <button class="btn-translate-column" data-lang="en" title="Translate from DE">🌐</button>
+                                            </div>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="codes-table-body">
                                     <!-- This will be filled by JavaScript -->
                                 </tbody>
                             </table>
-                            <div class="action-row">
-                                <button class="action-button translate-labels-btn" id="translate-labels-btn">Translate Labels</button>
-                            </div>
                         </div>
                         <div id="codelist-placeholder">
                             <p>Click "Generate Codes" to create codes for the codelist values.</p>
@@ -273,6 +293,32 @@
                                 <li>... and {{ column.unique_values|length - 5 }} more values</li>
                                 {% endif %}
                             </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Column import modal (hidden by default) -->
+                    <div id="column-import-modal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="modal-title">Import Labels</h3>
+                                <button class="modal-close" id="modal-close-btn">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modal-description">Select a column to import labels from:</p>
+                                <div id="column-select-container">
+                                    <select id="column-select" class="column-select">
+                                        <option value="">-- Select a column --</option>
+                                    </select>
+                                </div>
+                                <div id="column-preview" style="margin-top: 15px; display: none;">
+                                    <h4>Preview:</h4>
+                                    <ul id="preview-list" class="preview-list"></ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+                                <button class="btn btn-primary" id="modal-import-btn" disabled>Import</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -420,10 +466,271 @@
             let currentStep = 1;
             const totalSteps = {{ column.is_codelist|tojson }} ? 4 : 3;
             
+            // Saved data from server
+            const savedData = {{ saved_data|tojson|safe }};
+            
             // Clean up token if it includes "Bearer " prefix
             if (token.startsWith('Bearer ')) {
                 token = token.substring(7); // Remove "Bearer " prefix
             }
+            
+            // Auto-save function with debouncing
+            let saveTimeout;
+            function autoSaveData() {
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(async () => {
+                    const data = collectAllFormData();
+                    try {
+                        await fetch(`/api/save-concept-data/${index}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+                    } catch (error) {
+                        console.error('Auto-save error:', error);
+                    }
+                }, 1000); // Save after 1 second of no typing
+            }
+            
+            // Collect all form data
+            function collectAllFormData() {
+                const data = {
+                    // Step 1 fields
+                    title: document.getElementById('title')?.value || '',
+                    description: document.getElementById('description')?.value || '',
+                    keywords: document.getElementById('keywords')?.value || '',
+                    
+                    // Type-specific fields
+                    min_value: document.getElementById('min-value')?.value || '',
+                    max_value: document.getElementById('max-value')?.value || '',
+                    decimals: document.getElementById('decimals')?.value || '',
+                    unit: document.getElementById('unit')?.value || '',
+                    pattern: document.getElementById('pattern')?.value || '',
+                    max_length: document.getElementById('max-length')?.value || '',
+                    format: document.getElementById('format')?.value || '',
+                    
+                    // Step 2 - Translation fields
+                    trans_title_de: document.getElementById('trans-title-de')?.value || '',
+                    trans_title_en: document.getElementById('trans-title-en')?.value || '',
+                    trans_title_fr: document.getElementById('trans-title-fr')?.value || '',
+                    trans_title_it: document.getElementById('trans-title-it')?.value || '',
+                    
+                    trans_desc_de: document.getElementById('trans-desc-de')?.value || '',
+                    trans_desc_en: document.getElementById('trans-desc-en')?.value || '',
+                    trans_desc_fr: document.getElementById('trans-desc-fr')?.value || '',
+                    trans_desc_it: document.getElementById('trans-desc-it')?.value || '',
+                    
+                    trans_keywords_de: document.getElementById('trans-keywords-de')?.value || '',
+                    trans_keywords_en: document.getElementById('trans-keywords-en')?.value || '',
+                    trans_keywords_fr: document.getElementById('trans-keywords-fr')?.value || '',
+                    trans_keywords_it: document.getElementById('trans-keywords-it')?.value || '',
+                    
+                    // Final step fields
+                    concept_identifier: document.getElementById('concept-identifier')?.value || '',
+                    
+                    final_title_de: document.getElementById('final-title-de')?.value || '',
+                    final_title_en: document.getElementById('final-title-en')?.value || '',
+                    final_title_fr: document.getElementById('final-title-fr')?.value || '',
+                    final_title_it: document.getElementById('final-title-it')?.value || '',
+                    
+                    final_desc_de: document.getElementById('final-desc-de')?.value || '',
+                    final_desc_en: document.getElementById('final-desc-en')?.value || '',
+                    final_desc_fr: document.getElementById('final-desc-fr')?.value || '',
+                    final_desc_it: document.getElementById('final-desc-it')?.value || '',
+                    
+                    final_keywords_de: document.getElementById('final-keywords-de')?.value || '',
+                    final_keywords_en: document.getElementById('final-keywords-en')?.value || '',
+                    final_keywords_fr: document.getElementById('final-keywords-fr')?.value || '',
+                    final_keywords_it: document.getElementById('final-keywords-it')?.value || '',
+                    
+                    // Codelist data
+                    generatedCodes: window.generatedCodes || {},
+                    generatedLabels: window.generatedLabels || {},
+                    
+                    // Current step
+                    currentStep: currentStep
+                };
+                
+                return data;
+            }
+            
+            // Restore saved data
+            function restoreSavedData() {
+                if (!savedData || Object.keys(savedData).length === 0) {
+                    return;
+                }
+                
+                // Restore Step 1 fields
+                if (savedData.title) document.getElementById('title').value = savedData.title;
+                if (savedData.description) document.getElementById('description').value = savedData.description;
+                if (savedData.keywords) document.getElementById('keywords').value = savedData.keywords;
+                
+                // Restore type-specific fields
+                if (savedData.min_value && document.getElementById('min-value')) 
+                    document.getElementById('min-value').value = savedData.min_value;
+                if (savedData.max_value && document.getElementById('max-value')) 
+                    document.getElementById('max-value').value = savedData.max_value;
+                if (savedData.decimals && document.getElementById('decimals')) 
+                    document.getElementById('decimals').value = savedData.decimals;
+                if (savedData.unit && document.getElementById('unit')) 
+                    document.getElementById('unit').value = savedData.unit;
+                if (savedData.pattern && document.getElementById('pattern')) 
+                    document.getElementById('pattern').value = savedData.pattern;
+                if (savedData.max_length && document.getElementById('max-length')) 
+                    document.getElementById('max-length').value = savedData.max_length;
+                if (savedData.format && document.getElementById('format')) 
+                    document.getElementById('format').value = savedData.format;
+                
+                // Restore Step 2 fields
+                if (savedData.trans_title_de) document.getElementById('trans-title-de').value = savedData.trans_title_de;
+                if (savedData.trans_title_en) document.getElementById('trans-title-en').value = savedData.trans_title_en;
+                if (savedData.trans_title_fr) document.getElementById('trans-title-fr').value = savedData.trans_title_fr;
+                if (savedData.trans_title_it) document.getElementById('trans-title-it').value = savedData.trans_title_it;
+                
+                if (savedData.trans_desc_de) document.getElementById('trans-desc-de').value = savedData.trans_desc_de;
+                if (savedData.trans_desc_en) document.getElementById('trans-desc-en').value = savedData.trans_desc_en;
+                if (savedData.trans_desc_fr) document.getElementById('trans-desc-fr').value = savedData.trans_desc_fr;
+                if (savedData.trans_desc_it) document.getElementById('trans-desc-it').value = savedData.trans_desc_it;
+                
+                if (savedData.trans_keywords_de) document.getElementById('trans-keywords-de').value = savedData.trans_keywords_de;
+                if (savedData.trans_keywords_en) document.getElementById('trans-keywords-en').value = savedData.trans_keywords_en;
+                if (savedData.trans_keywords_fr) document.getElementById('trans-keywords-fr').value = savedData.trans_keywords_fr;
+                if (savedData.trans_keywords_it) document.getElementById('trans-keywords-it').value = savedData.trans_keywords_it;
+                
+                // Restore final step fields
+                if (savedData.concept_identifier) document.getElementById('concept-identifier').value = savedData.concept_identifier;
+                
+                if (savedData.final_title_de) document.getElementById('final-title-de').value = savedData.final_title_de;
+                if (savedData.final_title_en) document.getElementById('final-title-en').value = savedData.final_title_en;
+                if (savedData.final_title_fr) document.getElementById('final-title-fr').value = savedData.final_title_fr;
+                if (savedData.final_title_it) document.getElementById('final-title-it').value = savedData.final_title_it;
+                
+                if (savedData.final_desc_de) document.getElementById('final-desc-de').value = savedData.final_desc_de;
+                if (savedData.final_desc_en) document.getElementById('final-desc-en').value = savedData.final_desc_en;
+                if (savedData.final_desc_fr) document.getElementById('final-desc-fr').value = savedData.final_desc_fr;
+                if (savedData.final_desc_it) document.getElementById('final-desc-it').value = savedData.final_desc_it;
+                
+                if (savedData.final_keywords_de) document.getElementById('final-keywords-de').value = savedData.final_keywords_de;
+                if (savedData.final_keywords_en) document.getElementById('final-keywords-en').value = savedData.final_keywords_en;
+                if (savedData.final_keywords_fr) document.getElementById('final-keywords-fr').value = savedData.final_keywords_fr;
+                if (savedData.final_keywords_it) document.getElementById('final-keywords-it').value = savedData.final_keywords_it;
+                
+                // Restore codelist data
+                if (savedData.generatedCodes) {
+                    window.generatedCodes = savedData.generatedCodes;
+                }
+                if (savedData.generatedLabels) {
+                    window.generatedLabels = savedData.generatedLabels;
+                    // Rebuild the codelist table if data exists
+                    if (Object.keys(savedData.generatedLabels).length > 0) {
+                        rebuildCodelistTable();
+                    }
+                }
+                
+                // Restore current step
+                if (savedData.currentStep) {
+                    currentStep = savedData.currentStep;
+                    updateStepperState();
+                }
+            }
+            
+            // Rebuild codelist table from saved data
+            function rebuildCodelistTable() {
+                if (!window.generatedCodes || !window.generatedLabels) {
+                    return;
+                }
+                
+                const tbody = document.getElementById('codes-table-body');
+                if (!tbody) return;
+                
+                const container = document.getElementById('generated-codes-container');
+                const placeholder = document.getElementById('codelist-placeholder');
+                
+                if (container && placeholder) {
+                    container.style.display = 'block';
+                    placeholder.style.display = 'none';
+                }
+                
+                tbody.innerHTML = '';
+                
+                const values = Object.keys(window.generatedCodes);
+                values.forEach(value => {
+                    const code = window.generatedCodes[value];
+                    const labels = window.generatedLabels[value] || {de: '', fr: '', it: '', en: ''};
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="text" class="code-edit" data-value="${value}" value="${code}"></td>
+                        <td><input type="text" class="label-edit label-de" data-value="${value}" value="${labels.de || ''}"></td>
+                        <td><input type="text" class="label-edit label-fr" data-value="${value}" value="${labels.fr || ''}"></td>
+                        <td><input type="text" class="label-edit label-it" data-value="${value}" value="${labels.it || ''}"></td>
+                        <td><input type="text" class="label-edit label-en" data-value="${value}" value="${labels.en || ''}"></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                // Attach change listeners to codelist inputs
+                attachCodelistListeners();
+            }
+            
+            // Attach change listeners to all form inputs
+            function attachAutoSaveListeners() {
+                const inputs = document.querySelectorAll('input[type="text"], textarea, input[type="number"], select');
+                inputs.forEach(input => {
+                    input.addEventListener('input', autoSaveData);
+                    input.addEventListener('change', autoSaveData);
+                });
+            }
+            
+            // Attach listeners to codelist inputs
+            function attachCodelistListeners() {
+                document.querySelectorAll('.code-edit, .label-edit').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const value = this.getAttribute('data-value');
+                        if (this.classList.contains('code-edit')) {
+                            window.generatedCodes[value] = this.value;
+                        } else {
+                            const lang = this.classList.contains('label-de') ? 'de' :
+                                        this.classList.contains('label-fr') ? 'fr' :
+                                        this.classList.contains('label-it') ? 'it' : 'en';
+                            if (!window.generatedLabels[value]) {
+                                window.generatedLabels[value] = {de: '', fr: '', it: '', en: ''};
+                            }
+                            window.generatedLabels[value][lang] = this.value;
+                        }
+                        autoSaveData();
+                    });
+                });
+            }
+            
+            // Initialize on page load
+            restoreSavedData();
+            attachAutoSaveListeners();
+            
+            // Save data before navigating away
+            window.addEventListener('beforeunload', function() {
+                // Force immediate save (no debounce)
+                clearTimeout(saveTimeout);
+                const data = collectAllFormData();
+                navigator.sendBeacon(`/api/save-concept-data/${index}`, JSON.stringify(data));
+            });
+            
+            // Also save when clicking navigation links
+            document.querySelectorAll('.btn-back-overview, .pagination-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Save immediately before navigation
+                    clearTimeout(saveTimeout);
+                    const data = collectAllFormData();
+                    fetch(`/api/save-concept-data/${index}`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data),
+                        keepalive: true
+                    });
+                });
+            });
             
             // Initialize stepper
             function updateStepperState() {
@@ -486,6 +793,7 @@
                         
                         currentStep = targetStep;
                         updateStepperState();
+                        autoSaveData(); // Auto-save when changing steps
                     }
                 });
             });
@@ -1126,6 +1434,7 @@
                         input.addEventListener('change', function() {
                             const value = this.getAttribute('data-value');
                             window.generatedCodes[value] = this.value;
+                            autoSaveData(); // Auto-save when codes change
                         });
                     });
                     
@@ -1140,12 +1449,14 @@
                                 window.generatedLabels[value] = {de: '', fr: '', it: '', en: ''};
                             }
                             window.generatedLabels[value][lang] = this.value;
+                            autoSaveData(); // Auto-save when labels change
                         });
                     });
                     
-                    showStatus('success', `Generated ${result.codes.length} codes for codelist values. Labels have been placed in their detected language columns. Click "Translate Labels" to fill in other languages.`);
+                    showStatus('success', `Generated ${result.codes.length} codes for codelist values. Labels have been placed in their detected language columns. Use the translate buttons (🌐) in column headers to translate to other languages.`);
                     button.textContent = originalText;
                     button.disabled = false;
+                    autoSaveData(); // Auto-save after generating codes
                     
                 } catch (error) {
                     console.error('Generate codes error:', error);
@@ -1155,101 +1466,295 @@
                 }
             });
             
-            // Translate Labels button handler
-            document.getElementById('translate-labels-btn').addEventListener('click', async function() {
+            // Column-specific translate button handler
+            document.addEventListener('click', async function(e) {
+                if (e.target.classList.contains('btn-translate-column')) {
+                    const button = e.target;
+                    const targetLang = button.dataset.lang;
+                    const originalText = button.textContent;
+                    
+                    try {
+                        // Show loading state
+                        button.disabled = true;
+                        button.textContent = '🔄';
+                        showStatus('info', `Translating to ${targetLang.toUpperCase()}...`);
+                        
+                        // Get all the DE labels
+                        const labelInputs = document.querySelectorAll('.label-edit.label-de');
+                        const translations = {};
+                        
+                        // Process translations in batches to avoid overloading the API
+                        const batchSize = 10;
+                        for (let i = 0; i < labelInputs.length; i += batchSize) {
+                            const batch = Array.from(labelInputs).slice(i, i + batchSize);
+                            
+                            await Promise.all(batch.map(async input => {
+                                const value = input.getAttribute('data-value');
+                                const text = input.value;
+                                
+                                if (!text.trim()) return; // Skip empty values
+                                
+                                try {
+                                    const response = await fetch('/api/translate', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            text: text,
+                                            source_lang: 'DE'
+                                        })
+                                    });
+                                    
+                                    if (!response.ok) {
+                                        throw new Error(`Failed to translate "${text}"`);
+                                    }
+                                    
+                                    const result = await response.json();
+                                    translations[value] = result.translations || {};
+                                } catch (err) {
+                                    console.error(`Translation error for "${text}":`, err);
+                                    translations[value] = {};
+                                }
+                            }));
+                            
+                            // Update status for batches
+                            showStatus('info', `Translating to ${targetLang.toUpperCase()}... (${Math.min(i + batchSize, labelInputs.length)}/${labelInputs.length})`);
+                        }
+                        
+                        // Update only the target language column
+                        for (const value in translations) {
+                            const trans = translations[value];
+                            
+                            // Update window.generatedLabels as well
+                            if (!window.generatedLabels[value]) {
+                                window.generatedLabels[value] = {de: '', fr: '', it: '', en: ''};
+                            }
+                            
+                            const germanLabel = document.querySelector(`.label-de[data-value="${value}"]`).value;
+                            
+                            // Only update the specific target language
+                            if (trans[targetLang] && trans[targetLang].trim()) {
+                                window.generatedLabels[value][targetLang] = trans[targetLang];
+                                const targetInput = document.querySelector(`.label-${targetLang}[data-value="${value}"]`);
+                                if (targetInput) {
+                                    targetInput.value = trans[targetLang];
+                                }
+                            } else {
+                                console.log(`Empty ${targetLang.toUpperCase()} translation for "${germanLabel}", keeping original`);
+                            }
+                        }
+                        
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    } catch (error) {
+                        console.error('Translate column error:', error);
+                        showStatus('error', `Error: ${error.message}`);
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }
+                }
+            });
+            
+            // Import column functionality for codelist labels
+            let availableColumns = null;
+            let currentImportLang = null;
+            
+            // Load available columns when first import button is clicked
+            async function loadAvailableColumns() {
+                if (availableColumns !== null) {
+                    return availableColumns;
+                }
+                
+                try {
+                    const response = await fetch(`/api/codelist/label-columns/${index}`, {
+                        method: 'GET'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load columns');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.error || 'Unknown error');
+                    }
+                    
+                    availableColumns = result.candidates;
+                    return availableColumns;
+                    
+                } catch (error) {
+                    console.error('Load columns error:', error);
+                    showStatus('error', `Error: ${error.message}`);
+                    return [];
+                }
+            }
+            
+            // Handle import button clicks
+            document.addEventListener('click', async function(e) {
+                if (e.target.classList.contains('btn-import-column')) {
+                    const lang = e.target.dataset.lang;
+                    currentImportLang = lang;
+                    
+                    // Load available columns
+                    showStatus('info', 'Loading available columns...');
+                    const columns = await loadAvailableColumns();
+                    
+                    if (columns.length === 0) {
+                        showStatus('error', 'No additional columns available for import');
+                        return;
+                    }
+                    
+                    // Populate the select dropdown
+                    const select = document.getElementById('column-select');
+                    select.innerHTML = '<option value="">-- Select a column --</option>';
+                    
+                    // Filter and sort columns - prefer matching language
+                    const sortedColumns = [...columns].sort((a, b) => {
+                        // Prioritize columns matching the target language
+                        if (a.language === lang && b.language !== lang) return -1;
+                        if (a.language !== lang && b.language === lang) return 1;
+                        return a.name.localeCompare(b.name);
+                    });
+                    
+                    sortedColumns.forEach(col => {
+                        const option = document.createElement('option');
+                        option.value = col.name;
+                        option.textContent = col.name;
+                        option.dataset.samples = JSON.stringify(col.samples);
+                        
+                        // Add indicator if language matches
+                        if (col.language === lang) {
+                            option.textContent += ` ✓`;
+                        }
+                        
+                        select.appendChild(option);
+                    });
+                    
+                    // Update modal title
+                    const langNames = {
+                        'de': 'German',
+                        'fr': 'French',
+                        'it': 'Italian',
+                        'en': 'English'
+                    };
+                    document.getElementById('modal-title').textContent = `Import ${langNames[lang]} Labels`;
+                    document.getElementById('modal-description').textContent = `Select a column to import ${langNames[lang]} labels from:`;
+                    
+                    // Show modal
+                    document.getElementById('column-import-modal').style.display = 'flex';
+                    showStatus('success', `Found ${columns.length} columns`);
+                }
+            });
+            
+            // Column select change handler
+            document.getElementById('column-select').addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const importBtn = document.getElementById('modal-import-btn');
+                
+                if (this.value) {
+                    // Show preview
+                    const samples = JSON.parse(selectedOption.dataset.samples || '[]');
+                    const previewList = document.getElementById('preview-list');
+                    previewList.innerHTML = '';
+                    
+                    samples.forEach(sample => {
+                        const li = document.createElement('li');
+                        li.textContent = sample;
+                        previewList.appendChild(li);
+                    });
+                    
+                    document.getElementById('column-preview').style.display = 'block';
+                    importBtn.disabled = false;
+                } else {
+                    document.getElementById('column-preview').style.display = 'none';
+                    importBtn.disabled = true;
+                }
+            });
+            
+            // Modal close handlers
+            document.getElementById('modal-close-btn').addEventListener('click', function() {
+                document.getElementById('column-import-modal').style.display = 'none';
+            });
+            
+            document.getElementById('modal-cancel-btn').addEventListener('click', function() {
+                document.getElementById('column-import-modal').style.display = 'none';
+            });
+            
+            // Modal import handler
+            document.getElementById('modal-import-btn').addEventListener('click', async function() {
+                const selectedColumn = document.getElementById('column-select').value;
+                
+                if (!selectedColumn || !currentImportLang) {
+                    return;
+                }
+                
                 const button = this;
                 const originalText = button.textContent;
                 
                 try {
-                    // Show loading state
                     button.disabled = true;
-                    button.textContent = '🔄 Translating...';
-                    showStatus('info', 'Translating codelist labels...');
+                    button.textContent = '🔄 Importing...';
+                    showStatus('info', `Importing ${currentImportLang.toUpperCase()} labels from ${selectedColumn}...`);
                     
-                    // Get all the DE labels
-                    const labelInputs = document.querySelectorAll('.label-edit.label-de');
-                    const translations = {};
+                    // Get the code column name
+                    const codeColumn = "{{ column.name }}";
                     
-                    // Process translations in batches to avoid overloading the API
-                    const batchSize = 10;
-                    for (let i = 0; i < labelInputs.length; i += batchSize) {
-                        const batch = Array.from(labelInputs).slice(i, i + batchSize);
+                    // Call the API to add labels for this specific language
+                    const response = await fetch('/api/codelist/add-labels', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            codeColumn: codeColumn,
+                            labelColumns: [{
+                                name: selectedColumn,
+                                lang: currentImportLang
+                            }]
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to import labels');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.error || 'Unknown error');
+                    }
+                    
+                    // Update the table with imported labels for this language
+                    result.labels.forEach(item => {
+                        const code = item.code;
+                        const label = item.labels[currentImportLang];
                         
-                        await Promise.all(batch.map(async input => {
-                            const value = input.getAttribute('data-value');
-                            const text = input.value;
-                            
-                            if (!text.trim()) return; // Skip empty values
-                            
-                            try {
-                                const response = await fetch('/api/translate', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        text: text,
-                                        source_lang: 'DE' // Assuming German as source language
-                                    })
-                                });
+                        if (label) {
+                            // Find the input for this code and language
+                            const input = document.querySelector(`.label-${currentImportLang}[data-value="${code}"]`);
+                            if (input) {
+                                input.value = label;
                                 
-                                if (!response.ok) {
-                                    throw new Error(`Failed to translate "${text}"`);
+                                // Update stored labels
+                                if (!window.generatedLabels[code]) {
+                                    window.generatedLabels[code] = {de: '', fr: '', it: '', en: ''};
                                 }
-                                
-                                const result = await response.json();
-                                translations[value] = result.translations || {};
-                            } catch (err) {
-                                console.error(`Translation error for "${text}":`, err);
-                                // Create an empty translations object when translation fails
-                                translations[value] = {};
+                                window.generatedLabels[code][currentImportLang] = label;
                             }
-                        }));
-                        
-                        // Update status for batches
-                        showStatus('info', `Translating codelist labels... (${Math.min(i + batchSize, labelInputs.length)}/${labelInputs.length})`);
-                    }
+                        }
+                    });
                     
-                    // Update all the translation fields
-                    for (const value in translations) {
-                        const trans = translations[value];
-                        
-                        // Update window.generatedLabels as well
-                        if (!window.generatedLabels[value]) {
-                            window.generatedLabels[value] = {de: '', fr: '', it: '', en: ''};
-                        }
-                        
-                        // Save German value in case we need it as fallback
-                        const germanLabel = document.querySelector(`.label-de[data-value="${value}"]`).value;
-                        
-                        // Only update if translations are non-empty strings
-                        if (trans.fr && trans.fr.trim()) {
-                            window.generatedLabels[value].fr = trans.fr;
-                            document.querySelector(`.label-fr[data-value="${value}"]`).value = trans.fr;
-                        } else {
-                            console.log(`Empty French translation for "${germanLabel}", keeping original`);
-                        }
-                        
-                        if (trans.it && trans.it.trim()) {
-                            window.generatedLabels[value].it = trans.it;
-                            document.querySelector(`.label-it[data-value="${value}"]`).value = trans.it;
-                        } else {
-                            console.log(`Empty Italian translation for "${germanLabel}", keeping original`);
-                        }
-                        
-                        if (trans.en && trans.en.trim()) {
-                            window.generatedLabels[value].en = trans.en;
-                            document.querySelector(`.label-en[data-value="${value}"]`).value = trans.en;
-                        } else {
-                            console.log(`Empty English translation for "${germanLabel}", keeping original`);
-                        }
-                    }
+                    // Close modal
+                    document.getElementById('column-import-modal').style.display = 'none';
                     
-                    showStatus('success', 'Codelist labels translated successfully. Changes will be applied automatically.');
+                    showStatus('success', `Imported ${result.labels.length} ${currentImportLang.toUpperCase()} labels from "${selectedColumn}"`);
                     button.textContent = originalText;
                     button.disabled = false;
+                    
                 } catch (error) {
-                    console.error('Translate labels error:', error);
+                    console.error('Import labels error:', error);
                     showStatus('error', `Error: ${error.message}`);
                     button.textContent = originalText;
                     button.disabled = false;

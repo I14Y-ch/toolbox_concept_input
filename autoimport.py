@@ -18,6 +18,9 @@ from collections import defaultdict
 from langdetect import detect
 import tempfile
 import openai
+import io
+import threading
+import time
 
 # Create the Flask app first, before any circular imports might occur
 app = Flask(__name__)
@@ -57,10 +60,54 @@ SESSION_DATA_DIR = os.path.join(tempfile.gettempdir(), 'i14y-concept-import-sess
 if not os.path.exists(SESSION_DATA_DIR):
     os.makedirs(SESSION_DATA_DIR)
 
+# Session data cleanup functions
+def cleanup_old_session_files():
+    """Remove session files older than 24 hours"""
+    try:
+        current_time = time.time()
+        max_age_seconds = 24 * 60 * 60  # 24 hours
+        
+        for filename in os.listdir(SESSION_DATA_DIR):
+            if filename.endswith('.pkl'):
+                file_path = os.path.join(SESSION_DATA_DIR, filename)
+                try:
+                    file_age = current_time - os.path.getmtime(file_path)
+                    if file_age > max_age_seconds:
+                        os.remove(file_path)
+                        print(f"Cleaned up old session file: {filename}")
+                except OSError as e:
+                    print(f"Error removing session file {filename}: {e}")
+    except Exception as e:
+        print(f"Error during session cleanup: {e}")
+
+def cleanup_session_file(session_id):
+    """Remove a specific session file"""
+    try:
+        file_path = os.path.join(SESSION_DATA_DIR, f"{session_id}.pkl")
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Cleaned up session file for session: {session_id}")
+    except Exception as e:
+        print(f"Error removing session file for {session_id}: {e}")
+
+def periodic_cleanup_worker():
+    """Background worker that runs cleanup every hour"""
+    while True:
+        try:
+            cleanup_old_session_files()
+        except Exception as e:
+            print(f"Error in periodic cleanup: {e}")
+        time.sleep(60 * 60)  # Sleep for 1 hour
+
+# Start the periodic cleanup thread
+cleanup_thread = threading.Thread(target=periodic_cleanup_worker, daemon=True)
+cleanup_thread.start()
+
 # Helper functions to save and load session data
-def save_session_data(data):
-    """Save session data to a file and return a unique ID"""
-    session_id = str(uuid.uuid4())
+def save_session_data(data, session_id=None):
+    """Save session data to a file and return the session identifier."""
+    if not session_id:
+        session_id = str(uuid.uuid4())
     file_path = os.path.join(SESSION_DATA_DIR, f"{session_id}.pkl")
     with open(file_path, 'wb') as f:
         pickle.dump(data, f)
@@ -73,6 +120,47 @@ def load_session_data(session_id):
         return None
     with open(file_path, 'rb') as f:
         return pickle.load(f)
+
+def load_uploaded_dataframe(session_data):
+    """Reconstruct the original dataframe from the stored upload."""
+    dataset_info = session_data.get('dataset_file')
+    if not dataset_info:
+        return None
+    if isinstance(dataset_info, dict):
+        dataset_path = dataset_info.get('path')
+        dataset_type = (dataset_info.get('type') or '').lower()
+    else:
+        dataset_path = dataset_info
+        dataset_type = os.path.splitext(dataset_path)[1].lower()
+    if not dataset_path or not os.path.exists(dataset_path):
+        return None
+    if dataset_type in ('.xlsx', '.xls'):
+        return pd.read_excel(dataset_path)
+    if dataset_type == '.csv':
+        with open(dataset_path, 'rb') as source:
+            return read_csv_with_encoding_fallback(io.BytesIO(source.read()), sep=None, engine='python')
+    raise ValueError(f"Unsupported dataset type: {dataset_type or 'unknown'}")
+
+def infer_language_from_column(column_name):
+    """Heuristically detect the language from a column suffix."""
+    lowered = column_name.lower()
+    for delimiter in ['_', '-', ' ']:
+        if delimiter in lowered:
+            suffix = lowered.rsplit(delimiter, 1)[-1]
+            if suffix in {'de', 'fr', 'it', 'en', 'rm'}:
+                return suffix
+    if lowered.endswith(('de', 'fr', 'it', 'en', 'rm')):
+        return lowered[-2:]
+    return None
+
+def safe_detect_language(text, default='de'):
+    """Detect language safely with a fallback."""
+    try:
+        if not text or not text.strip():
+            return default
+        return detect(text)
+    except Exception:
+        return default
 
 # Add theme definitions
 VALID_THEMES = {
@@ -509,7 +597,7 @@ def read_csv_with_encoding_fallback(file, **kwargs):
     
     detected_encoding = None
     try:
-        import chardet
+        import chardet  # type: ignore
         detected = chardet.detect(raw_bytes)
         if detected and detected.get('encoding'):
             detected_encoding = detected['encoding']
@@ -536,7 +624,6 @@ def read_csv_with_encoding_fallback(file, **kwargs):
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'GET':
-        # We don't need to fetch agencies upfront anymore
         return render_template('index.html', themes=VALID_THEMES)
     
     if request.method == 'POST':
@@ -580,98 +667,104 @@ def upload_file():
             if file.filename == '':
                 return jsonify({'error': 'No selected file'})
             
-            try:
-                if file and file.filename.lower().endswith(('.xlsx', '.xls')):
-                    df = pd.read_excel(file)
-                elif file and file.filename.lower().endswith('.csv'):
-                    df = read_csv_with_encoding_fallback(file, sep=None, engine='python')
-                else:
-                    return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'}), 400
-            except ValueError as e:
-                # Specific error for encoding/parsing issues
-                import traceback
-                traceback.print_exc()
-                return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
-            except Exception as e:
-                import traceback
-                traceback.print_exc()
-                return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
+            file_ext = os.path.splitext(file.filename)[1].lower()
+            file_bytes = file.read()
+            if not file_bytes:
+                return jsonify({'error': 'Uploaded file is empty'}), 400
             
-            columns_info = []
-            form_data = {
-                'responsible_person': request.form.get('responsible_person'),
-                'responsible_deputy': request.form.get('responsible_deputy'),
-                'publisher_id': selected_agency,  # We use the selected agency as publisher ID
-                'theme': request.form.get('theme')
-            }
-            
-            # Validate new required fields
-            if not all(form_data.values()):
-                return jsonify({'error': 'All concept information fields are required'})
-            
-            # Validate theme
-            if form_data['theme'] not in VALID_THEMES:
-                return jsonify({'error': 'Invalid theme code'})
-            
-            # Process columns but avoid storing large datasets in session
-            for column in df.columns:
-                analysis = analyze_column_type(df[column])
-                
-                # Create a simplified column info that takes less space
-                column_info = {
-                    'name': column,
-                    'type': analysis['type'],
-                    'is_codelist': analysis['is_codelist']
-                }
-                
-                # Only store essential data for codelists
-                if analysis['is_codelist']:
-                    # Limit the amount of data we store in the session
-                    column_info.update({
-                        'unique_values': analysis['unique_values'][:20],  # Limit to 20 values
-                        'value_counts': {str(k): v for k, v in list(analysis['value_counts'].items())[:20]},
-                        'code_type': analysis['code_type'],
-                        'min_length': analysis['min_length'],
-                        'max_length': analysis['max_length'],
-                        'unique_count': analysis['unique_count']
-                    })
-                
-                # Add pattern and format if they exist
-                if 'pattern' in analysis:
-                    column_info['pattern'] = analysis['pattern']
-                
-                if 'format' in analysis:
-                    column_info['format'] = analysis['format']
-                
-                columns_info.append(column_info)
-            
-            # Store only minimal data in the session
-            session_data = {
-                'columns': columns_info,
-                'form_data': form_data,
-                'token': token,
-                # We no longer need dataset_id or dataset_metadata
-            }
-            
-            # Save the full data to a file
-            session_id = save_session_data(session_data)
-            
-            # Store only the session ID in the actual session cookie
-            session['session_data_id'] = session_id
-            
-            # Return JSON success response instead of redirect
-            return jsonify({
-                'success': True,
-                'redirect_url': url_for('results')
-            })
-            
-        except Exception as e:
-            # Catch any unhandled errors and return JSON
+            if file_ext in ('.xlsx', '.xls'):
+                df = pd.read_excel(io.BytesIO(file_bytes))
+            elif file_ext == '.csv':
+                df = read_csv_with_encoding_fallback(io.BytesIO(file_bytes), sep=None, engine='python')
+            else:
+                return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'}), 400
+        except ValueError as e:
             import traceback
             traceback.print_exc()
-            return jsonify({'error': f'An error occurred while processing the file: {str(e)}'}), 500
-    
+            return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
+        
+        session_id = str(uuid.uuid4())
+        dataset_suffix = file_ext if file_ext else '.bin'
+        dataset_path = os.path.join(SESSION_DATA_DIR, f"{session_id}{dataset_suffix}")
+        with open(dataset_path, 'wb') as dataset_file:
+            dataset_file.write(file_bytes)
+
+        columns_info = []
+        form_data = {
+            'responsible_person': request.form.get('responsible_person'),
+            'responsible_deputy': request.form.get('responsible_deputy'),
+            'publisher_id': selected_agency,
+            'theme': request.form.get('theme')
+        }
+        
+        if not all(form_data.values()):
+            return jsonify({'error': 'All concept information fields are required'})
+        if form_data['theme'] not in VALID_THEMES:
+            return jsonify({'error': 'Invalid theme code'})
+        
+        for column in df.columns:
+            analysis = analyze_column_type(df[column])
+            column_info = {
+                'name': column,
+                'type': analysis['type'],
+                'is_codelist': analysis['is_codelist']
+            }
+            if analysis['is_codelist']:
+                column_info.update({
+                    'unique_values': analysis['unique_values'][:20],
+                    'value_counts': {str(k): v for k, v in list(analysis['value_counts'].items())[:20]},
+                    'code_type': analysis['code_type'],
+                    'min_length': analysis['min_length'],
+                    'max_length': analysis['max_length'],
+                    'unique_count': analysis['unique_count']
+                })
+            if 'pattern' in analysis:
+                column_info['pattern'] = analysis['pattern']
+            if 'format' in analysis:
+                column_info['format'] = analysis['format']
+            columns_info.append(column_info)
+        
+        session_data = {
+            'columns': columns_info,
+            'form_data': form_data,
+            'token': token,
+            'dataset_file': {
+                'path': dataset_path,
+                'type': dataset_suffix,
+                'original_name': file.filename
+            }
+        }
+        
+        session_id = save_session_data(session_data, session_id=session_id)
+        session['session_data_id'] = session_id
+        
+        return jsonify({
+            'success': True,
+            'redirect_url': url_for('results')
+        })
+
     return render_template('index.html', themes=VALID_THEMES)
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    """Clean up session data and redirect to upload page"""
+    if 'session_data_id' in session:
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+    return redirect(url_for('upload_file'))
+
+@app.route('/api/cleanup-sessions', methods=['POST'])
+def manual_cleanup():
+    """Manually trigger cleanup of old session files (admin endpoint)"""
+    try:
+        cleanup_old_session_files()
+        return jsonify({'message': 'Session cleanup completed'})
+    except Exception as e:
+        return jsonify({'error': f'Cleanup failed: {str(e)}'}), 500
 
 @app.route('/results', methods=['GET'])
 def results():
@@ -681,7 +774,8 @@ def results():
     # Get session data from file
     session_data = load_session_data(session['session_data_id'])
     if not session_data:
-        # Session data expired or not found
+        # Session data expired or not found - clean up the session file
+        cleanup_session_file(session['session_data_id'])
         session.pop('session_data_id', None)
         return redirect(url_for('upload_file'))
     
@@ -698,7 +792,8 @@ def view_concept(index):
     # Get session data from file
     session_data = load_session_data(session['session_data_id'])
     if not session_data:
-        # Session data expired or not found
+        # Session data expired or not found - clean up the session file
+        cleanup_session_file(session['session_data_id'])
         session.pop('session_data_id', None)
         return redirect(url_for('upload_file'))
     
@@ -706,12 +801,47 @@ def view_concept(index):
     if index < 0 or index >= len(session_data['columns']):
         return redirect(url_for('results'))
     
+    # Get saved concept data if it exists
+    concept_data = session_data.get('concept_data', {}).get(str(index), {})
+    
     return render_template('concept.html', 
                           column=session_data['columns'][index],
                           index=index,
                           total=len(session_data['columns']),
                           form_data=session_data['form_data'],
-                          token=session_data.get('token', ''))  # Pass token to template
+                          token=session_data.get('token', ''),
+                          saved_data=concept_data)  # Pass saved concept data to template
+
+@app.route('/api/save-concept-data/<int:index>', methods=['POST'])
+def save_concept_data(index):
+    """Save concept form data for a specific column"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired'}), 404
+    
+    if index < 0 or index >= len(session_data.get('columns', [])):
+        return jsonify({'error': 'Invalid column index'}), 400
+    
+    # Get the data from the request
+    data = request.get_json() or {}
+    
+    # Initialize concept_data dict if it doesn't exist
+    if 'concept_data' not in session_data:
+        session_data['concept_data'] = {}
+    
+    # Save the data for this specific concept
+    session_data['concept_data'][str(index)] = data
+    
+    # Save back to file
+    save_session_data(session_data, session_id=session['session_data_id'])
+    
+    return jsonify({'success': True})
 
 def generate_concept_json(column, form_data, description, params=None, translations=None, dataset_metadata=None, keywords=None, custom_identifier=None):
     """Generate a concept JSON based on column information and user inputs"""
@@ -1029,6 +1159,9 @@ def extract_keywords(index):
     
     session_data = load_session_data(session['session_data_id'])
     if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
         return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
     
     if index < 0 or index >= len(session_data['columns']):
@@ -1145,341 +1278,146 @@ def generate_fallback_keywords(title, description, lang):
     
     return ', '.join(unique_keywords)
 
-@app.route('/api/generate-description/<int:index>', methods=['POST'])
-def generate_description(index):
-    """Generate a description using OpenAI API"""
+@app.route('/api/dataset/columns', methods=['GET'])
+def list_dataset_columns():
+    """Return analyzed columns so the UI can offer manual selection."""
     if 'session_data_id' not in session:
-        return jsonify({'error': 'No results found. Please upload a file first.'}), 404
+        return jsonify({'error': 'No session found. Please upload a file first.'}), 404
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
+    return jsonify({
+        'success': True,
+        'columns': summarize_columns_for_response(session_data.get('columns', []))
+    })
+
+@app.route('/api/codelist/label-columns/<int:index>', methods=['GET'])
+def list_label_column_candidates(index):
+    """Suggest label columns (with guessed languages) for a codelist."""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found. Please upload a file first.'}), 404
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
+    columns = session_data.get('columns', [])
+    if index < 0 or index >= len(columns):
+        return jsonify({'error': 'Invalid column index'}), 400
+    target_column = columns[index]
+    if not target_column.get('is_codelist'):
+        return jsonify({'error': 'Selected column is not a codelist'}), 400
+    df = load_uploaded_dataframe(session_data)
+    if df is None or target_column['name'] not in df.columns:
+        return jsonify({'error': 'Unable to load dataset for the current session'}), 400
+
+    candidates = []
+    for column_name in df.columns:
+        if column_name == target_column['name']:
+            continue
+        lang = infer_language_from_column(column_name) or 'unknown'
+        sample_values = []
+        for value in df[column_name].dropna().astype(str).head(3):
+            value = value.strip()
+            if value:
+                sample_values.append(value)
+        candidates.append({
+            'name': column_name,
+            'language': lang,
+            'samples': sample_values
+        })
+
+    return jsonify({
+        'success': True,
+        'codeColumn': target_column['name'],
+        'candidates': candidates
+    })
+
+@app.route('/api/codelist/add-labels', methods=['POST'])
+def add_codelist_labels():
+    """Combine code values with multilingual labels sourced from other columns."""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found. Please upload a file first.'}), 404
     
     session_data = load_session_data(session['session_data_id'])
     if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
         return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
     
-    if index < 0 or index >= len(session_data['columns']):
-        return jsonify({'error': 'Invalid column index'}), 400
-    
-    column = session_data['columns'][index]
-    
-    # Get data from request
     data = request.get_json() or {}
+    code_column = data.get('codeColumn')
+    label_columns = data.get('labelColumns', [])
     
-    # Extract parameters
-    title = data.get('title', '')
-    description = data.get('description', '')
-    codelist_values = data.get('codelist_values')
+    if not code_column or not label_columns:
+        return jsonify({'error': 'Both codeColumn and labelColumns are required'}), 400
     
-    # Get the requested language, default to "de"
-    lang = data.get('lang', 'de').lower()
+    df = load_uploaded_dataframe(session_data)
+    if df is None or code_column not in df.columns:
+        return jsonify({'error': 'Unable to access the requested columns in the uploaded file'}), 400
     
-    # Validate language is supported
-    if lang not in ['de', 'en', 'fr', 'it']:
-        lang = 'de'  # Default to German if unsupported language
+    target_meta = next((col for col in session_data.get('columns', []) if col.get('name') == code_column), None)
+    if not target_meta or not target_meta.get('is_codelist'):
+        return jsonify({'error': f'Column "{code_column}" is not registered as a codelist'}), 400
     
-    # Generate description using OpenAI (use_openai=True)
-    generated_description = generate_concept_description(
-        column, 
-        lang=lang,
-        title=title,
-        description=description,
-        codelist_values=codelist_values,
-        use_openai=True
-    )
-    
-    # Get suggested field values
-    params = estimate_field_values(column)
-    
-    return jsonify({
-        'description': generated_description,
-        'params': params
-    })
-
-@app.route('/api/get-default-description/<int:index>', methods=['GET'])
-def get_default_description(index):
-    """Get a default description for a column (no OpenAI API call)"""
-    if 'session_data_id' not in session:
-        return jsonify({'error': 'No results found. Please upload a file first.'}), 404
-    
-    session_data = load_session_data(session['session_data_id'])
-    if not session_data:
-        return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
-    
-    if index < 0 or index >= len(session_data['columns']):
-        return jsonify({'error': 'Invalid column index'}), 400
-    
-    column = session_data['columns'][index]
-    
-    # Get the requested language, default to "de"
-    lang = request.args.get('lang', 'de').lower()
-    
-    # Validate language is supported
-    if lang not in ['de', 'en', 'fr', 'it']:
-        lang = 'de'  # Default to German if unsupported language
-    
-    # Generate default description (use_openai=False)
-    default_description = generate_concept_description(
-        column, 
-        lang=lang,
-        use_openai=False
-    )
-    
-    return jsonify({
-        'description': default_description
-    })
-
-@app.route('/api/create-concept/<int:index>', methods=['POST'])
-def create_concept(index):
-    """Translate title and description texts - DO NOT CREATE CONCEPTS"""
-    data = request.json
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
-    
-    title = data.get('title', '')
-    description = data.get('description', '')
-    
-    # Import translator only when needed to avoid automatic translations during loading
-    from utils.translator import create_multilingual_text
-    
-    title_translations = create_multilingual_text(title)
-    desc_translations = create_multilingual_text(description)
-    
-    return jsonify({
-        'title': title_translations,
-        'description': desc_translations
-    })
-
-@app.route('/api/submit-concept', methods=['POST'])
-def submit_concept():
-    """Submit a concept to the I14Y API - now handles both concept creation and submission"""
-    # Get data from the request
-    data = request.json
-    
-    # Get token from Authorization header
-    auth_header = request.headers.get('Authorization', '')
-    if not auth_header.startswith('Bearer '):
-        return jsonify({'error': 'Missing or invalid Authorization header'}), 400
-    
-    # If this is form data rather than a concept JSON
-    if data and 'index' in data:
-        if 'session_data_id' not in session:
-            return jsonify({'error': 'No session found. Please upload a file first.'}), 404
-        
-        session_data = load_session_data(session['session_data_id'])
-        if not session_data:
-            return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
-        
-        index = data.get('index')
-        if index < 0 or index >= len(session_data['columns']):
-            return jsonify({'error': 'Invalid column index'}), 400
-        
-        column = session_data['columns'][index]
-        
-        # If column already has a concept GUID, return it immediately
-        if 'concept_guid' in column:
-            return jsonify({
-                'success': True,
-                'status': 200,
-                'message': f"Concept for {column['name']} already exists",
-                'conflict': True,
-                'location': f"/api/partner/v1/concepts/{column['concept_guid']}"
-            })
-        
-        # Before generating a new concept, check if we've recently tried to create this exact same concept
-        # Use a simple cache to avoid duplicate submissions in quick succession
-        concept_cache_key = f"{session['session_data_id']}_{data.get('index')}"
-        last_attempt_time = getattr(app, '_concept_submission_cache', {}).get(concept_cache_key)
-        
-        # If we've tried to create this concept in the last 30 seconds, return the cached response
-        if last_attempt_time and (datetime.now() - last_attempt_time).total_seconds() < 30:
-            return jsonify({
-                'success': True,
-                'status': 200,
-                'message': 'Duplicate request prevented. The previous request is still being processed.'
-            })
-            
-        # Record this attempt in the cache
-        if not hasattr(app, '_concept_submission_cache'):
-            app._concept_submission_cache = {}
-        app._concept_submission_cache[concept_cache_key] = datetime.now()
-        
-        # Get form data
-        form_data = session_data['form_data']
-        description = data.get('description', '')
-        
-        # Extract additional params for the concept
-        params = {
-            'min_value': data.get('min_value'),
-            'max_value': data.get('max_value'),
-            'decimals': data.get('decimals'),
-            'unit': data.get('unit'),
-            'pattern': data.get('pattern'),
-            'max_length': data.get('max_length'),
-            'format': data.get('format')
-        }
-        
-        # Check if translations were provided
-        translations = data.get('translations')
-        
-        # Get keywords from the request
-        keywords = data.get('keywords', '')
-        
-        # Get custom identifier from the request
-        custom_identifier = data.get('identifier', '')
-        
-        # Generate the concept JSON
-        concept = generate_concept_json(
-            column, 
-            form_data, 
-            description, 
-            params, 
-            translations, 
-            session_data.get('dataset_metadata'),
-            keywords,
-            custom_identifier
-        )
-        
-        # Validate the generated concept
-        issues = []
-        required_fields = ['conceptType', 'description', 'identifier', 'name']
-        for field in required_fields:
-            if field not in concept['data']:
-                issues.append(f'Missing required field: {field}')
-        
-        if issues:
-            return jsonify({
-                'success': False,
-                'status': 400,
-                'message': f"Validation error: {', '.join(issues)}",
-                'issues': issues
-            }), 400
-        
-    else:
-        # If direct concept JSON was provided (backward compatibility)
-        concept = data
-        index = None
-    
-    # Make the request to the I14Y API
-    url = 'https://api.i14y.admin.ch/api/partner/v1/concepts'
-    headers = {
-        'accept': 'text/plain',
-        'Authorization': auth_header,
-        'Content-Type': 'application/json'
-    }
-    
-    try:
-        # Make the actual API call
-        response = requests.post(url, headers=headers, json=concept)
-        
-        # Handle 409 Conflict (already exists) as a SUCCESS case
-        if response.status_code == 409:
-            # Try to get the existing concept's details
-            concept_id = concept.get('data', {}).get('identifier', '')
-            if concept_id:
-                try:
-                    # Try to fetch the existing concept to provide more details
-                    get_url = f'https://api.i14y.admin.ch/api/partner/v1/concepts/{concept_id}'
-                    get_response = requests.get(get_url, headers={
-                        'accept': 'text/plain',
-                        'Authorization': auth_header
-                    })
-                    if get_response.ok:
-                        existing_concept = get_response.json()
-                        
-                        # Extract GUID from existing concept if available
-                        concept_guid = None
-                        if 'id' in existing_concept:
-                            concept_guid = existing_concept['id']
-                        
-                        # Generate I14Y web interface URL
-                        i14y_url = None
-                        if concept_guid:
-                            i14y_url = f"https://core.i14y.c.bfs.admin.ch/catalog/concepts/{concept_guid}"
-                        
-                        return jsonify({
-                            'success': True,
-                            'status': 200,
-                            'message': f'Concept "{concept_id}" already exists in I14Y and will be used',
-                            'conflict': True,
-                            'existing_concept': existing_concept,
-                            'i14y_url': i14y_url
-                        })
-                except Exception:
-                    pass
-            # Default conflict response if we couldn't get details
-            return jsonify({
-                'success': True,
-                'status': 200,  # Return 200 OK instead of 409 since this is expected
-                'message': 'Concept already exists in I14Y and will be used',
-                'conflict': True
-            })
-        
-        # For successful creation (201 Created)
-        elif response.status_code == 201:
-            location = response.headers.get('Location')
-            concept_guid = None
-            i14y_url = None
-            
-            # If we have an index, store the concept GUID in the column
-            if location:
-                location_parts = location.split('/')
-                concept_guid = location_parts[-1]
-                
-                # Generate I14Y web interface URL
-                i14y_url = f"https://core.i14y.c.bfs.admin.ch/catalog/concepts/{concept_guid}"
-                
-                # Update the column in session data if we have an index
-                if index is not None and 'session_data_id' in session:
-                    session_data = load_session_data(session['session_data_id'])
-                    if session_data:
-                        session_data['columns'][index]['concept_guid'] = concept_guid
-                        save_session_data(session_data)
-            
-            return jsonify({
-                'success': True,
-                'status': response.status_code,
-                'message': 'Concept successfully created. ',
-                'location': location,
-                'concept_guid': concept_guid,
-                'i14y_url': i14y_url
-            })
-        
-        # For other successful responses
-        elif response.status_code < 400:
-            return jsonify({
-                'success': True,
-                'status': response.status_code,
-                'message': response.text
-            })
-        
-        # Handle error responses
+    parsed_columns = []
+    for entry in label_columns:
+        if isinstance(entry, dict):
+            col_name = entry.get('name')
+            lang = entry.get('lang')
         else:
-            error_message = "Unknown error"
-            try:
-                # Try to parse the error response as JSON
-                error_data = response.json()
-                if isinstance(error_data, dict):
-                    error_message = error_data.get('message', error_data.get('error', response.text))
-                    if 'title' in error_data and 'detail' in error_data:
-                        error_message = f"{error_data.get('title')}: {error_data.get('detail')}"
-                    elif isinstance(error_data, dict):
-                        error_message = error_data.get('message', error_data.get('error', response.text))
-                    else:
-                        error_message = str(error_data)
-            except Exception:
-                error_message = response.text
-            return jsonify({
-                'success': False,
-                'status': response.status_code,
-                'message': error_message
-            }), response.status_code
-            
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({
-            'success': False,
-            'status': 500,
-            'message': f"Exception during submission: {str(e)}"
-        }), 500
+            col_name = entry
+            lang = None
+        if not col_name or col_name not in df.columns:
+            return jsonify({'error': f'Column "{col_name}" is not available in the dataset'}), 400
+        lang = (lang or infer_language_from_column(col_name) or 'de').lower()
+        parsed_columns.append({'name': col_name, 'lang': lang})
+    
+    collected = {}
+    languages = set()
+    required_columns = [code_column] + [c['name'] for c in parsed_columns]
+    for _, row in df[required_columns].iterrows():
+        code_value = row[code_column]
+        if pd.isna(code_value):
+            continue
+        code_key = str(code_value).strip()
+        if not code_key:
+            continue
+        entry = collected.setdefault(code_key, {})
+        for column in parsed_columns:
+            value = row[column['name']]
+            if pd.isna(value):
+                continue
+            label = str(value).strip()
+            if label:
+                entry[column['lang']] = label
+                languages.add(column['lang'])
+    
+    labels = [{'code': code, 'labels': lang_map} for code, lang_map in collected.items() if lang_map]
+    
+    return jsonify({
+        'success': True,
+        'codeColumn': code_column,
+        'languages': sorted(languages),
+        'labels': labels
+    })
+
+def summarize_columns_for_response(columns):
+    """Return lightweight metadata for the frontend."""
+    summary = []
+    for col in columns:
+        summary.append({
+            'name': col.get('name'),
+            'type': col.get('type'),
+            'isCodelist': col.get('is_codelist', False),
+            'guessedLanguage': infer_language_from_column(col.get('name', ''))
+        })
+    return summary
 
 @app.route('/api/add-codelist-entries/<concept_guid>', methods=['POST'])
 def add_codelist_entries(concept_guid):
@@ -1522,7 +1460,7 @@ def add_codelist_entries(concept_guid):
                     
                     try:
                         # Detect the source language instead of assuming DE
-                        source_lang = detect_language(label)
+                        source_lang = safe_detect_language(label, default='de')
                         
                         # Create translations for all required languages
                         translated_labels = create_multilingual_text(label, source_lang)
@@ -1600,24 +1538,31 @@ def add_codelist_entries(concept_guid):
 @app.before_request
 def cleanup_old_sessions():
     """Clean up session files older than 1 hour"""
-    # Only run cleanup occasionally (e.g., 1% of requests)
     import random
     if random.random() > 0.01:
         return
     
     import time
     current_time = time.time()
-    one_hour_ago = current_time - 3600  # 1 hour in seconds
+    one_hour_ago = current_time - 3600
     
     for filename in os.listdir(SESSION_DATA_DIR):
         if filename.endswith('.pkl'):
             file_path = os.path.join(SESSION_DATA_DIR, filename)
-            # Check if file is older than 1 hour
             if os.path.getmtime(file_path) < one_hour_ago:
                 try:
+                    with open(file_path, 'rb') as stored_session:
+                        stored_data = pickle.load(stored_session)
+                        dataset_info = stored_data.get('dataset_file', {})
+                        dataset_path = dataset_info.get('path') if isinstance(dataset_info, dict) else dataset_info
+                        if dataset_path and os.path.exists(dataset_path):
+                            os.remove(dataset_path)
+                except Exception:
+                    pass
+                try:
                     os.remove(file_path)
-                except:
-                    pass  # Ignore errors during cleanup
+                except Exception:
+                    pass
 
 # Add this function to generate codes
 def generate_code_for_value(value, code_length=2, existing_codes=None, known_mappings=None):
@@ -1747,6 +1692,7 @@ def get_known_code_mappings():
     }
     
     # Months
+   
     months = {
         "Januar": "01", "January": "01", "Janvier": "01", "Gennaio": "01",
         "Februar": "02", "February": "02", "Février": "02", "Febbraio": "02",
@@ -1849,6 +1795,9 @@ def generate_codes(index):
     
     session_data = load_session_data(session['session_data_id'])
     if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
         return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
     
     if index < 0 or index >= len(session_data['columns']):
@@ -1943,7 +1892,7 @@ def translate_text():
                 try:
                     # Detect language if not provided
                     if not source_lang or source_lang == 'auto':
-                        source_lang = detect_language(text)
+                        source_lang = safe_detect_language(text)
                         
                     translations = create_multilingual_text(text, source_lang)
                     response_data['translations'] = translations
@@ -1962,7 +1911,7 @@ def translate_text():
                 try:
                     # Detect language if not provided
                     if not source_lang or source_lang == 'auto':
-                        source_lang = detect_language(title)
+                        source_lang = safe_detect_language(title)
                         
                     title_translations = create_multilingual_text(title, source_lang)
                     if 'title' not in response_data:
@@ -1977,7 +1926,7 @@ def translate_text():
                 try:
                     # Detect language if not provided
                     if not source_lang or source_lang == 'auto':
-                        source_lang = detect_language(description)
+                        source_lang = safe_detect_language(description)
                         
                     desc_translations = create_multilingual_text(description, source_lang)
                     if 'description' not in response_data:
@@ -1992,7 +1941,7 @@ def translate_text():
                 try:
                     # Detect language if not provided
                     if not source_lang or source_lang == 'auto':
-                        source_lang = detect_language(keywords)
+                        source_lang = safe_detect_language(keywords)
                         
                     keywords_translations = create_multilingual_text(keywords, source_lang)
                     if 'keywords' not in response_data:
