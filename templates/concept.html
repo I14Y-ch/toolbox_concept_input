@@ -14,23 +14,6 @@
                 </div>
             </header>
             
-            <!-- Pagination controls -->
-            <div class="pagination">
-                {% if index > 0 %}
-                <a href="{{ url_for('view_concept', index=index-1) }}" class="pagination-link">&larr; Previous</a>
-                {% else %}
-                <span class="pagination-link disabled">&larr; Previous</span>
-                {% endif %}
-                
-                <span class="pagination-info">Column {{ index + 1 }} of {{ total }}</span>
-                
-                {% if index < total - 1 %}
-                <a href="{{ url_for('view_concept', index=index+1) }}" class="pagination-link">Next &rarr;</a>
-                {% else %}
-                <span class="pagination-link disabled">Next &rarr;</span>
-                {% endif %}
-            </div>
-            
             <!-- Wizard/Stepper interface -->
             <div class="stepper">
                 <div class="step-indicators">
@@ -58,9 +41,9 @@
                             <textarea id="description" class="concept-description" placeholder="Enter concept description or click Generate to create one automatically"></textarea>
                         </div>
 
-                        <div class="action-row" style="margin-bottom: 20px;">
+                        <div class="action-row action-row-margin">
                             <button class="action-button generate-btn" id="generate-btn">AI Generate Description</button>
-                            <div class="info-text" style="margin-top: 8px; font-size: 0.9em; color: #666;">
+                            <div class="info-text info-text-small">
                                 <i>ℹ️ By clicking this button, the title, current description content{% if column.is_codelist %}, and codelist values{% endif %} will be sent to OpenAI for processing.</i><br />
                             </div>
                         </div>
@@ -218,7 +201,7 @@
                             </div>
                         </div>
                         
-                        <div class="form-group" style="margin-top: 20px;">
+                        <div class="form-group form-group-margin-top">
                             <button class="action-button translate-btn" id="translate-btn">Translate Content</button>
                         </div>
                     </div>
@@ -244,7 +227,7 @@
                     
                     <div class="codelist-values">
                         <h4>Codelist Values</h4>
-                        <div id="generated-codes-container" style="display: none;">
+                        <div id="generated-codes-container" class="generated-codes-hidden">
                             <table id="codes-table" class="codes-table">
                                 <thead>
                                     <tr>
@@ -297,7 +280,7 @@
                     </div>
                     
                     <!-- Column import modal (hidden by default) -->
-                    <div id="column-import-modal" class="modal" style="display: none;">
+                    <div id="column-import-modal" class="modal column-import-modal-hidden">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h3 id="modal-title">Import Labels</h3>
@@ -310,7 +293,7 @@
                                         <option value="">-- Select a column --</option>
                                     </select>
                                 </div>
-                                <div id="column-preview" style="margin-top: 15px; display: none;">
+                                <div id="column-preview" class="column-preview-hidden">
                                     <h4>Preview:</h4>
                                     <ul id="preview-list" class="preview-list"></ul>
                                 </div>
@@ -451,7 +434,7 @@
         </div>
         
         <!-- Status messages area -->
-        <div class="status-area" id="status-area" style="display: none;">
+        <div class="status-area status-area-hidden" id="status-area">
             <div id="status-message"></div>
         </div>
     </div>

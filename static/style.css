@@ -498,6 +498,24 @@ table td:nth-child(4) {
     color: #6a1b9a;
 }
 
+.submitted-badge {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 10px;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.submitted-badge:hover {
+    background-color: #45a049;
+    text-decoration: none;
+}
+
 .action-link {
     display: inline-block;
     padding: 6px 12px;
@@ -1255,4 +1273,61 @@ select:focus {
     background-color: #545b62;
 }
 
+/* Additional styles for multi-step form */
+.step {
+    display: none;
+}
+.step.active {
+    display: block;
+}
+#agency-selection {
+    display: none;
+    margin-top: 20px;
+}
+#error-container {
+    color: red;
+    margin-top: 20px;
+}
+.loading {
+    display: none;
+    margin-top: 10px;
+}
 
+/* Inline style conversions from concept.html */
+.action-row-margin {
+    margin-bottom: 20px;
+}
+
+.info-text-small {
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.form-group-margin-top {
+    margin-top: 20px;
+}
+
+.generated-codes-hidden {
+    display: none;
+}
+
+.column-import-modal-hidden {
+    display: none;
+}
+
+.column-preview-hidden {
+    margin-top: 15px;
+    display: none;
+}
+
+.status-area-hidden {
+    display: none;
+}
+
+.concept-header-lead {
+    padding-top: 16px;
+    font-weight: bold;
+    color: lightgrey;
+    margin-top: 5px;
+}

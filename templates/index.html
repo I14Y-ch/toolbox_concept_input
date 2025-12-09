@@ -4,33 +4,15 @@
     <title>Concept Import</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <style>
-        /* Additional styles for multi-step form */
-        .step {
-            display: none;
-        }
-        .step.active {
-            display: block;
-        }
-        #agency-selection {
-            display: none;
-            margin-top: 20px;
-        }
-        #error-container {
-            color: red;
-            margin-top: 20px;
-        }
-        .loading {
-            display: none;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <header class="concept-header">
             <div class="concept-header-content">
-                <h1 class="concept-header-title">Dataset Auto Import</h1>
+                <h1 class="concept-header-title">Generate I14Y Concepts from Data</h1>
+            </div>
+            <div class="lead">
+                <p class="concept-header-lead">Extract concepts from your data tables and publish them directly to I14Y.</p>
             </div>
         </header>
         

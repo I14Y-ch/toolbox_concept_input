@@ -928,10 +928,20 @@ def submit_concept():
         if response.status_code == 201:  # Created
             # Extract location header for concept GUID
             location = response.headers.get('Location', '')
+            # Extract GUID from location (e.g., "/api/partner/v1/concepts/abc-123-def")
+            guid = location.split('/')[-1] if location else ''
+            
+            # Mark this concept as submitted in session data with GUID
+            if 'submitted_concepts' not in session_data:
+                session_data['submitted_concepts'] = {}
+            session_data['submitted_concepts'][index] = guid
+            save_session_data(session_data, session['session_data_id'])
+            
             return jsonify({
                 'success': True,
                 'message': 'Concept created successfully',
-                'location': location
+                'location': location,
+                'guid': guid
             })
         
         elif response.status_code == 409:  # Conflict - concept already exists
@@ -997,7 +1007,8 @@ def results():
     return render_template('results.html', 
                           columns=session_data['columns'],
                           form_data=session_data['form_data'],
-                          themes=VALID_THEMES)  # Pass themes to the template
+                          themes=VALID_THEMES,  # Pass themes to the template
+                          submitted_concepts=session_data.get('submitted_concepts', {}))
 
 @app.route('/concept/<int:index>', methods=['GET'])
 def view_concept(index):
