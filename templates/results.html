@@ -20,7 +20,12 @@
                 {% for col in columns %}
                 <div class="column-item">
                     <div class="column-summary">
-                        <h3>{{ col.name }}</h3>
+                        <h3>
+                            {{ col.name }}
+                            {% if loop.index0 in submitted_concepts %}
+                                <a href="https://input.i14y.admin.ch/catalog/concepts/{{ submitted_concepts[loop.index0] }}" target="_blank" class="submitted-badge">✓ Submitted</a>
+                            {% endif %}
+                        </h3>
                         <p class="type-badge {{ col.type|lower }}">{{ col.type }} {% if col.is_codelist %}(Codelist){% endif %}</p>
                     </div>
                     <div class="column-actions">
