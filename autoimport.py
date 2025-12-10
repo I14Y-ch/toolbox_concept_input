@@ -730,13 +730,17 @@ def upload_file():
                 return jsonify({'error': 'No selected file'})
             
             file_ext = os.path.splitext(file.filename)[1].lower()
+            # Canonical mapping for allowed file types
+            allowed_extensions = {'.xlsx': '.xlsx', '.xls': '.xls', '.csv': '.csv'}
+            # Only accept one of the allowed extensions
+            dataset_suffix = allowed_extensions.get(file_ext)
             file_bytes = file.read()
             if not file_bytes:
                 return jsonify({'error': 'Uploaded file is empty'}), 400
             
-            if file_ext in ('.xlsx', '.xls'):
+            if dataset_suffix == '.xlsx' or dataset_suffix == '.xls':
                 df = pd.read_excel(io.BytesIO(file_bytes))
-            elif file_ext == '.csv':
+            elif dataset_suffix == '.csv':
                 df = read_csv_with_encoding_fallback(io.BytesIO(file_bytes), sep=None, engine='python')
             else:
                 return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'}), 400
@@ -750,7 +754,6 @@ def upload_file():
             return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
         
         session_id = str(uuid.uuid4())
-        dataset_suffix = file_ext if file_ext else '.bin'
         dataset_path = os.path.join(SESSION_DATA_DIR, f"{session_id}{dataset_suffix}")
         with open(dataset_path, 'wb') as dataset_file:
             dataset_file.write(file_bytes)
