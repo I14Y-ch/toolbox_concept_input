@@ -1,42 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Analysis Results - Dataset Auto Import</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - I14Y Concept Import</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
-    <div class="container">
-        <header class="concept-header">
-            <div class="concept-header-content">
-                <h1 class="concept-header-title">Analysis Results</h1>
-                <a href="{{ url_for('upload_file') }}" class="btn-back-overview">&larr; Back to Upload</a>
+    <header>
+        <div class="header-wrapper">
+            <div class="layout-brand">
+                <div class="logo">
+                    <a href="https://i14y.admin.ch">
+                        <img src="{{ url_for('static', filename='logo.svg') }}" alt="Logo Eidgenossenschaft">
+                    </a>
+                </div>
+                <h1 class="header-title">I14Y Concept Import</h1>
             </div>
-        </header>
-        
-        <div id="results">
-            <h2>Detected Columns</h2>
-            <div class="columns-list">
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <a href="{{ url_for('upload_file') }}" class="back-link">Back to Upload</a>
+            
+            <div class="page-header">
+                <h1>Detected Columns</h1>
+                <p class="page-lead">{{ columns|length }} column{{ 's' if columns|length != 1 }} detected. Click on each to edit and create concepts.</p>
+            </div>
+
+            <div class="concept-grid">
                 {% for col in columns %}
-                <div class="column-item">
-                    <div class="column-summary">
-                        <h3>
-                            {{ col.name }}
+                <div class="concept-card">
+                    <div class="concept-card-header">
+                        <h3 class="concept-card-title">{{ col.name }}</h3>
+                        <div>
+                            <span class="badge badge-{{ col.type|lower }}">
+                                {{ col.type }}{% if col.is_codelist %} · Codelist{% endif %}
+                            </span>
                             {% if loop.index0 in submitted_concepts %}
-                                <a href="https://input.i14y.admin.ch/catalog/concepts/{{ submitted_concepts[loop.index0] }}" target="_blank" class="submitted-badge">✓ Submitted</a>
+                                <a href="https://input.i14y.admin.ch/catalog/concepts/{{ submitted_concepts[loop.index0] }}" 
+                                   target="_blank" 
+                                   class="badge badge-success ml-2">
+                                    ✓ Submitted
+                                </a>
                             {% endif %}
-                        </h3>
-                        <p class="type-badge {{ col.type|lower }}">{{ col.type }} {% if col.is_codelist %}(Codelist){% endif %}</p>
+                        </div>
                     </div>
-                    <div class="column-actions">
-                        <a href="{{ url_for('view_concept', index=loop.index0) }}" class="action-link">
-                            View Details & Create Concept
-                        </a>
+                    
+                    <div class="concept-card-body">
+                        {% if col.sample_values %}
+                        <p class="text-muted mb-2"><strong>Sample values:</strong></p>
+                        <p class="text-muted">{{ col.sample_values[:3]|join(', ') }}{% if col.sample_values|length > 3 %}...{% endif %}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="concept-card-footer">
+                        {% if loop.index0 in submitted_concepts %}
+                            <a href="https://input.i14y.admin.ch/catalog/concepts/{{ submitted_concepts[loop.index0] }}" 
+                               target="_blank" 
+                               class="btn btn-primary" 
+                               style="width: 100%;">
+                                Edit Concept
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('view_concept', index=loop.index0) }}" class="btn btn-primary" style="width: 100%;">
+                                Create Concept
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="https://www.bfs.admin.ch/bfs/de/home/bfs/bundesamt-statistik/rechtliche-hinweise.html" target="_blank">Rechtliche Hinweise</a></li>
+                    <li><a href="https://github.com/i14y-ch" target="_blank">Github</a></li>
+                    <li><a href="https://www.linkedin.com/showcase/i14y/about/" target="_blank">LinkedIn</a></li>
+                    <li><a href="https://apiconsole.i14y.admin.ch/" target="_blank">API</a></li>
+                </ul>
+            </div>
+            <div class="footer-info">
+                <p>© 2025 Bundesamt für Statistik</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

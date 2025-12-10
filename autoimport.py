@@ -1,12 +1,11 @@
-from flask import Flask, request, render_template, jsonify, session, redirect, url_for, abort
+from flask import Flask, request, render_template, jsonify, session, redirect, url_for
 import pandas as pd
-from datetime import datetime, date
+from datetime import datetime
 import os
 import re
 import json
 import base64
 import jwt
-from collections import Counter
 from pandas.api.types import is_numeric_dtype, is_object_dtype
 import requests
 import config
@@ -109,8 +108,22 @@ def save_session_data(data, session_id=None):
     if not session_id:
         session_id = str(uuid.uuid4())
     file_path = os.path.join(SESSION_DATA_DIR, f"{session_id}.pkl")
-    with open(file_path, 'wb') as f:
-        pickle.dump(data, f)
+    # Use atomic write: write to temp file first, then rename
+    temp_path = file_path + '.tmp'
+    try:
+        with open(temp_path, 'wb') as f:
+            pickle.dump(data, f)
+        # Atomic rename
+        os.replace(temp_path, file_path)
+    except Exception as e:
+        # Clean up temp file if it exists
+        if os.path.exists(temp_path):
+            try:
+                os.remove(temp_path)
+            except:
+                pass
+        print(f"Error saving session data: {e}")
+        raise
     return session_id
 
 def load_session_data(session_id):
@@ -118,8 +131,16 @@ def load_session_data(session_id):
     file_path = os.path.join(SESSION_DATA_DIR, f"{session_id}.pkl")
     if not os.path.exists(file_path):
         return None
-    with open(file_path, 'rb') as f:
-        return pickle.load(f)
+    try:
+        with open(file_path, 'rb') as f:
+            return pickle.load(f)
+    except (EOFError, pickle.UnpicklingError) as e:
+        # File is corrupted or empty
+        print(f"Error loading session data {session_id}: {e}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error loading session data {session_id}: {e}")
+        return None
 
 def load_uploaded_dataframe(session_data):
     """Reconstruct the original dataframe from the stored upload."""
@@ -621,13 +642,7 @@ def fetch_user_agencies(token):
     
     return []
 
-def fetch_agencies_authenticated(token):
-    """Kept for compatibility - just calls fetch_user_agencies"""
-    return fetch_user_agencies(token)
 
-def fetch_agencies():
-    """Deprecated - agencies are now extracted from token"""
-    return []
 
 def read_csv_with_encoding_fallback(file, **kwargs):
     """Read CSV content trying multiple encodings and delimiters."""
@@ -685,43 +700,9 @@ def upload_file():
     
     if request.method == 'POST':
         try:
-            # Get the token from the form
-            token = request.form.get('token')
-            if not token:
-                return jsonify({'error': 'API token is required'}), 400
+            # No token required at upload time - it will be provided later
             
-            # Clean the token by removing Bearer prefix if present
-            clean_token = token.strip()
-            if clean_token.upper().startswith('BEARER '):
-                clean_token = clean_token[7:].strip()  # Remove "BEARER " (7 characters)
-            
-            # Extract agencies from the cleaned token
-            agencies = fetch_user_agencies(clean_token)
-            
-            if not agencies:
-                return jsonify({'error': 'Could not extract agencies from the provided token. Please verify your token is correct.'}), 400
-            
-            # Check if an agency was selected or needs to be selected
-            selected_agency = request.form.get('selected_agency')
-            if not selected_agency:
-                if len(agencies) == 1:
-                    # If only one agency, use it automatically
-                    selected_agency = agencies[0]['identifier']
-                else:
-                    # If multiple agencies, return selection data
-                    return jsonify({
-                        'needs_agency_selection': True,
-                        'agencies': agencies,
-                        'token': token,
-                        'themes': VALID_THEMES
-                    })
-            
-            # Validate that the selected agency is in the user's agencies
-            valid_agency_ids = [agency['identifier'] for agency in agencies]
-            if selected_agency not in valid_agency_ids:
-                return jsonify({'error': 'Selected agency is not available for this user'}), 400
-            
-            # Now we have the token and selected agency
+            # Now we don't need token or agency validation upfront
             if 'file' not in request.files:
                 return jsonify({'error': 'No file part'})
             
@@ -751,7 +732,6 @@ def upload_file():
         except Exception as e:
             import traceback
             traceback.print_exc()
-            return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
         
         session_id = str(uuid.uuid4())
         dataset_path = os.path.join(SESSION_DATA_DIR, f"{session_id}{dataset_suffix}")
@@ -760,14 +740,12 @@ def upload_file():
 
         columns_info = []
         form_data = {
-            'responsible_person': request.form.get('responsible_person'),
-            'responsible_deputy': request.form.get('responsible_deputy'),
-            'publisher_id': selected_agency,
             'theme': request.form.get('theme')
         }
         
-        if not all(form_data.values()):
-            return jsonify({'error': 'All concept information fields are required'})
+        # Validate theme
+        if not form_data['theme']:
+            return jsonify({'error': 'Theme is required'})
         if form_data['theme'] not in VALID_THEMES:
             return jsonify({'error': 'Invalid theme code'})
         
@@ -796,7 +774,6 @@ def upload_file():
         session_data = {
             'columns': columns_info,
             'form_data': form_data,
-            'token': clean_token,
             'dataset_file': {
                 'path': dataset_path,
                 'type': dataset_suffix,
@@ -822,15 +799,6 @@ def logout():
         session.pop('session_data_id', None)
     return redirect(url_for('upload_file'))
 
-@app.route('/api/cleanup-sessions', methods=['POST'])
-def manual_cleanup():
-    """Manually trigger cleanup of old session files (admin endpoint)"""
-    try:
-        cleanup_old_session_files()
-        return jsonify({'message': 'Session cleanup completed'})
-    except Exception as e:
-        return jsonify({'error': f'Cleanup failed: {str(e)}'}), 500
-
 @app.route('/api/get-default-description/<int:index>', methods=['GET'])
 def get_default_description(index):
     """Generate a default description for a concept"""
@@ -854,6 +822,50 @@ def get_default_description(index):
     
     return jsonify({'description': description})
 
+@app.route('/api/generate-description/<int:index>', methods=['POST'])
+def generate_description(index):
+    """Generate an AI-powered description for a concept"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        # Session expired - clean up and return error
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired'}), 404
+    
+    if index < 0 or index >= len(session_data.get('columns', [])):
+        return jsonify({'error': 'Invalid column index'}), 400
+    
+    column = session_data['columns'][index]
+    
+    # Get request data
+    data = request.get_json() or {}
+    title = data.get('title', '')
+    description = data.get('description', '')
+    lang = data.get('lang', 'de')
+    codelist_values = data.get('codelist_values', None)
+    
+    # Generate AI-powered description
+    try:
+        generated_description = generate_concept_description(
+            column=column,
+            lang=lang,
+            title=title,
+            description=description,
+            codelist_values=codelist_values,
+            use_openai=True
+        )
+        
+        return jsonify({'description': generated_description})
+    
+    except Exception as e:
+        print(f"Error generating description: {e}")
+        # Fallback to default description
+        fallback_description = generate_default_description(column, lang)
+        return jsonify({'description': fallback_description, 'fallback': True})
+
 @app.route('/api/submit-concept', methods=['POST'])
 def submit_concept():
     """Submit a concept to the I14Y API"""
@@ -876,8 +888,29 @@ def submit_concept():
         return jsonify({'error': 'Invalid column index'}), 400
     
     column = session_data['columns'][index]
-    form_data = session_data['form_data']
-    token = session_data.get('token', '')
+    
+    # Get agency and contact info from request (provided by user at submission time)
+    agency = data.get('agency', '')
+    responsible_person = data.get('responsible_person', '')
+    responsible_deputy = data.get('responsible_deputy', '')
+    
+    if not agency or not responsible_person or not responsible_deputy:
+        return jsonify({'error': 'Agency and contact information are required'}), 400
+    
+    # Build form_data with submission-time information
+    form_data = {
+        'publisher_id': agency,
+        'responsible_person': responsible_person,
+        'responsible_deputy': responsible_deputy,
+        'theme': session_data['form_data'].get('theme', '')
+    }
+    
+    # Get token from Authorization header
+    auth_header = request.headers.get('Authorization', '')
+    token = auth_header.replace('Bearer ', '').strip() if auth_header.startswith('Bearer ') else auth_header.strip()
+    
+    if not token:
+        return jsonify({'error': 'Authorization token is required'}), 401
     
     # Extract concept parameters
     title = data.get('title', '')
@@ -910,12 +943,7 @@ def submit_concept():
         keywords=keywords,
         custom_identifier=custom_identifier
     )
-    
-    # Debug: Log the keywords being sent
-    print(f"DEBUG - Translations received: {translations}")
-    print(f"DEBUG - Keywords string: {keywords}")
-    print(f"DEBUG - Generated concept_json keywords: {concept_json.get('data', {}).get('keywords', [])}")
-    
+       
     # Prepare the API request
     url = 'https://api.i14y.admin.ch/api/partner/v1/concepts'
     headers = {
@@ -938,7 +966,11 @@ def submit_concept():
             if 'submitted_concepts' not in session_data:
                 session_data['submitted_concepts'] = {}
             session_data['submitted_concepts'][index] = guid
-            save_session_data(session_data, session['session_data_id'])
+            try:
+                save_session_data(session_data, session['session_data_id'])
+            except Exception as e:
+                print(f"Warning: Could not save session data after submission: {e}")
+                # Don't fail the request if session save fails - concept was already created
             
             return jsonify({
                 'success': True,
@@ -1002,9 +1034,10 @@ def results():
     # Get session data from file
     session_data = load_session_data(session['session_data_id'])
     if not session_data:
-        # Session data expired or not found - clean up the session file
+        # Session data expired, corrupted, or not found - clean up the session file
         cleanup_session_file(session['session_data_id'])
         session.pop('session_data_id', None)
+        # Flash error message and redirect
         return redirect(url_for('upload_file'))
     
     return render_template('results.html', 
@@ -1038,7 +1071,6 @@ def view_concept(index):
                           index=index,
                           total=len(session_data['columns']),
                           form_data=session_data['form_data'],
-                          token=session_data.get('token', ''),
                           saved_data=concept_data)  # Pass saved concept data to template
 
 @app.route('/api/save-concept-data/<int:index>', methods=['POST'])
@@ -1071,10 +1103,13 @@ def save_concept_data(index):
     # Save the data for this specific concept
     session_data['concept_data'][str(index)] = data
     
-    # Save back to file
-    save_session_data(session_data, session_id=session['session_data_id'])
-    
-    return jsonify({'success': True})
+    # Save back to file with error handling
+    try:
+        save_session_data(session_data, session_id=session['session_data_id'])
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error saving concept data: {e}")
+        return jsonify({'error': 'Failed to save concept data'}), 500
 
 def generate_concept_json(column, form_data, description, params=None, translations=None, dataset_metadata=None, keywords=None, custom_identifier=None):
     """Generate a concept JSON based on column information and user inputs"""
@@ -1379,31 +1414,6 @@ def generate_default_description(column, lang="de"):
             description += f". Muster: {column['pattern']}"
     
     return description
-
-def estimate_field_values(column):
-    """Estimate field values based on column data for form pre-filling"""
-    params = {}
-    
-    if column['type'] == 'Number' and not column['is_codelist']:
-        # If we tracked min/max in analyze_column_type, we'd use those values
-        # For now we'll use defaults
-        params['min_value'] = 0
-        params['max_value'] = 999
-        params['decimals'] = 0
-        params['unit'] = ""
-    
-    if column['type'] == 'String' and not column['is_codelist']:
-        # If we had string length info in analyze_column_type
-        params['max_length'] = 255
-    
-    if column['type'] == 'Date' and not column['is_codelist']:
-        # Add date-specific parameters
-        params['format'] = column.get('format', 'YYYY-MM-DD')
-    
-    if column.get('pattern'):
-        params['pattern'] = column['pattern']
-    
-    return params
 
 @app.route('/api/extract-keywords/<int:index>', methods=['POST'])
 def extract_keywords(index):
@@ -2332,6 +2342,55 @@ def verify_token():
         response_data['preselected_agency'] = preselected_agency
     
     return jsonify(response_data)
+
+@app.route('/api/save-submission-info', methods=['POST'])
+def save_submission_info():
+    """Save token and email information to session for reuse"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        return jsonify({'error': 'Session expired'}), 404
+    
+    data = request.get_json() or {}
+    
+    # Save submission info
+    if 'submission_info' not in session_data:
+        session_data['submission_info'] = {}
+    
+    if data.get('token'):
+        session_data['submission_info']['token'] = data['token']
+    if data.get('responsible_person'):
+        session_data['submission_info']['responsible_person'] = data['responsible_person']
+    if data.get('responsible_deputy'):
+        session_data['submission_info']['responsible_deputy'] = data['responsible_deputy']
+    if data.get('agency'):
+        session_data['submission_info']['agency'] = data['agency']
+    
+    try:
+        save_session_data(session_data, session_id=session['session_data_id'])
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error saving submission info: {e}")
+        return jsonify({'error': 'Failed to save submission info'}), 500
+
+@app.route('/api/get-submission-info', methods=['GET'])
+def get_submission_info():
+    """Retrieve saved token and email information from session"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        return jsonify({'error': 'Session expired'}), 404
+    
+    submission_info = session_data.get('submission_info', {})
+    
+    return jsonify({
+        'success': True,
+        'submission_info': submission_info
+    })
 
 if __name__ == '__main__':
     print("Starting I14Y AutoImport application...")

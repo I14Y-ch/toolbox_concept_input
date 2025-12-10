@@ -1,201 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Concept Import</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I14Y Concept Import</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
-    <div class="container">
-        <header class="concept-header">
-            <div class="concept-header-content">
-                <h1 class="concept-header-title">Generate I14Y Concepts from Data</h1>
-            </div>
-            <div class="lead">
-                <p class="concept-header-lead">Extract concepts from your data tables and publish them directly to I14Y.</p>
-            </div>
-        </header>
-        
-        <!-- Step 1: Token input -->
-        <div id="step1" class="step active">
-            <fieldset>
-                <legend>API Token</legend>
-                <div class="form-group">
-                    <label for="token">Enter your I14Y API Token:</label>
-                    <input type="text" id="token" name="token" required>
+    <header>
+        <div class="header-wrapper">
+            <div class="layout-brand">
+                <div class="logo">
+                    <a href="https://i14y.admin.ch">
+                        <img src="{{ url_for('static', filename='logo_i14y.png') }}" alt="Logo I14Y">
+                    </a>
                 </div>
-                <button id="verify-token-btn" type="button">Verify Token</button>
-                <div id="token-loading" class="loading">Verifying token...</div>
-            </fieldset>
-            
-            <!-- Agency selection will appear here if needed -->
-            <div id="agency-selection">
-                <fieldset>
-                    <legend>Select Agency</legend>
-                    <div class="form-group">
-                        <label for="selected-agency">Select your organization:</label>
-                        <select id="selected-agency" name="selected_agency" required>
-                            <option value="">-- Select an agency --</option>
-                            <!-- Options will be added dynamically -->
-                        </select>
-                    </div>
-                    <button id="select-agency-btn" type="button">Continue</button>
-                </fieldset>
+                <h1 class="header-title">I14Y Concept Import</h1>
             </div>
         </div>
-        
-        <!-- Step 2: Full form -->
-        <div id="step2" class="step">
-            <form id="upload-form" method="post" enctype="multipart/form-data">
-                <!-- Hidden fields to carry over from step 1 -->
-                <input type="hidden" id="form-token" name="token">
-                <input type="hidden" id="form-agency" name="selected_agency">
-                
-                <fieldset>
-                    <legend>File Upload</legend>
-                    <div class="form-group">
-                        <label for="file">Data File (Excel or CSV):</label>
-                        <input type="file" id="file" name="file" accept=".xlsx,.xls,.csv" required>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Generate I14Y Concepts from Data</h1>
+                <p class="page-lead">Extract concepts from your data tables and publish them directly to I14Y.</p>
+            </div>
+
+            <!-- Upload and Configure -->
+            <div id="upload-section" class="card">
+                <h2 class="card-title">Upload Data & Configure</h2>
+                <p class="card-description">Upload your Excel or CSV file. The metadata will be derived automatically from the data. Don't provide datasets containing sensitive or personal information.</p>
+
+                <form id="upload-form" method="post" enctype="multipart/form-data">
+                    <!-- Drag and Drop Area -->
+                    <div id="drop-zone" style="border: 3px dashed var(--primary-color); border-radius: 12px; padding: 3rem 2rem; text-align: center; background: #fff5f5; margin-bottom: 1.5rem; transition: all 0.3s ease; cursor: pointer;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📁</div>
+                        <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--primary-color); margin-bottom: 0.5rem;">Drop your file here</h3>
+                        <p style="color: var(--secondary-text); margin-bottom: 1rem;">or</p>
+                        <button type="button" id="select-file-btn" class="btn btn-primary" style="font-size: 1rem; padding: 0.75rem 2rem;">
+                            <i class="fas fa-cloud-upload-alt" style="margin-right: 0.5rem;"></i>Select File
+                        </button>
+                        <input type="file" id="file" name="file" class="form-control" accept=".xlsx,.xls,.csv" required style="display: none;">
+                        <p style="color: var(--secondary-text); font-size: 0.875rem; margin-top: 1rem;">Supported formats: Excel (.xlsx, .xls) or CSV</p>
                     </div>
-                </fieldset>
-                
-                <fieldset>
-                    <legend>Concept Information</legend>
+
                     <div class="form-group">
-                        <label for="responsible_person">Responsible Person (email):</label>
-                        <input type="email" id="responsible_person" name="responsible_person" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="responsible_deputy">Deputy Person (email):</label>
-                        <input type="email" id="responsible_deputy" name="responsible_deputy" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="theme">Theme:</label>
-                        <select id="theme" name="theme" required>
+                        <label for="theme">Theme</label>
+                        <select id="theme" name="theme" class="form-control" required>
                             <option value="">Select a theme...</option>
                             {% for code, name in themes.items() %}
                             <option value="{{ code }}">{{ code }} - {{ name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                </fieldset>
 
-                <button type="submit">Analyze File</button>
-            </form>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1rem; padding: 0.875rem 1.5rem; font-weight: 600;">
+                        <i class="fas fa-play-circle" style="margin-right: 0.5rem;"></i>Analyze File
+                    </button>
+                </form>
+            </div>
+
+            <!-- Error container -->
+            <div id="error-container"></div>
         </div>
-        
-        <div id="error-container"></div>
-    </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="https://www.bfs.admin.ch/bfs/de/home/bfs/bundesamt-statistik/rechtliche-hinweise.html" target="_blank">Rechtliche Hinweise</a></li>
+                    <li><a href="https://github.com/i14y-ch" target="_blank">Github</a></li>
+                    <li><a href="https://www.linkedin.com/showcase/i14y/about/" target="_blank">LinkedIn</a></li>
+                    <li><a href="https://apiconsole.i14y.admin.ch/" target="_blank">API</a></li>
+                </ul>
+            </div>
+            <div class="footer-info">
+                <p>© 2025 Bundesamt für Statistik</p>
+            </div>
+        </div>
+    </footer>
+
 
     <script>
-        // Step 1: Token verification
-        document.getElementById('verify-token-btn').addEventListener('click', async () => {
-            const token = document.getElementById('token').value.trim();
-            if (!token) {
-                document.getElementById('error-container').innerHTML = '<p class="error">Please enter a valid token</p>';
-                return;
-            }
-            
-            document.getElementById('error-container').innerHTML = '';
-            document.getElementById('token-loading').style.display = 'block';
-            
-            try {
-                const response = await fetch('/api/verify-token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ token })
-                });
-                
-                document.getElementById('token-loading').style.display = 'none';
-                
-                const data = await response.json();
-                
-                if (!data.success) {
-                    document.getElementById('error-container').innerHTML = `<p class="error">${data.error || 'Invalid token'}</p>`;
-                    return;
-                }
-                
-                // Store token in hidden field for step 2
-                document.getElementById('form-token').value = token;
-                
-                // If user email is available, prefill the responsible person field
-                if (data.user_email) {
-                    document.getElementById('responsible_person').value = data.user_email;
-                }
-                
-                // Debug logging
-                console.log('Token verification response:', data);
-                
-                // Check if we need to show agency selection
-                if (data.agencies && data.agencies.length > 1) {
-                    // Multiple agencies - show selection
-                    const select = document.getElementById('selected-agency');
-                    // Clear existing options except first placeholder
-                    select.innerHTML = '<option value="">-- Select an agency --</option>';
-                    
-                    // Add agency options
-                    data.agencies.forEach(agency => {
-                        const option = document.createElement('option');
-                        option.value = agency.identifier;
-                        option.textContent = `${agency.name.de} (${agency.identifier})`;
-                        select.appendChild(option);
-                    });
-                    
-                    // Preselect agency if available
-                    if (data.preselected_agency) {
-                        console.log('Preselecting agency:', data.preselected_agency);
-                        select.value = data.preselected_agency;
-                        console.log('Selected value after setting:', select.value);
-                    } else {
-                        console.log('No preselected agency provided');
-                    }
-                    
-                    // Show the agency selection
-                    document.getElementById('agency-selection').style.display = 'block';
-                } else if (data.agencies && data.agencies.length === 1) {
-                    // Single agency - use it automatically
-                    document.getElementById('form-agency').value = data.agencies[0].identifier;
-                    // Proceed to step 2
-                    goToStep2();
-                } else {
-                    document.getElementById('error-container').innerHTML = '<p class="error">No agencies found for this token</p>';
-                }
-            } catch (error) {
-                document.getElementById('token-loading').style.display = 'none';
-                document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
-            }
+        // Drag and drop functionality
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file');
+        
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
         });
         
-        // Handle agency selection
-        document.getElementById('select-agency-btn').addEventListener('click', () => {
-            const agencySelect = document.getElementById('selected-agency');
-            const selectedAgency = agencySelect.value;
-            
-            if (!selectedAgency) {
-                document.getElementById('error-container').innerHTML = '<p class="error">Please select an agency</p>';
-                return;
-            }
-            
-            // Store selected agency
-            document.getElementById('form-agency').value = selectedAgency;
-            
-            // Go to step 2
-            goToStep2();
-        });
-        
-        // Function to advance to step 2
-        function goToStep2() {
-            document.getElementById('step1').classList.remove('active');
-            document.getElementById('step2').classList.add('active');
-            document.getElementById('error-container').innerHTML = '';
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
         }
         
-        // Handle final form submission
+        // Highlight drop zone when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.style.borderColor = '#4caf50';
+                dropZone.style.backgroundColor = '#f0fdf4';
+                dropZone.style.transform = 'scale(1.02)';
+            }, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.style.borderColor = 'var(--primary-color)';
+                dropZone.style.backgroundColor = '#fff5f5';
+                dropZone.style.transform = 'scale(1)';
+            }, false);
+        });
+        
+        // Handle dropped files
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            
+            // Show selected file name
+            if (files.length > 0) {
+                const fileName = files[0].name;
+                const fileNameDisplay = document.querySelector('[data-file-name]');
+                if (!fileNameDisplay) {
+                    const display = document.createElement('p');
+                    display.setAttribute('data-file-name', '');
+                    display.style.color = '#4caf50';
+                    display.style.fontWeight = '600';
+                    display.style.marginTop = '1rem';
+                    display.textContent = '✓ File selected: ' + fileName;
+                    dropZone.appendChild(display);
+                } else {
+                    fileNameDisplay.textContent = '✓ File selected: ' + fileName;
+                }
+            }
+        }, false);
+        
+        // Handle file selection via button
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                const fileNameDisplay = document.querySelector('[data-file-name]');
+                if (!fileNameDisplay) {
+                    const display = document.createElement('p');
+                    display.setAttribute('data-file-name', '');
+                    display.style.color = '#4caf50';
+                    display.style.fontWeight = '600';
+                    display.style.marginTop = '1rem';
+                    display.textContent = '✓ File selected: ' + fileName;
+                    dropZone.appendChild(display);
+                } else {
+                    fileNameDisplay.textContent = '✓ File selected: ' + fileName;
+                }
+            }
+        });
+        
+        // Trigger file input when "Select File" button is clicked
+        document.getElementById('select-file-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            fileInput.click();
+        });
+        
+        // Form submission
         document.getElementById('upload-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
+            const errorContainer = document.getElementById('error-container');
             
             try {
                 const response = await fetch('/', {
@@ -203,142 +179,31 @@
                     body: formData
                 });
                 
-                // Check if response is redirect
                 if (response.redirected) {
                     window.location.href = response.url;
                     return;
                 }
                 
-                // Check content type before parsing
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     const data = await response.json();
                     
-                    // Handle agency selection
-                    if (data.needs_agency_selection) {
-                        // Show agency selection UI
-                        showAgencySelection(data.agencies, data.token, data.themes);
-                        return;
-                    }
-                    
-                    // Handle success redirect
                     if (data.success && data.redirect_url) {
                         window.location.href = data.redirect_url;
                         return;
                     }
                     
-                    // Handle errors
                     if (data.error) {
-                        document.getElementById('error-container').innerHTML = `<p class="error">${data.error}</p>`;
+                        errorContainer.innerHTML = `<div class="alert alert-error">${data.error}</div>`;
                         return;
                     }
-                } else if (contentType && contentType.includes('text/html')) {
-                    // If we get HTML back, it's likely an error page
-                    const htmlText = await response.text();
-                    // Try to extract error message from HTML or show generic error
-                    if (!response.ok) {
-                        document.getElementById('error-container').innerHTML = `<p class="error">Server error occurred. Please check the file format and try again.</p>`;
-                    } else {
-                        // This shouldn't happen, but handle it
-                        document.getElementById('error-container').innerHTML = `<p class="error">Unexpected response format. Please try again.</p>`;
-                    }
                 } else {
-                    // Unknown content type
-                    const text = await response.text();
-                    console.error('Unexpected response:', text);
-                    document.getElementById('error-container').innerHTML = `<p class="error">Unexpected server response. Please try again.</p>`;
+                    errorContainer.innerHTML = '<div class="alert alert-error">Server error occurred. Please check the file format and try again.</div>';
                 }
             } catch (error) {
-                console.error('Upload error:', error);
-                document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                errorContainer.innerHTML = `<div class="alert alert-error">Error: ${error.message}</div>`;
             }
         });
-        
-        function showAgencySelection(agencies, token, themes) {
-            // Hide the upload form
-            document.getElementById('upload-form').style.display = 'none';
-            
-            // Create agency selection UI
-            const agencyContainer = document.createElement('div');
-            agencyContainer.id = 'agency-selection';
-            agencyContainer.innerHTML = `
-                <h2>Select Agency</h2>
-                <p>Please select the agency you want to use for this concept import:</p>
-                <form id="agency-form">
-                    <input type="hidden" name="token" value="${token}">
-                    <input type="hidden" name="file" value="">
-                    <input type="hidden" name="responsible_person" value="">
-                    <input type="hidden" name="responsible_deputy" value="">
-                    <input type="hidden" name="theme" value="">
-                    
-                    <div class="agency-list">
-                        ${agencies.map(agency => `
-                            <label class="agency-option">
-                                <input type="radio" name="selected_agency" value="${agency.identifier}" required>
-                                <span class="agency-name">${agency.name.de}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Continue with Selected Agency</button>
-                    <button type="button" onclick="cancelAgencySelection()" class="btn btn-secondary">Cancel</button>
-                </form>
-            `;
-            
-            // Copy values from original form
-            const originalForm = document.getElementById('upload-form');
-            agencyContainer.querySelector('input[name="file"]').value = originalForm.querySelector('input[name="file"]').value;
-            agencyContainer.querySelector('input[name="responsible_person"]').value = originalForm.querySelector('input[name="responsible_person"]').value;
-            agencyContainer.querySelector('input[name="responsible_deputy"]').value = originalForm.querySelector('input[name="responsible_deputy"]').value;
-            agencyContainer.querySelector('input[name="theme"]').value = originalForm.querySelector('select[name="theme"]').value;
-            
-            // Insert after the upload form
-            originalForm.parentNode.insertBefore(agencyContainer, originalForm.nextSibling);
-            
-            // Handle agency form submission
-            document.getElementById('agency-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const agencyFormData = new FormData(e.target);
-                
-                try {
-                    const response = await fetch('/', {
-                        method: 'POST',
-                        body: agencyFormData
-                    });
-                    
-                    const contentType = response.headers.get('content-type');
-                    if (contentType && contentType.includes('application/json')) {
-                        const data = await response.json();
-                        
-                        if (data.success && data.redirect_url) {
-                            window.location.href = data.redirect_url;
-                            return;
-                        }
-                        
-                        if (data.error) {
-                            document.getElementById('error-container').innerHTML = `<p class="error">${data.error}</p>`;
-                            return;
-                        }
-                    } else {
-                        document.getElementById('error-container').innerHTML = `<p class="error">Unexpected response format. Please try again.</p>`;
-                    }
-                } catch (error) {
-                    console.error('Agency selection error:', error);
-                    document.getElementById('error-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
-                }
-            });
-        }
-        
-        function cancelAgencySelection() {
-            // Remove agency selection UI
-            const agencyContainer = document.getElementById('agency-selection');
-            if (agencyContainer) {
-                agencyContainer.remove();
-            }
-            
-            // Show the upload form again
-            document.getElementById('upload-form').style.display = 'block';
-        }
     </script>
 </body>
 </html>
