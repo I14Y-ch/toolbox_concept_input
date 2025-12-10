@@ -1,262 +1,308 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <title>{{ column.name }} - Concept Details</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ column.name }} - I14Y Concept Import</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     </head>
     <body>
-        <div class="container">
-            <header class="concept-header">
-                <div class="concept-header-content">
-                    <h1 class="concept-header-title">Concept Input</h1>
-                    <a href="{{ url_for('results') }}" class="btn-back-overview">Back to Overview</a>
+        <header>
+            <div class="header-wrapper">
+                <div class="layout-brand">
+                    <div class="logo">
+                        <a href="https://i14y.admin.ch">
+                            <img src="{{ url_for('static', filename='logo.svg') }}" alt="Logo Eidgenossenschaft">
+                        </a>
+                    </div>
+                    <h1 class="header-title">I14Y Concept Import</h1>
                 </div>
-            </header>
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+                <a href="{{ url_for('results') }}" class="back-link">Back to Overview</a>
+                
+                <div class="page-header">
+                    <h1>{{ column.name }}</h1>
+                    <p class="page-lead">Create and configure your I14Y concept step by step.</p>
+                </div>
             
-            <!-- Wizard/Stepper interface -->
-            <div class="stepper">
-                <div class="step-indicators">
-                    <div class="step-indicator active" data-step="1">1. Generate & Edit</div>
-                    <div class="step-indicator" data-step="2">2. Translate</div>
+                <!-- Progress Steps -->
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="progress-step-circle">1</div>
+                        <div class="progress-step-label">Generate & Edit</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="progress-step-circle">2</div>
+                        <div class="progress-step-label">Translate</div>
+                    </div>
                     {% if column.is_codelist %}
-                    <div class="step-indicator" data-step="3">3. Codelist</div>
+                    <div class="progress-step" data-step="3">
+                        <div class="progress-step-circle">3</div>
+                        <div class="progress-step-label">Codelist</div>
+                    </div>
                     {% endif %}
-                    <div class="step-indicator" data-step="{% if column.is_codelist %}4{% else %}3{% endif %}">{% if column.is_codelist %}4{% else %}3{% endif %}. Review & Publish</div>
+                    <div class="progress-step" data-step="{% if column.is_codelist %}4{% else %}3{% endif %}">
+                        <div class="progress-step-circle">{% if column.is_codelist %}4{% else %}3{% endif %}</div>
+                        <div class="progress-step-label">Review & Publish</div>
+                    </div>
                 </div>
                 
-                <div class="step-content">
-                    <!-- Step 1: Generate and Edit -->
-                    <div class="step-panel active" id="step-1">
-                        <h3 class="panel-title">Step 1: Generate and Edit Concept Details</h3>
-                        <p class="panel-description">Edit the title and description, or generate a description automatically.</p>
+                <!-- Step 1: Generate and Edit -->
+                <div class="step-panel active" id="step-1">
+                    <div class="card">
+                        <h2 class="card-title">Step 1: Generate and Edit Concept Details</h2>
+                        <p class="card-description">Edit the title and description, or generate a description automatically using AI.</p>
                         
                         <div class="form-group">
-                            <label for="title">Title:</label>
-                            <input type="text" id="title" class="concept-title" value="{{ column.name }}" placeholder="Enter concept title">
+                            <label for="title">Title</label>
+                            <input type="text" id="title" class="form-control" value="{{ column.name }}" placeholder="Enter concept title">
                         </div>
                         
                         <div class="form-group">
-                            <label for="description">Description:</label>
-                            <textarea id="description" class="concept-description" placeholder="Enter concept description or click Generate to create one automatically"></textarea>
+                            <label for="description">Description</label>
+                            <textarea id="description" class="form-control" placeholder="Enter concept description or click Generate to create one automatically"></textarea>
                         </div>
 
-                        <div class="action-row action-row-margin">
-                            <button class="action-button generate-btn" id="generate-btn">AI Generate Description</button>
-                            <div class="info-text info-text-small">
-                                <i>ℹ️ By clicking this button, the title, current description content{% if column.is_codelist %}, and codelist values{% endif %} will be sent to OpenAI for processing.</i><br />
-                            </div>
+                        <button class="btn btn-primary mb-3" id="generate-btn">
+                            <i class="fas fa-magic" style="margin-right: 0.5rem;"></i> AI Generate Description
+                        </button>
+                        <div class="alert alert-info mb-3" style="font-size: 0.875rem;">
+                            ℹ️ By clicking this button, the title, current description content{% if column.is_codelist %}, and codelist values{% endif %} will be sent to OpenAI for processing.
                         </div>
                         
                         <div class="form-group">
-                            <label for="keywords">Keywords:</label>
-                            <input type="text" id="keywords" class="concept-keywords" placeholder="Enter keywords separated by commas (e.g. data, statistics, analysis)">
+                            <label for="keywords">Keywords</label>
+                            <input type="text" id="keywords" class="form-control" placeholder="Enter keywords separated by commas (e.g. data, statistics, analysis)">
                         </div>
                         
-                        <div class="action-row">
-                            <button class="action-button generate-keywords-btn" id="generate-keywords-btn" disabled>Extract Keywords</button>
-                        </div>                         
+                        <button class="btn btn-secondary mb-3" id="generate-keywords-btn" disabled>
+                            Extract Keywords
+                        </button>                         
                         
                         <!-- Additional fields based on the type -->
                         {% if column.type == 'Number' and not column.is_codelist %}
-                        <div class="numeric-fields">
-                        <div class="form-group">
-                            <label for="min-value">Minimum Value:</label>
-                            <input type="number" id="min-value" class="min-value" placeholder="Min value">
+                        <div class="mt-4">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Number Configuration</h3>
+                            <div class="form-group">
+                                <label for="min-value">Minimum Value</label>
+                                <input type="number" id="min-value" class="form-control" placeholder="Min value">
+                            </div>
+                            <div class="form-group">
+                                <label for="max-value">Maximum Value</label>
+                                <input type="number" id="max-value" class="form-control" placeholder="Max value">
+                            </div>
+                            <div class="form-group">
+                                <label for="decimals">Decimal Places</label>
+                                <input type="number" id="decimals" class="form-control" placeholder="Number of decimal places" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="unit">Measurement Unit</label>
+                                <input type="text" id="unit" class="form-control" placeholder="e.g. mm, kg, °C">
+                            </div>
+                            <div class="form-group">
+                                <label for="pattern">Pattern (regex)</label>
+                                <input type="text" id="pattern" class="form-control" value="{{ column.pattern|default('') }}" placeholder="e.g. \d{1,3}">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="max-value">Maximum Value:</label>
-                            <input type="number" id="max-value" class="max-value" placeholder="Max value">
-                        </div>
-                        <div class="form-group">
-                            <label for="decimals">Decimal Places:</label>
-                            <input type="number" id="decimals" class="decimals" placeholder="Number of decimal places" value="0" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="unit">Measurement Unit:</label>
-                            <input type="text" id="unit" class="unit" placeholder="e.g. mm, kg, °C">
-                        </div>
-                        <div class="form-group">
-                            <label for="pattern">Pattern (regex):</label>
-                            <input type="text" id="pattern" class="pattern" value="{{ column.pattern|default('') }}" placeholder="e.g. \d{1,3}">
-                        </div>
-                    </div>
-                    {% endif %}
+                        {% endif %}
                     
-                    {% if column.type == 'String' and not column.is_codelist %}
-                    <div class="string-fields">
-                        <div class="form-group">
-                            <label for="pattern">Pattern (regex):</label>
-                            <input type="text" id="pattern" class="pattern" value="{{ column.pattern|default('') }}" placeholder="e.g. [A-Za-z]+">
+                        {% if column.type == 'String' and not column.is_codelist %}
+                        <div class="mt-4">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">String Configuration</h3>
+                            <div class="form-group">
+                                <label for="pattern">Pattern (regex)</label>
+                                <input type="text" id="pattern" class="form-control" value="{{ column.pattern|default('') }}" placeholder="e.g. [A-Za-z]+">
+                            </div>
+                            <div class="form-group">
+                                <label for="max-length">Maximum Length</label>
+                                <input type="number" id="max-length" class="form-control" placeholder="Max string length" value="255" min="1">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="max-length">Maximum Length:</label>
-                            <input type="number" id="max-length" class="max-length" placeholder="Max string length" value="255" min="1">
-                        </div>
-                    </div>
-                    {% endif %}
+                        {% endif %}
                     
-                    {% if column.type == 'Date' and not column.is_codelist %}
-                    <div class="date-fields">
-                        <div class="form-group">
-                            <label for="pattern">Pattern (regex):</label>
-                            <input type="text" id="pattern" class="pattern" value="{{ column.pattern|default('') }}" placeholder="e.g. \d{4}-\d{2}-\d{2}">
+                        {% if column.type == 'Date' and not column.is_codelist %}
+                        <div class="mt-4">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Date Configuration</h3>
+                            <div class="form-group">
+                                <label for="pattern">Pattern (regex)</label>
+                                <input type="text" id="pattern" class="form-control" value="{{ column.pattern|default('') }}" placeholder="e.g. \d{4}-\d{2}-\d{2}">
+                            </div>
+                            <div class="form-group">
+                                <label for="format">Date Format</label>
+                                <input type="text" id="format" class="form-control" value="{{ column.format|default('YYYY-MM-DD') }}" placeholder="e.g. YYYY-MM-DD">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="format">Date Format:</label>
-                            <input type="text" id="format" class="format" value="{{ column.format|default('YYYY-MM-DD') }}" placeholder="e.g. YYYY-MM-DD">
-                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
                     
+                    <div class="step-navigation mt-4">
+                        <button class="btn btn-primary" id="step-1-next">
+                            Next: Translate <span style="margin-left: 0.5rem;">→</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Step 2: Translate -->
                 <div class="step-panel" id="step-2">
-                    <h3 class="panel-title">Step 2: Translate Content</h3>
-                    <p class="panel-description">Translate the title and the description to all needed languages.</p>
+                    <div class="card">
+                        <h2 class="card-title">Step 2: Translate Content</h2>
+                        <p class="card-description">Translate the title, description, and keywords to all needed languages.</p>
+                        
+                        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Title Translations</h3>
+                        <div class="translation-grid">
+                            <div class="translation-item">
+                                <div class="translation-label">DE</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-title-de" class="form-control" value="{{ column.name }}">
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">FR</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-title-fr" class="form-control">
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">IT</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-title-it" class="form-control">
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">EN</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-title-en" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="font-size: 1.125rem; font-weight: 600; margin: 2rem 0 1rem;">Description Translations</h3>
+                        <div class="translation-grid">
+                            <div class="translation-item">
+                                <div class="translation-label">DE</div>
+                                <div class="translation-field">
+                                    <textarea id="trans-desc-de" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">FR</div>
+                                <div class="translation-field">
+                                    <textarea id="trans-desc-fr" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">IT</div>
+                                <div class="translation-field">
+                                    <textarea id="trans-desc-it" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">EN</div>
+                                <div class="translation-field">
+                                    <textarea id="trans-desc-en" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="font-size: 1.125rem; font-weight: 600; margin: 2rem 0 1rem;">Keyword Translations</h3>
+                        <div class="translation-grid">
+                            <div class="translation-item">
+                                <div class="translation-label">DE</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-keywords-de" class="form-control" placeholder="Keywords separated by commas">
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">FR</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-keywords-fr" class="form-control" placeholder="Keywords separated by commas">
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">IT</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-keywords-it" class="form-control" placeholder="Keywords separated by commas">
+                                </div>
+                            </div>
+                            <div class="translation-item">
+                                <div class="translation-label">EN</div>
+                                <div class="translation-field">
+                                    <input type="text" id="trans-keywords-en" class="form-control" placeholder="Keywords separated by commas">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary mt-4 mb-3" id="translate-btn">
+                            <i class="fas fa-language" style="margin-right: 0.5rem;"></i> Auto-Translate Content
+                        </button>
+                    </div>
                     
-                    <div class="translations-container" id="translations-container">
-                        <h4>Title Translations</h4>
-                        <div class="translation-grid">
-                            <div class="translation-row">
-                                <div class="translation-label">DE:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-title-de" class="translation-input" value="{{ column.name }}">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">FR:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-title-fr" class="translation-input">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">IT:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-title-it" class="translation-input">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">EN:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-title-en" class="translation-input">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <h4>Description Translations</h4>
-                        <div class="translation-grid">
-                            <div class="translation-row">
-                                <div class="translation-label">DE:</div>
-                                <div class="translation-field">
-                                    <textarea id="trans-desc-de" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">FR:</div>
-                                <div class="translation-field">
-                                    <textarea id="trans-desc-fr" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">IT:</div>
-                                <div class="translation-field">
-                                    <textarea id="trans-desc-it" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">EN:</div>
-                                <div class="translation-field">
-                                    <textarea id="trans-desc-en" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <h4>Keyword Translations</h4>
-                        <div class="translation-grid">
-                            <div class="translation-row">
-                                <div class="translation-label">DE:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-keywords-de" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">FR:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-keywords-fr" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">IT:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-keywords-it" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">EN:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="trans-keywords-en" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group form-group-margin-top">
-                            <button class="action-button translate-btn" id="translate-btn">Translate Content</button>
-                        </div>
+                    <div class="step-navigation mt-4">
+                        <button class="btn btn-secondary" id="step-2-prev">
+                            <span style="margin-right: 0.5rem;">←</span> Previous
+                        </button>
+                        <button class="btn btn-primary" id="step-2-next">
+                            Next: {% if column.is_codelist %}Codelist{% else %}Review{% endif %} <span style="margin-left: 0.5rem;">→</span>
+                        </button>
                     </div>
                 </div>
                 
                 <!-- Step 3: Codelist (only for codelist types) -->
                 {% if column.is_codelist %}
                 <div class="step-panel" id="step-3">
-                    <h3 class="panel-title">Step 3: Codelist Settings</h3>
-                    <p class="panel-description">We detected a Codelist with the labels below. It contains {{ column.unique_count }} unique entries. 
-                        On I14Y, every codelist must consist of Codes and Labels in different languages.</p>
-                    
-                    <div class="codelist-controls">
-                        <label for="code-length">Code length:</label>
-                        <select id="code-length" class="code-length">
-                            <option value="2">2 characters</option>
-                            <option value="3">3 characters</option>
-                            <option value="4">4 characters</option>
-                            <option value="5">5 characters</option>
-                        </select>
-                        <button class="action-button generate-codes-btn" id="generate-codes-btn">Generate Codes</button>
-                    </div>
-                    
-                    <div class="codelist-values">
-                        <h4>Codelist Values</h4>
-                        <div id="generated-codes-container" class="generated-codes-hidden">
-                            <table id="codes-table" class="codes-table">
+                    <div class="card">
+                        <h2 class="card-title">Step 3: Codelist Configuration</h2>
+                        <p class="card-description">We detected {{ column.unique_count }} unique entries. Configure codes and labels for each language.</p>
+                        
+                        <div class="form-group">
+                            <label for="code-length">Code Length</label>
+                            <select id="code-length" class="form-control" style="max-width: 300px;">
+                                <option value="2">2 characters</option>
+                                <option value="3">3 characters</option>
+                                <option value="4">4 characters</option>
+                                <option value="5">5 characters</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary mb-4" id="generate-codes-btn">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i> Generate Codes
+                        </button>
+                        
+                        <div id="generated-codes-container" class="hidden">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin: 2rem 0 1rem;">Codelist Values</h3>
+                            <table id="codes-table" class="table">
                                 <thead>
                                     <tr>
                                         <th>Code</th>
                                         <th>
                                             <div class="table-header-with-import">
                                                 <span>Label DE</span>
-                                                <button class="btn-import-column" data-lang="de" title="Import from column">📥</button>
+                                                <button class="btn btn-sm btn-import-column" data-lang="de" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
                                             </div>
                                         </th>
                                         <th>
                                             <div class="table-header-with-import">
                                                 <span>Label FR</span>
-                                                <button class="btn-import-column" data-lang="fr" title="Import from column">📥</button>
-                                                <button class="btn-translate-column" data-lang="fr" title="Translate from DE">🌐</button>
+                                                <button class="btn btn-sm btn-import-column" data-lang="fr" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                                <button class="btn btn-sm btn-translate-column" data-lang="fr" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
                                             </div>
                                         </th>
                                         <th>
                                             <div class="table-header-with-import">
                                                 <span>Label IT</span>
-                                                <button class="btn-import-column" data-lang="it" title="Import from column">📥</button>
-                                                <button class="btn-translate-column" data-lang="it" title="Translate from DE">🌐</button>
+                                                <button class="btn btn-sm btn-import-column" data-lang="it" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                                <button class="btn btn-sm btn-translate-column" data-lang="it" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
                                             </div>
                                         </th>
                                         <th>
                                             <div class="table-header-with-import">
                                                 <span>Label EN</span>
-                                                <button class="btn-import-column" data-lang="en" title="Import from column">📥</button>
-                                                <button class="btn-translate-column" data-lang="en" title="Translate from DE">🌐</button>
+                                                <button class="btn btn-sm btn-import-column" data-lang="en" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                                <button class="btn btn-sm btn-translate-column" data-lang="en" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
                                             </div>
                                         </th>
                                     </tr>
@@ -266,8 +312,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div id="codelist-placeholder">
-                            <p>Click "Generate Codes" to create codes for the codelist values.</p>
+                        <div id="codelist-placeholder" class="alert alert-info">
+                            <p style="margin: 0;">Click "Generate Codes" to create codes for the codelist values.</p>
                             <ul>
                                 {% for value in column.unique_values[:5] %}
                                 <li>{{ value }}</li>
@@ -277,28 +323,37 @@
                                 {% endif %}
                             </ul>
                         </div>
+                        
+                        <div class="step-navigation mt-4">
+                            <button class="btn btn-secondary" id="step-3-prev">
+                                <span style="margin-right: 0.5rem;">←</span> Previous
+                            </button>
+                            <button class="btn btn-primary" id="step-3-next">
+                                Next <span style="margin-left: 0.5rem;">→</span>
+                            </button>
+                        </div>
                     </div>
                     
-                    <!-- Column import modal (hidden by default) -->
-                    <div id="column-import-modal" class="modal column-import-modal-hidden">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 id="modal-title">Import Labels</h3>
-                                <button class="modal-close" id="modal-close-btn">&times;</button>
+                    <!-- Column import modal -->
+                    <div id="column-import-modal" class="modal">
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <h3 id="modal-title" style="margin: 0; font-size: 1.5rem; font-weight: 600;">Import Labels</h3>
+                                <button class="btn btn-sm" id="modal-close-btn" style="padding: 0.25rem 0.75rem; font-size: 1.25rem;">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <p id="modal-description">Select a column to import labels from:</p>
+                                <p id="modal-description" style="margin-bottom: 1rem;">Select a column to import labels from:</p>
                                 <div id="column-select-container">
-                                    <select id="column-select" class="column-select">
+                                    <select id="column-select" class="form-control">
                                         <option value="">-- Select a column --</option>
                                     </select>
                                 </div>
-                                <div id="column-preview" class="column-preview-hidden">
-                                    <h4>Preview:</h4>
-                                    <ul id="preview-list" class="preview-list"></ul>
+                                <div id="column-preview" class="hidden mt-3">
+                                    <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Preview:</h4>
+                                    <ul id="preview-list" style="list-style: none; padding: 0; margin: 0;"></ul>
                                 </div>
                             </div>
-                            <div class="modal-footer">
+                            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
                                 <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
                                 <button class="btn btn-primary" id="modal-import-btn" disabled>Import</button>
                             </div>
@@ -309,153 +364,296 @@
                 
                 <!-- Step 4 (or 3 for non-codelists): Review and Publish -->
                 <div class="step-panel" id="step-{% if column.is_codelist %}4{% else %}3{% endif %}">
-                    <h3 class="panel-title">{% if column.is_codelist %}Step 4{% else %}Step 3{% endif %}: Review and Publish</h3>
-                    <p class="panel-description">Review all information, make final edits if needed, and publish the concept to I14Y.</p>
-                    
-                    <div class="summary-section">
-                        <h4>Concept Details</h4>
-                        <div class="summary-label">Identifier:</div>
-                        <div class="form-group">
-                            <input type="text" id="concept-identifier" class="concept-identifier" placeholder="Enter concept identifier (auto-generated from column name)">
+                    <div class="card">
+                        <h2 class="card-title">{% if column.is_codelist %}Step 4{% else %}Step 3{% endif %}: Review & Publish</h2>
+                        <p class="card-description">Review all information and publish the concept to I14Y.</p>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Concept Details</h3>
+                            
+                            <div class="form-group">
+                                <label for="concept-identifier">Identifier</label>
+                                <input type="text" id="concept-identifier" class="form-control" placeholder="Auto-generated from column name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Title</label>
+                                <div class="translation-grid">
+                                    <div class="translation-row">
+                                        <div class="translation-label">DE:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-title-de" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">FR:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-title-fr" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">IT:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-title-it" class="form-control">
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">EN:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-title-en" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Description</label>
+                                <div class="translation-grid">
+                                    <div class="translation-row">
+                                        <div class="translation-label">DE:</div>
+                                        <div class="translation-field">
+                                            <textarea id="final-desc-de" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">FR:</div>
+                                        <div class="translation-field">
+                                            <textarea id="final-desc-fr" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">IT:</div>
+                                        <div class="translation-field">
+                                            <textarea id="final-desc-it" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">EN:</div>
+                                        <div class="translation-field">
+                                            <textarea id="final-desc-en" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Keywords</label>
+                                <div class="translation-grid">
+                                    <div class="translation-row">
+                                        <div class="translation-label">DE:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-keywords-de" class="form-control" placeholder="Keywords separated by commas">
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">FR:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-keywords-fr" class="form-control" placeholder="Keywords separated by commas">
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">IT:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-keywords-it" class="form-control" placeholder="Keywords separated by commas">
+                                        </div>
+                                    </div>
+                                    <div class="translation-row">
+                                        <div class="translation-label">EN:</div>
+                                        <div class="translation-field">
+                                            <input type="text" id="final-keywords-en" class="form-control" placeholder="Keywords separated by commas">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="summary-label">Title:</div>
-                        <div class="translation-grid">
-                            <div class="translation-row">
-                                <div class="translation-label">DE:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-title-de" class="translation-input">
+                        {% if column.is_codelist %}
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Codelist Entries</h3>
+                            <div id="final-codelist-container">
+                                <table id="final-codes-table" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Label DE</th>
+                                            <th>Label FR</th>
+                                            <th>Label IT</th>
+                                            <th>Label EN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="final-codes-body">
+                                        <tr><td colspan="5" style="text-align: center; color: #6b7280;">No codelist entries yet. Generate codes in Step 3 first.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div style="margin-bottom: 2rem; border-top: 2px solid var(--border-color); padding-top: 2rem;">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem;">Submission Options</h3>
+                            <p class="card-description" style="margin-bottom: 1.5rem;">Choose how you want to submit this concept to I14Y:</p>
+                            
+                            <!-- Tab Navigation -->
+                            <div style="display: flex; gap: 0; border-bottom: 2px solid var(--border-color); margin-bottom: 2rem;">
+                                <button class="tab-btn active" data-tab="api-tab" style="padding: 1rem 1.5rem; background: transparent; border: none; font-size: 1rem; font-weight: 500; color: var(--primary-color); cursor: pointer; border-bottom: 3px solid var(--primary-color); margin-bottom: -2px;">
+                                    <i class="fas fa-lock" style="margin-right: 0.5rem;"></i> API Submission
+                                </button>
+                                <button class="tab-btn" data-tab="manual-tab" style="padding: 1rem 1.5rem; background: transparent; border: none; font-size: 1rem; font-weight: 500; color: var(--secondary-text); cursor: pointer; border-bottom: 3px solid transparent;">
+                                    <i class="fas fa-download" style="margin-right: 0.5rem;"></i> Manual Download
+                                </button>
+                            </div>
+                            
+                            <!-- Tab 1: API Submission -->
+                            <div class="tab-content active" id="api-tab" style="display: block;">
+                                <!-- Security Information -->
+                                <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                                    <h5 style="font-size: 0.95rem; font-weight: 600; color: #856404; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i> Security Information
+                                    </h5>
+                                    <p style="color: #856404; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                        <strong>Communication is end-to-end encrypted (HTTPS).</strong> Your token is transmitted securely to verify your identity.
+                                    </p>
+                                    <p style="color: #856404; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                        <strong>Risk:</strong> If someone obtains your API token, they could modify metadata on I14Y for as long as the token remains valid. However, this risk is very small if you handle the token carefully.
+                                    </p>
+                                    <p style="color: #856404; font-size: 0.875rem;">
+                                        <strong>Alternative:</strong> Download the JSON and submit it manually via the <a href="https://apiconsole.i14y.admin.ch/partner/v1/index.html#/Concepts/post_concepts" target="_blank" style="color: #856404; text-decoration: underline;">I14Y API Console</a> to avoid entering your token here.
+                                    </p>
+                                </div>
+                                
+                                <div class="card" style="background: #f8f9fa;">
+                                    <div class="form-group">
+                                        <label for="api-token">I14Y API Token</label>
+                                        <input type="text" id="api-token" class="form-control" placeholder="Enter your API token">
+                                    </div>
+                                    
+                                    <button id="verify-and-select-agency-btn" class="btn btn-primary mb-3">
+                                        <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i> Verify Token & Select Agency
+                                    </button>
+                                    
+                                    <div id="token-loading" class="hidden mt-2 mb-3">
+                                        <div class="spinner active"></div>
+                                        <p class="text-center text-muted mt-2">Verifying token...</p>
+                                    </div>
+                                    
+                                    <div id="agency-selection" class="hidden">
+                                        <div class="form-group">
+                                            <label for="selected-agency">Select Organization</label>
+                                            <select id="selected-agency" class="form-control">
+                                                <option value="">-- Select an organization --</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="responsible-person">Responsible Person (Email)</label>
+                                            <input type="email" id="responsible-person" class="form-control" placeholder="email@example.com">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="responsible-deputy">Deputy Person (Email)</label>
+                                            <input type="email" id="responsible-deputy" class="form-control" placeholder="email@example.com">
+                                        </div>
+                                        
+                                        <button class="btn btn-primary" id="publish-api-button">
+                                            <i class="fas fa-rocket" style="margin-right: 0.5rem;"></i> Publish to I14Y via API
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="translation-row">
-                                <div class="translation-label">FR:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-title-fr" class="translation-input">
+                            
+                            <!-- Tab 2: Manual Download -->
+                            <div class="tab-content" id="manual-tab" style="display: none;">
+                                <!-- Information -->
+                                <div style="background: #e7f3ff; border: 1px solid #2196f3; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                                    <h5 style="font-size: 0.95rem; font-weight: 600; color: #1976d2; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i> How It Works
+                                    </h5>
+                                    <p style="color: #1976d2; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                        1. Fill in the required information below
+                                    </p>
+                                    <p style="color: #1976d2; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                        2. Click "Download JSON" to save the concept data
+                                    </p>
+                                    <p style="color: #1976d2; font-size: 0.875rem;">
+                                        3. Submit the JSON file manually to the <a href="https://apiconsole.i14y.admin.ch/partner/v1/index.html#/Concepts/post_concepts" target="_blank" style="color: #1976d2; text-decoration: underline;">I14Y API Console</a>
+                                    </p>
                                 </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">IT:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-title-it" class="translation-input">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">EN:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-title-en" class="translation-input">
+                                
+                                <div class="card" style="background: #f8f9fa;">
+                                    <div class="form-group">
+                                        <label for="manual-agency">Organization Identifier</label>
+                                        <input type="text" id="manual-agency" class="form-control" placeholder="e.g., bfs">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="manual-responsible-person">Responsible Person (Email)</label>
+                                        <input type="email" id="manual-responsible-person" class="form-control" placeholder="email@example.com">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="manual-responsible-deputy">Deputy Person (Email)</label>
+                                        <input type="email" id="manual-responsible-deputy" class="form-control" placeholder="email@example.com">
+                                    </div>
+                                    
+                                    <button class="btn btn-primary" id="download-json-button">
+                                        <i class="fas fa-download" style="margin-right: 0.5rem;"></i> Download JSON
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="summary-label">Description:</div>
-                        <div class="translation-grid">
-                            <div class="translation-row">
-                                <div class="translation-label">DE:</div>
-                                <div class="translation-field">
-                                    <textarea id="final-desc-de" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">FR:</div>
-                                <div class="translation-field">
-                                    <textarea id="final-desc-fr" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">IT:</div>
-                                <div class="translation-field">
-                                    <textarea id="final-desc-it" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">EN:</div>
-                                <div class="translation-field">
-                                    <textarea id="final-desc-en" class="translation-textarea"></textarea>
-                                </div>
-                            </div>
+                        <div class="step-navigation mt-4">
+                            <button class="btn btn-secondary" id="step-{% if column.is_codelist %}4{% else %}3{% endif %}-prev">
+                                <span style="margin-right: 0.5rem;">←</span> Previous
+                            </button>
                         </div>
-                        
-                        <div class="summary-label">Keywords:</div>
-                        <div class="translation-grid">
-                            <div class="translation-row">
-                                <div class="translation-label">DE:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-keywords-de" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">FR:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-keywords-fr" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">IT:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-keywords-it" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                            <div class="translation-row">
-                                <div class="translation-label">EN:</div>
-                                <div class="translation-field">
-                                    <input type="text" id="final-keywords-en" class="translation-input" placeholder="Keywords separated by commas">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {% if column.is_codelist %}
-                    <div class="summary-section codelist-section">
-                        <h4>Codelist Entries</h4>
-                        <div id="final-codelist-container">
-                            <table id="final-codes-table" class="codes-table">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Label DE</th>
-                                        <th>Label FR</th>
-                                        <th>Label IT</th>
-                                        <th>Label EN</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="final-codes-body">
-                                    <tr><td colspan="5">No codelist entries yet. Generate codes in Step 3 first.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="action-row">
-                        <button class="action-button publish-button" id="publish-button">Publish to I14Y</button>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Status messages area -->
-        <div class="status-area status-area-hidden" id="status-area">
-            <div id="status-message"></div>
+        <div id="status-area" class="hidden" style="position: fixed; bottom: 2rem; right: 2rem; z-index: 1000;">
+            <div id="status-message" class="alert"></div>
         </div>
-    </div>
+        
+        <!-- Back to overview button (shown after successful submission) -->
+        <div id="back-to-overview-container" class="hidden" style="position: fixed; bottom: 2rem; left: 2rem; z-index: 1000;">
+            <a href="{{ url_for('results') }}" class="btn btn-primary" style="box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>Back to Overview
+            </a>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="https://www.bfs.admin.ch/bfs/de/home/bfs/bundesamt-statistik/rechtliche-hinweise.html" target="_blank">Rechtliche Hinweise</a></li>
+                    <li><a href="https://github.com/i14y-ch" target="_blank">Github</a></li>
+                    <li><a href="https://www.linkedin.com/showcase/i14y/about/" target="_blank">LinkedIn</a></li>
+                    <li><a href="https://apiconsole.i14y.admin.ch/" target="_blank">API</a></li>
+                </ul>
+            </div>
+            <div class="footer-info">
+                <p>© 2025 Bundesamt für Statistik</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const index = {{ index }};
             let translations = null; // Will hold translation data when available
-            let token = "{{ token }}"; // Get the token from the server
             let conceptGuid = null; // Will store the GUID of the created concept
             let currentStep = 1;
             const totalSteps = {{ column.is_codelist|tojson }} ? 4 : 3;
             
             // Saved data from server
             const savedData = {{ saved_data|tojson|safe }};
-            
-            // Clean up token if it includes "Bearer " prefix
-            if (token.startsWith('Bearer ')) {
-                token = token.substring(7); // Remove "Bearer " prefix
-            }
             
             // Auto-save function with debouncing
             let saveTimeout;
@@ -632,8 +830,8 @@
                 const placeholder = document.getElementById('codelist-placeholder');
                 
                 if (container && placeholder) {
-                    container.style.display = 'block';
-                    placeholder.style.display = 'none';
+                    container.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
                 }
                 
                 tbody.innerHTML = '';
@@ -693,6 +891,72 @@
             attachAutoSaveListeners();
             
             // Save data before navigating away
+            // Load saved submission info from previous submissions in this session
+            async function loadSavedSubmissionInfo() {
+                try {
+                    const response = await fetch('/api/get-submission-info');
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.submission_info) {
+                            const info = data.submission_info;
+                            // Pre-fill form fields if saved data exists
+                            if (info.token) {
+                                document.getElementById('api-token').value = info.token;
+                                verifiedToken = info.token;
+                            }
+                            if (info.responsible_person) {
+                                document.getElementById('responsible-person').value = info.responsible_person;
+                            }
+                            if (info.responsible_deputy) {
+                                document.getElementById('responsible-deputy').value = info.responsible_deputy;
+                            }
+                            if (info.agency) {
+                                document.getElementById('selected-agency').value = info.agency;
+                            }
+                            // If we have a verified token, show the agency selection section
+                            if (info.token && info.agency) {
+                                document.getElementById('agency-selection').classList.remove('hidden');
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log('Could not load saved submission info:', error);
+                }
+            }
+            
+            // Load saved info on page load
+            loadSavedSubmissionInfo();
+            
+            // Tab switching functionality
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Hide all tabs
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.style.display = 'none';
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Deactivate all buttons
+                    document.querySelectorAll('.tab-btn').forEach(b => {
+                        b.style.color = 'var(--secondary-text)';
+                        b.style.borderBottom = '3px solid transparent';
+                    });
+                    
+                    // Show selected tab
+                    const selectedTab = document.getElementById(tabName);
+                    if (selectedTab) {
+                        selectedTab.style.display = 'block';
+                        selectedTab.classList.add('active');
+                    }
+                    
+                    // Activate button
+                    this.style.color = 'var(--primary-color)';
+                    this.style.borderBottom = '3px solid var(--primary-color)';
+                });
+            });
+            
             window.addEventListener('beforeunload', function() {
                 // Force immediate save (no debounce)
                 clearTimeout(saveTimeout);
@@ -717,8 +981,20 @@
             
             // Initialize stepper
             function updateStepperState() {
-                // Update step indicators
+                // Update step indicators (legacy support)
                 document.querySelectorAll('.step-indicator').forEach(el => {
+                    const step = parseInt(el.dataset.step);
+                    el.classList.remove('active', 'completed');
+                    
+                    if (step === currentStep) {
+                        el.classList.add('active');
+                    } else if (step < currentStep) {
+                        el.classList.add('completed');
+                    }
+                });
+                
+                // Update progress steps
+                document.querySelectorAll('.progress-step').forEach(el => {
                     const step = parseInt(el.dataset.step);
                     el.classList.remove('active', 'completed');
                     
@@ -758,8 +1034,8 @@
                 }
             }
             
-            // Step indicator clicks
-            document.querySelectorAll('.step-indicator').forEach(indicator => {
+            // Progress step clicks
+            document.querySelectorAll('.progress-step').forEach(indicator => {
                 indicator.addEventListener('click', function() {
                     const targetStep = parseInt(this.dataset.step);
                     // Only allow navigating to completed steps or the next step
@@ -780,6 +1056,70 @@
                     }
                 });
             });
+            
+            // Navigation button handlers
+            // Step 1 navigation
+            const step1Next = document.getElementById('step-1-next');
+            if (step1Next) {
+                step1Next.addEventListener('click', function() {
+                    currentStep = 2;
+                    updateDescriptionStep();
+                    updateStepperState();
+                    autoSaveData();
+                });
+            }
+            
+            // Step 2 navigation
+            const step2Prev = document.getElementById('step-2-prev');
+            if (step2Prev) {
+                step2Prev.addEventListener('click', function() {
+                    currentStep = 1;
+                    updateStepperState();
+                    autoSaveData();
+                });
+            }
+            
+            const step2Next = document.getElementById('step-2-next');
+            if (step2Next) {
+                step2Next.addEventListener('click', function() {
+                    currentStep = {{ column.is_codelist|tojson }} ? 3 : 3;
+                    if (currentStep === totalSteps) {
+                        updateSummaryPanel();
+                    }
+                    updateStepperState();
+                    autoSaveData();
+                });
+            }
+            
+            // Step 3 navigation (codelist only)
+            const step3Prev = document.getElementById('step-3-prev');
+            if (step3Prev) {
+                step3Prev.addEventListener('click', function() {
+                    currentStep = 2;
+                    updateStepperState();
+                    autoSaveData();
+                });
+            }
+            
+            const step3Next = document.getElementById('step-3-next');
+            if (step3Next) {
+                step3Next.addEventListener('click', function() {
+                    currentStep = 4;
+                    updateSummaryPanel();
+                    updateStepperState();
+                    autoSaveData();
+                });
+            }
+            
+            // Step 4 navigation (codelist only)
+            const step4Prev = document.getElementById('step-4-prev');
+            if (step4Prev) {
+                step4Prev.addEventListener('click', function() {
+                    currentStep = 3;
+                    updateStepperState();
+                    autoSaveData();
+                });
+            }
             
             // Update the summary panel with the current title and description
             async function updateDescriptionStep() {
@@ -1136,6 +1476,10 @@
                         showStatus('success', `AI-generated description created in ${detectedLang}`);
                         button.textContent = originalText;
                         button.disabled = false;
+                        
+                        // Change button to green after successful generation
+                        button.classList.remove('btn-primary');
+                        button.classList.add('btn-success');
                     } else {
                         showStatus('error', data.error || 'Failed to generate description');
                         button.textContent = originalText;
@@ -1286,6 +1630,10 @@
                     showStatus('success', 'Translation completed successfully.');
                     button.textContent = originalText;
                     button.disabled = false;
+                    
+                    // Change button to green after successful translation
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-success');
                 } catch (error) {
                     console.error('Translation error:', error);
                     showStatus('error', `Error: ${error.message}`);
@@ -1308,11 +1656,10 @@
                     const codeLength = document.getElementById('code-length').value;
                     showStatus('info', 'Generating codes...');
                     
-                    // Hide placeholder
-                    document.getElementById('codelist-placeholder').style.display = 'none';
-                    // Show codes container
-                    document.getElementById('generated-codes-container').style.display = 'block';
-                    document.getElementById('codes-table-body').innerHTML = '<tr><td colspan="5">Generating codes...</td></tr>';
+                    // Hide placeholder, show codes container
+                    document.getElementById('codelist-placeholder').classList.add('hidden');
+                    document.getElementById('generated-codes-container').classList.remove('hidden');
+                    document.getElementById('codes-table-body').innerHTML = '<tr><td colspan="5" style="text-align: center;">Generating codes...</td></tr>';
                     
                     // Call the API to generate codes
                     const response = await fetch(`/api/generate-codes/${index}`, {
@@ -1439,6 +1786,11 @@
                     showStatus('success', `Generated ${result.codes.length} codes for codelist values. Labels have been placed in their detected language columns. Use the translate buttons (🌐) in column headers to translate to other languages.`);
                     button.textContent = originalText;
                     button.disabled = false;
+                    
+                    // Change button to green after successful code generation
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-success');
+                    
                     autoSaveData(); // Auto-save after generating codes
                     
                 } catch (error) {
@@ -1451,8 +1803,13 @@
             
             // Column-specific translate button handler
             document.addEventListener('click', async function(e) {
-                if (e.target.classList.contains('btn-translate-column')) {
-                    const button = e.target;
+                // Check if the clicked element or any of its parents has the btn-translate-column class
+                let target = e.target;
+                let found = false;
+                while (target && target !== document && !found) {
+                    if (target.classList && target.classList.contains('btn-translate-column')) {
+                        found = true;
+                        const button = target;
                     const targetLang = button.dataset.lang;
                     const originalText = button.textContent;
                     
@@ -1536,6 +1893,8 @@
                         button.textContent = originalText;
                         button.disabled = false;
                     }
+                    }
+                    target = target.parentElement;
                 }
             });
             
@@ -1576,58 +1935,66 @@
             
             // Handle import button clicks
             document.addEventListener('click', async function(e) {
-                if (e.target.classList.contains('btn-import-column')) {
-                    const lang = e.target.dataset.lang;
-                    currentImportLang = lang;
-                    
-                    // Load available columns
-                    showStatus('info', 'Loading available columns...');
-                    const columns = await loadAvailableColumns();
-                    
-                    if (columns.length === 0) {
-                        showStatus('error', 'No additional columns available for import');
-                        return;
-                    }
-                    
-                    // Populate the select dropdown
-                    const select = document.getElementById('column-select');
-                    select.innerHTML = '<option value="">-- Select a column --</option>';
-                    
-                    // Filter and sort columns - prefer matching language
-                    const sortedColumns = [...columns].sort((a, b) => {
-                        // Prioritize columns matching the target language
-                        if (a.language === lang && b.language !== lang) return -1;
-                        if (a.language !== lang && b.language === lang) return 1;
-                        return a.name.localeCompare(b.name);
-                    });
-                    
-                    sortedColumns.forEach(col => {
-                        const option = document.createElement('option');
-                        option.value = col.name;
-                        option.textContent = col.name;
-                        option.dataset.samples = JSON.stringify(col.samples);
+                // Check if the clicked element or any of its parents has the btn-import-column class
+                let target = e.target;
+                let found = false;
+                while (target && target !== document && !found) {
+                    if (target.classList && target.classList.contains('btn-import-column')) {
+                        found = true;
+                        const lang = target.dataset.lang;
+                        currentImportLang = lang;
                         
-                        // Add indicator if language matches
-                        if (col.language === lang) {
-                            option.textContent += ` ✓`;
+                        // Load available columns
+                        showStatus('info', 'Loading available columns...');
+                        const columns = await loadAvailableColumns();
+                        
+                        if (columns.length === 0) {
+                            showStatus('error', 'No additional columns available for import');
+                            return;
                         }
                         
-                        select.appendChild(option);
-                    });
-                    
-                    // Update modal title
-                    const langNames = {
-                        'de': 'German',
-                        'fr': 'French',
-                        'it': 'Italian',
-                        'en': 'English'
-                    };
-                    document.getElementById('modal-title').textContent = `Import ${langNames[lang]} Labels`;
-                    document.getElementById('modal-description').textContent = `Select a column to import ${langNames[lang]} labels from:`;
-                    
-                    // Show modal
-                    document.getElementById('column-import-modal').style.display = 'flex';
-                    showStatus('success', `Found ${columns.length} columns`);
+                        // Populate the select dropdown
+                        const select = document.getElementById('column-select');
+                        select.innerHTML = '<option value="">-- Select a column --</option>';
+                        
+                        // Filter and sort columns - prefer matching language
+                        const sortedColumns = [...columns].sort((a, b) => {
+                            // Prioritize columns matching the target language
+                            if (a.language === lang && b.language !== lang) return -1;
+                            if (a.language !== lang && b.language === lang) return 1;
+                            return a.name.localeCompare(b.name);
+                        });
+                        
+                        sortedColumns.forEach(col => {
+                            const option = document.createElement('option');
+                            option.value = col.name;
+                            option.textContent = col.name;
+                            option.dataset.samples = JSON.stringify(col.samples);
+                            
+                            // Add indicator if language matches
+                            if (col.language === lang) {
+                                option.textContent += ` ✓`;
+                            }
+                            
+                            select.appendChild(option);
+                        });
+                        
+                        // Update modal title
+                        const langNames = {
+                            'de': 'German',
+                            'fr': 'French',
+                            'it': 'Italian',
+                            'en': 'English'
+                        };
+                        document.getElementById('modal-title').textContent = `Import ${langNames[lang]} Labels`;
+                        document.getElementById('modal-description').textContent = `Select a column to import ${langNames[lang]} labels from:`;
+                        
+                        // Show modal
+                        document.getElementById('column-import-modal').classList.remove('hidden');
+                        document.getElementById('column-import-modal').classList.add('active');
+                        showStatus('success', `Found ${columns.length} columns`);
+                    }
+                    target = target.parentElement;
                 }
             });
             
@@ -1648,21 +2015,23 @@
                         previewList.appendChild(li);
                     });
                     
-                    document.getElementById('column-preview').style.display = 'block';
+                    document.getElementById('column-preview').classList.remove('hidden');
                     importBtn.disabled = false;
                 } else {
-                    document.getElementById('column-preview').style.display = 'none';
+                    document.getElementById('column-preview').classList.add('hidden');
                     importBtn.disabled = true;
                 }
             });
             
             // Modal close handlers
             document.getElementById('modal-close-btn').addEventListener('click', function() {
-                document.getElementById('column-import-modal').style.display = 'none';
+                document.getElementById('column-import-modal').classList.remove('active');
+                document.getElementById('column-import-modal').classList.add('hidden');
             });
             
             document.getElementById('modal-cancel-btn').addEventListener('click', function() {
-                document.getElementById('column-import-modal').style.display = 'none';
+                document.getElementById('column-import-modal').classList.remove('active');
+                document.getElementById('column-import-modal').classList.add('hidden');
             });
             
             // Modal import handler
@@ -1730,7 +2099,8 @@
                     });
                     
                     // Close modal
-                    document.getElementById('column-import-modal').style.display = 'none';
+                    document.getElementById('column-import-modal').classList.remove('active');
+                    document.getElementById('column-import-modal').classList.add('hidden');
                     
                     showStatus('success', `Imported ${result.labels.length} ${currentImportLang.toUpperCase()} labels from "${selectedColumn}"`);
                     button.textContent = originalText;
@@ -1748,9 +2118,99 @@
             
             // Track if we've already submitted this concept to prevent duplicates
             let conceptSubmitted = false;
+            let verifiedToken = null;
+            let selectedAgencyId = null;
             
-            // Combined publish button handler (replaces separate create-concept and add-codelist)
-            document.getElementById('publish-button').addEventListener('click', async function() {
+            // Token verification and agency selection
+            document.getElementById('verify-and-select-agency-btn').addEventListener('click', async function() {
+                const tokenInput = document.getElementById('api-token');
+                let token = tokenInput.value.trim();
+                const errorContainer = document.getElementById('status-area');
+                
+                // Strip "Bearer " prefix if present (case-insensitive)
+                if (token.toLowerCase().startsWith('bearer ')) {
+                    token = token.substring(7).trim();
+                    tokenInput.value = token; // Update the input field to show cleaned token
+                }
+                
+                if (!token) {
+                    showStatus('error', 'Please enter a valid token');
+                    return;
+                }
+                
+                document.getElementById('token-loading').classList.remove('hidden');
+                
+                try {
+                    const response = await fetch('/api/verify-token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token })
+                    });
+                    
+                    document.getElementById('token-loading').classList.add('hidden');
+                    const data = await response.json();
+                    
+                    if (!data.success) {
+                        showStatus('error', data.error || 'Invalid token');
+                        return;
+                    }
+                    
+                    verifiedToken = token;
+                    
+                    // Fill in email if available
+                    if (data.user_email) {
+                        document.getElementById('responsible-person').value = data.user_email;
+                    }
+                    
+                    // Populate agency dropdown
+                    if (data.agencies && data.agencies.length > 0) {
+                        const select = document.getElementById('selected-agency');
+                        select.innerHTML = '<option value="">-- Select an organization --</option>';
+                        
+                        data.agencies.forEach(agency => {
+                            const option = document.createElement('option');
+                            option.value = agency.identifier;
+                            option.textContent = `${agency.name.de} (${agency.identifier})`;
+                            select.appendChild(option);
+                        });
+                        
+                        if (data.agencies.length === 1) {
+                            select.value = data.agencies[0].identifier;
+                        } else if (data.preselected_agency) {
+                            select.value = data.preselected_agency;
+                        }
+                        
+                        document.getElementById('agency-selection').classList.remove('hidden');
+                        showStatus('success', 'Token verified successfully. Please select an organization.');
+                        
+                        // Change button to green after successful verification
+                        document.getElementById('verify-and-select-agency-btn').classList.remove('btn-primary');
+                        document.getElementById('verify-and-select-agency-btn').classList.add('btn-success');
+                        
+                        // Save token and email to session for reuse
+                        try {
+                            await fetch('/api/save-submission-info', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({
+                                    token: token,
+                                    responsible_person: data.user_email || ''
+                                })
+                            });
+                        } catch (e) {
+                            console.log('Could not save submission info:', e);
+                        }
+                    } else {
+                        showStatus('error', 'No organizations found for this token');
+                    }
+                } catch (error) {
+                    document.getElementById('token-loading').classList.add('hidden');
+                    showStatus('error', `Error: ${error.message}`);
+                }
+            });
+            
+            // API submission handler
+            document.getElementById('publish-api-button').addEventListener('click', async function() {
                 const button = this;
                 
                 // Prevent multiple submissions
@@ -1759,10 +2219,182 @@
                     return;
                 }
                 
+                // Validate inputs
+                const agency = document.getElementById('selected-agency').value;
+                const responsiblePerson = document.getElementById('responsible-person').value;
+                const responsibleDeputy = document.getElementById('responsible-deputy').value;
+                
+                if (!verifiedToken) {
+                    showStatus('error', 'Please verify your token first');
+                    return;
+                }
+                
+                if (!agency) {
+                    showStatus('error', 'Please select an organization');
+                    return;
+                }
+                
+                if (!responsiblePerson || !responsibleDeputy) {
+                    showStatus('error', 'Please fill in both email addresses');
+                    return;
+                }
+                
                 // Disable button to prevent double-clicks
                 button.disabled = true;
+                const originalText = button.textContent;
                 button.textContent = 'Publishing...';
                 
+                try {
+                    const payload = buildConceptPayload(agency, responsiblePerson, responsibleDeputy);
+                    
+                    showStatus('info', 'Creating and submitting concept to I14Y...');
+                    
+                    // Submit the concept
+                    const response = await fetch('/api/submit-concept', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${verifiedToken}`
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (!response.ok || !result.success) {
+                        let errorMsg = 'API submission failed';
+                        if (result.message) {
+                            errorMsg += `: ${result.message}`;
+                        } else if (result.error) {
+                            errorMsg += `: ${result.error}`;
+                        }
+                        throw new Error(errorMsg);
+                    }
+                    
+                    // Concept creation succeeded
+                    conceptSubmitted = true;
+                    
+                    // Save submission info for next concept in this session
+                    try {
+                        await fetch('/api/save-submission-info', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                token: verifiedToken,
+                                agency: agency,
+                                responsible_person: responsiblePerson,
+                                responsible_deputy: responsibleDeputy
+                            })
+                        });
+                    } catch (e) {
+                        console.log('Could not save submission info:', e);
+                    }
+                    
+                    // Get the concept GUID
+                    let conceptGuid = null;
+                    if (result.location) {
+                        const locationParts = result.location.split('/');
+                        conceptGuid = locationParts[locationParts.length - 1];
+                    } else if (result.conflict && result.existing_concept && result.existing_concept.data) {
+                        conceptGuid = result.existing_concept.data.guid;
+                    }
+                    
+                    // Create I14Y URL for concept
+                    let i14yUrl = null;
+                    if (conceptGuid) {
+                        i14yUrl = `https://input.i14y.admin.ch/catalog/concepts/${conceptGuid}/description`;
+                    } else if (result.i14y_url) {
+                        i14yUrl = result.i14y_url;
+                    }
+                    
+                    // Show concept creation status
+                    showStatus('success', result.message || 'Concept created or already exists in I14Y', i14yUrl);
+                    showBackToOverviewButton();
+                    
+                    // Handle codelist entries if applicable
+                    if ({{ column.is_codelist|tojson }} && conceptGuid && payload.codelist_entries) {
+                        const codelistPayload = { data: payload.codelist_entries };
+                        
+                        showStatus('info', `Adding ${payload.codelist_entries.length} codelist entries to concept...`);
+                        
+                        const codelistResponse = await fetch(`/api/add-codelist-entries/${conceptGuid}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${verifiedToken}`
+                            },
+                            body: JSON.stringify(codelistPayload)
+                        });
+                        
+                        const codelistResult = await codelistResponse.json();
+                        
+                        if (!codelistResponse.ok || !codelistResult.success) {
+                            throw new Error(codelistResult.message || 'Failed to add codelist entries');
+                        }
+                        
+                        const codelistUrl = `https://input.i14y.admin.ch/catalog/concepts/${conceptGuid}`;
+                        showStatus('success', `Successfully published concept with ${payload.codelist_entries.length} codelist entries!`, codelistUrl);
+                        showBackToOverviewButton();
+                    }
+                    
+                    button.textContent = 'Published to I14Y';
+                    
+                } catch (error) {
+                    console.error('Publish error:', error);
+                    showStatus('error', `Error: ${error.message}`);
+                    
+                    // Re-enable button for retry
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+            });
+            
+            // JSON download handler
+            document.getElementById('download-json-button').addEventListener('click', async function() {
+                const agency = document.getElementById('manual-agency').value.trim();
+                const responsiblePerson = document.getElementById('manual-responsible-person').value.trim();
+                const responsibleDeputy = document.getElementById('manual-responsible-deputy').value.trim();
+                
+                if (!agency || !responsiblePerson || !responsibleDeputy) {
+                    showStatus('error', 'Please fill in all required fields');
+                    return;
+                }
+                
+                const payload = buildConceptPayload(agency, responsiblePerson, responsibleDeputy);
+                
+                // Save submission info for next concept in this session
+                try {
+                    await fetch('/api/save-submission-info', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            agency: agency,
+                            responsible_person: responsiblePerson,
+                            responsible_deputy: responsibleDeputy
+                        })
+                    });
+                } catch (e) {
+                    console.log('Could not save submission info:', e);
+                }
+                
+                // Create a downloadable JSON file
+                const jsonStr = JSON.stringify(payload, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `concept_${payload.identifier || 'export'}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showStatus('success', 'JSON file downloaded successfully. You can now submit it to the I14Y API Console.');
+            });
+            
+            // Helper function to build concept payload
+            function buildConceptPayload(agency, responsiblePerson, responsibleDeputy) {
                 // Get final values from editable fields
                 const finalTitle = {
                     de: document.getElementById('final-title-de').value,
@@ -1791,179 +2423,94 @@
                 // Collect all other form values
                 const values = getFormValues();
                 
-                // Use the final title and description
-                values.title = finalTitle.de; // Main title is DE
-                values.description = finalDesc.de; // Main description is DE
-                
-                // Use the final translations
-                values.translations = {
-                    title: finalTitle,
-                    description: finalDesc,
-                    keywords: finalKeywords
+                // Build payload for submission
+                const payload = {
+                    title: finalTitle.de,
+                    description: finalDesc.de,
+                    translations: {
+                        title: finalTitle,
+                        description: finalDesc,
+                        keywords: finalKeywords
+                    },
+                    keywords: document.getElementById('keywords').value,
+                    identifier: document.getElementById('concept-identifier').value.trim(),
+                    index: index,
+                    agency: agency,
+                    responsible_person: responsiblePerson,
+                    responsible_deputy: responsibleDeputy
                 };
                 
-                // Add keywords
-                values.keywords = document.getElementById('keywords').value;
+                // Add all other form values from getFormValues()
+                Object.keys(values).forEach(key => {
+                    if (!(key in payload)) {
+                        payload[key] = values[key];
+                    }
+                });
                 
-                // Add custom identifier
-                values.identifier = document.getElementById('concept-identifier').value.trim();
-                
-                // Add index to the values
-                values.index = index;
-                
-                try {
-                    showStatus('info', 'Creating and submitting concept to I14Y...');
+                // Handle codelist entries if applicable
+                if ({{ column.is_codelist|tojson }}) {
+                    const finalCodeInputs = document.querySelectorAll('.final-code-edit');
+                    const finalLabelInputs = document.querySelectorAll('.final-label-edit');
                     
-                    // Step 1: Create the concept
-                    const response = await fetch('/api/submit-concept', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify(values)
+                    const finalCodes = {};
+                    const finalLabels = {};
+                    
+                    // Collect final codes
+                    finalCodeInputs.forEach(input => {
+                        const value = input.getAttribute('data-value');
+                        finalCodes[value] = input.value;
+                        if (!finalLabels[value]) {
+                            finalLabels[value] = { de: '', fr: '', it: '', en: '' };
+                        }
                     });
                     
-                    const result = await response.json();
-                    
-                    if (!response.ok || !result.success) {
-                        let errorMsg = 'API submission failed';
-                        if (result.message) {
-                            errorMsg += `: ${result.message}`;
-                        } else if (result.error) {
-                            errorMsg += `: ${result.error}`;
+                    // Collect final labels
+                    finalLabelInputs.forEach(input => {
+                        const value = input.getAttribute('data-value');
+                        const lang = input.getAttribute('data-lang');
+                        if (!finalLabels[value]) {
+                            finalLabels[value] = { de: '', fr: '', it: '', en: '' };
                         }
-                        throw new Error(errorMsg);
-                    }
+                        finalLabels[value][lang] = input.value;
+                    });
                     
-                    // Concept creation succeeded
-                    conceptSubmitted = true;
+                    // Prepare codelist entries
+                    const entries = [];
+                    const column = {{ column|tojson }};
                     
-                    // Get the concept GUID
-                    if (result.location) {
-                        const locationParts = result.location.split('/');
-                        conceptGuid = locationParts[locationParts.length - 1];
-                    } else if (result.conflict && result.existing_concept && result.existing_concept.data) {
-                        conceptGuid = result.existing_concept.data.guid;
-                    }
-                    
-                    // Create I14Y URL for concept
-                    let i14yUrl = null;
-                    if (conceptGuid) {
-                        i14yUrl = `https://input.i14y.admin.ch/catalog/concepts/${conceptGuid}/description`;
-                    } else if (result.i14y_url) {
-                        i14yUrl = result.i14y_url;
-                    }
-                    
-                    // Show concept creation status
-                    showStatus('success', result.message || 'Concept created or already exists in I14Y', i14yUrl);
-                    
-                    // Step 2: For codelist columns, add codelist entries
-                    if ({{ column.is_codelist|tojson }} && conceptGuid) {
-                        // Update codelist data from final edit fields
-                        const finalCodeInputs = document.querySelectorAll('.final-code-edit');
-                        const finalLabelInputs = document.querySelectorAll('.final-label-edit');
-                        
-                        const finalCodes = {};
-                        const finalLabels = {};
-                        
-                        // Collect final codes
-                        finalCodeInputs.forEach(input => {
-                            const value = input.getAttribute('data-value');
-                            finalCodes[value] = input.value;
-                            if (!finalLabels[value]) {
-                                finalLabels[value] = {
-                                    de: '', fr: '', it: '', en: ''
-                                };
+                    if (column.unique_values && column.unique_values.length > 0) {
+                        column.unique_values.forEach((value) => {
+                            let code = value;
+                            if (finalCodes[value]) {
+                                code = finalCodes[value];
+                            }
+                            
+                            let labels = null;
+                            if (finalLabels[value]) {
+                                labels = finalLabels[value];
+                            }
+                            
+                            if (labels) {
+                                entries.push({
+                                    code: code,
+                                    name: labels,
+                                    annotations: []
+                                });
+                            } else {
+                                entries.push({
+                                    code: code,
+                                    name: String(value),
+                                    annotations: []
+                                });
                             }
                         });
-                        
-                        // Collect final labels
-                        finalLabelInputs.forEach(input => {
-                            const value = input.getAttribute('data-value');
-                            const lang = input.getAttribute('data-lang');
-                            if (!finalLabels[value]) {
-                                finalLabels[value] = {
-                                    de: '', fr: '', it: '', en: ''
-                                };
-                            }
-                            finalLabels[value][lang] = input.value;
-                        });
-                        
-                        // Prepare codelist entries
-                        const entries = [];
-                        const column = {{ column|tojson }};
-                        
-                        if (column.unique_values && column.unique_values.length > 0) {
-                            column.unique_values.forEach((value) => {
-                                // Get final code
-                                let code = value;
-                                if (finalCodes[value]) {
-                                    code = finalCodes[value];
-                                }
-                                
-                                // Get final labels
-                                let labels = null;
-                                if (finalLabels[value]) {
-                                    labels = finalLabels[value];
-                                }
-                                
-                                // Create entry with multilingual labels
-                                if (labels) {
-                                    const entry = {
-                                        code: code,
-                                        name: labels,
-                                        annotations: []
-                                    };
-                                    entries.push(entry);
-                                } else {
-                                    // Fallback to monolingual
-                                    const entry = {
-                                        code: code,
-                                        name: String(value),
-                                        annotations: []
-                                    };
-                                    entries.push(entry);
-                                }
-                            });
-                            
-                            // Create payload and submit codelist entries
-                            const payload = { data: entries };
-                            
-                            showStatus('info', `Adding ${entries.length} codelist entries to concept...`);
-                            
-                            const codelistResponse = await fetch(`/api/add-codelist-entries/${conceptGuid}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                body: JSON.stringify(payload)
-                            });
-                            
-                            const codelistResult = await codelistResponse.json();
-                            
-                            if (!codelistResponse.ok || !codelistResult.success) {
-                                throw new Error(codelistResult.message || 'Failed to add codelist entries');
-                            }
-                            
-                            // Codelist entries added successfully
-                            const codelistUrl = `https://input.i14y.admin.ch/catalog/concepts/${conceptGuid}`;
-                            showStatus('success', `Successfully published concept with ${entries.length} codelist entries!`, codelistUrl);
-                        }
                     }
                     
-                    button.textContent = 'Published to I14Y';
-                    
-                } catch (error) {
-                    console.error('Publish error:', error);
-                    showStatus('error', `Error: ${error.message}`);
-                    
-                    // Re-enable button for retry
-                    button.disabled = false;
-                    button.textContent = 'Publish to I14Y';
+                    payload.codelist_entries = entries;
                 }
-            });
+                
+                return payload;
+            }
             
             // Helper function to show status messages
             function showStatus(type, message, linkUrl = null) {
@@ -1975,12 +2522,27 @@
                 
                 if (linkUrl) {
                     // Add a link to the message if URL is provided
-                    statusEl.innerHTML = `${message} <a href="${linkUrl}" target="_blank" class="i14y-link">View on I14Y</a>`;
+                    statusEl.innerHTML = `${message} <a href="${linkUrl}" target="_blank" style="color: #dc0018; text-decoration: underline;">View on I14Y</a>`;
                 } else {
                     statusEl.textContent = message;
                 }
                 
-                statusArea.style.display = 'block';
+                statusArea.classList.remove('hidden');
+                
+                // Auto-hide after 5 seconds for success/info messages
+                if (type === 'success' || type === 'info') {
+                    setTimeout(() => {
+                        statusArea.classList.add('hidden');
+                    }, 5000);
+                }
+            }
+            
+            // Helper function to show back to overview button after successful submission
+            function showBackToOverviewButton() {
+                const backButtonContainer = document.getElementById('back-to-overview-container');
+                if (backButtonContainer) {
+                    backButtonContainer.classList.remove('hidden');
+                }
             }
             
             // Pre-fill description field with default description on page load
