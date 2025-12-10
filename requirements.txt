@@ -7,7 +7,7 @@ openpyxl==3.1.2
 requests==2.31.0
 langdetect==1.0.9
 pyjwt==2.8.0
-gunicorn==21.2.0
+gunicorn==22.0.0
 cryptography>=39.0.0
 python-dotenv==1.0.0
 chardet==5.2.0
