@@ -2114,6 +2114,132 @@ def generate_codes(index):
         'valueType': value_type
     })
 
+@app.route('/api/get-dataset-columns/<int:index>', methods=['GET'])
+def get_dataset_columns(index):
+    """Get all columns from the uploaded dataset for import selection"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found. Please upload a file first.'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
+    
+    if index < 0 or index >= len(session_data['columns']):
+        return jsonify({'error': 'Invalid column index'}), 400
+    
+    # Load the dataframe
+    df = load_uploaded_dataframe(session_data)
+    if df is None:
+        return jsonify({'error': 'Could not load dataset'}), 500
+    
+    # Get all column names
+    columns = list(df.columns)
+    
+    # Get a preview of values from each column (first 5 non-null unique values)
+    column_previews = {}
+    for col in columns:
+        unique_values = df[col].dropna().unique()
+        preview = [str(v) for v in unique_values[:5]]
+        column_previews[col] = preview
+    
+    return jsonify({
+        'success': True,
+        'columns': columns,
+        'previews': column_previews
+    })
+
+@app.route('/api/import-codes/<int:index>', methods=['POST'])
+def import_codes(index):
+    """Import codes from a selected column in the dataset"""
+    if 'session_data_id' not in session:
+        return jsonify({'error': 'No session found. Please upload a file first.'}), 404
+    
+    session_data = load_session_data(session['session_data_id'])
+    if not session_data:
+        cleanup_session_file(session['session_data_id'])
+        session.pop('session_data_id', None)
+        return jsonify({'error': 'Session expired. Please upload the file again.'}), 404
+    
+    if index < 0 or index >= len(session_data['columns']):
+        return jsonify({'error': 'Invalid column index'}), 400
+    
+    column = session_data['columns'][index]
+    
+    if not column['is_codelist']:
+        return jsonify({'error': 'This column is not a codelist'}), 400
+    
+    data = request.json
+    code_column_name = data.get('codeColumn')
+    
+    if not code_column_name:
+        return jsonify({'error': 'Code column name is required'}), 400
+    
+    # Load the dataframe
+    df = load_uploaded_dataframe(session_data)
+    if df is None:
+        return jsonify({'error': 'Could not load dataset'}), 500
+    
+    if code_column_name not in df.columns:
+        return jsonify({'error': f'Column "{code_column_name}" not found in dataset'}), 400
+    
+    # Get the unique values from the codelist column
+    label_column_name = column['name']
+    if label_column_name not in df.columns:
+        return jsonify({'error': f'Label column "{label_column_name}" not found in dataset'}), 400
+    
+    # Create a mapping from unique values to their codes
+    # Remove any null values and create a dictionary
+    value_code_mapping = {}
+    for idx, row in df[[label_column_name, code_column_name]].drop_duplicates().iterrows():
+        label_value = row[label_column_name]
+        code_value = row[code_column_name]
+        
+        # Skip if either is null
+        if pd.isna(label_value) or pd.isna(code_value):
+            continue
+        
+        # Convert to string
+        label_str = str(label_value)
+        code_str = str(code_value)
+        
+        value_code_mapping[label_str] = code_str
+    
+    # Get the unique values for this column
+    values = column.get('unique_values', [])
+    
+    # Generate the codes list
+    imported_codes = []
+    missing_values = []
+    
+    for value in values:
+        value_str = str(value)
+        if value_str in value_code_mapping:
+            imported_codes.append({
+                'value': value,
+                'code': value_code_mapping[value_str]
+            })
+        else:
+            # Value not found in mapping - this shouldn't happen if the data is consistent
+            missing_values.append(value)
+            # Assign a placeholder or empty code
+            imported_codes.append({
+                'value': value,
+                'code': ''
+            })
+    
+    response = {
+        'success': True,
+        'codes': imported_codes
+    }
+    
+    if missing_values:
+        response['warning'] = f'{len(missing_values)} values could not be mapped to codes'
+        response['missing_values'] = missing_values[:10]  # Return first 10 missing values
+    
+    return jsonify(response)
+
 @app.route('/api/translate', methods=['POST'])
 def translate_text():
     """API endpoint to translate text using DeepL"""

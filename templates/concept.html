@@ -259,7 +259,16 @@
                         <h2 class="card-title">Step 3: Codelist Configuration</h2>
                         <p class="card-description">We detected {{ column.unique_count }} unique entries. Configure codes and labels for each language.</p>
                         
-                        <div class="form-group">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                            <button class="btn btn-primary" id="generate-codes-btn">
+                                <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i> Generate Codes
+                            </button>
+                            <button class="btn btn-secondary" id="import-codes-btn">
+                                <i class="fas fa-file-import" style="margin-right: 0.5rem;"></i> Import Codes
+                            </button>
+                        </div>
+                        
+                        <div class="form-group hidden" id="code-length-selector">
                             <label for="code-length">Code Length</label>
                             <select id="code-length" class="form-control" style="max-width: 300px;">
                                 <option value="2">2 characters</option>
@@ -268,41 +277,63 @@
                                 <option value="5">5 characters</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary mb-4" id="generate-codes-btn">
-                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i> Generate Codes
-                        </button>
                         
                         <div id="generated-codes-container" class="hidden">
                             <h3 style="font-size: 1.125rem; font-weight: 600; margin: 2rem 0 1rem;">Codelist Values</h3>
                             <table id="codes-table" class="table">
                                 <thead>
                                     <tr>
-                                        <th>Code</th>
-                                        <th>
-                                            <div class="table-header-with-import">
-                                                <span>Label DE</span>
-                                                <button class="btn btn-sm btn-import-column" data-lang="de" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                        <th class="sortable-header" data-column="code" style="cursor: pointer; user-select: none;">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span>Code</span>
+                                                <span class="sort-indicator" style="font-size: 0.75rem;">▼</span>
                                             </div>
                                         </th>
-                                        <th>
+                                        <th class="sortable-header" data-column="label-de" style="cursor: pointer; user-select: none;">
                                             <div class="table-header-with-import">
-                                                <span>Label FR</span>
-                                                <button class="btn btn-sm btn-import-column" data-lang="fr" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
-                                                <button class="btn btn-sm btn-translate-column" data-lang="fr" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
+                                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                    <span>Label DE</span>
+                                                    <span class="sort-indicator" style="font-size: 0.75rem; opacity: 0;">▼</span>
+                                                </div>
+                                                <div style="display: flex; gap: 0.25rem;">
+                                                    <button class="btn btn-sm btn-import-column" data-lang="de" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                                </div>
                                             </div>
                                         </th>
-                                        <th>
+                                        <th class="sortable-header" data-column="label-fr" style="cursor: pointer; user-select: none;">
                                             <div class="table-header-with-import">
-                                                <span>Label IT</span>
-                                                <button class="btn btn-sm btn-import-column" data-lang="it" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
-                                                <button class="btn btn-sm btn-translate-column" data-lang="it" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
+                                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                    <span>Label FR</span>
+                                                    <span class="sort-indicator" style="font-size: 0.75rem; opacity: 0;">▼</span>
+                                                </div>
+                                                <div style="display: flex; gap: 0.25rem;">
+                                                    <button class="btn btn-sm btn-import-column" data-lang="fr" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                                    <button class="btn btn-sm btn-translate-column" data-lang="fr" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
+                                                </div>
                                             </div>
                                         </th>
-                                        <th>
+                                        <th class="sortable-header" data-column="label-it" style="cursor: pointer; user-select: none;">
                                             <div class="table-header-with-import">
-                                                <span>Label EN</span>
-                                                <button class="btn btn-sm btn-import-column" data-lang="en" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
-                                                <button class="btn btn-sm btn-translate-column" data-lang="en" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
+                                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                    <span>Label IT</span>
+                                                    <span class="sort-indicator" style="font-size: 0.75rem; opacity: 0;">▼</span>
+                                                </div>
+                                                <div style="display: flex; gap: 0.25rem;">
+                                                    <button class="btn btn-sm btn-import-column" data-lang="it" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                                    <button class="btn btn-sm btn-translate-column" data-lang="it" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th class="sortable-header" data-column="label-en" style="cursor: pointer; user-select: none;">
+                                            <div class="table-header-with-import">
+                                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                    <span>Label EN</span>
+                                                    <span class="sort-indicator" style="font-size: 0.75rem; opacity: 0;">▼</span>
+                                                </div>
+                                                <div style="display: flex; gap: 0.25rem;">
+                                                    <button class="btn btn-sm btn-import-column" data-lang="en" title="Import from column" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">📥</button>
+                                                    <button class="btn btn-sm btn-translate-column" data-lang="en" title="Translate from DE" style="font-size: 0.875rem; padding: 0.25rem 0.5rem;">🌐</button>
+                                                </div>
                                             </div>
                                         </th>
                                     </tr>
@@ -356,6 +387,32 @@
                             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
                                 <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
                                 <button class="btn btn-primary" id="modal-import-btn" disabled>Import</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Code import modal -->
+                    <div id="code-import-modal" class="modal">
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <h3 style="margin: 0; font-size: 1.5rem; font-weight: 600;">Import Codes from Column</h3>
+                                <button class="btn btn-sm" id="code-modal-close-btn" style="padding: 0.25rem 0.75rem; font-size: 1.25rem;">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p style="margin-bottom: 1rem;">Select the column that contains the codes for your codelist values:</p>
+                                <div>
+                                    <select id="code-column-select" class="form-control">
+                                        <option value="">-- Select a column --</option>
+                                    </select>
+                                </div>
+                                <div id="code-column-preview" class="hidden mt-3">
+                                    <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Preview:</h4>
+                                    <ul id="code-preview-list" style="list-style: none; padding: 0; margin: 0; max-height: 200px; overflow-y: auto;"></ul>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                                <button class="btn btn-secondary" id="code-modal-cancel-btn">Cancel</button>
+                                <button class="btn btn-primary" id="code-modal-import-btn" disabled>Import Codes</button>
                             </div>
                         </div>
                     </div>
@@ -1644,8 +1701,10 @@
             
             // Generate Codes button handler (for codelists)
             {% if column.is_codelist %}
-            document.getElementById('generate-codes-btn').addEventListener('click', async function() {
-                const button = this;
+            
+            // Function to actually generate the codes
+            async function performCodeGeneration() {
+                const button = document.getElementById('generate-codes-btn');
                 const originalText = button.textContent;
                 
                 try {
@@ -1791,10 +1850,298 @@
                     button.classList.remove('btn-primary');
                     button.classList.add('btn-success');
                     
+                    // Sort table by code (default)
+                    sortTable('code');
+                    
                     autoSaveData(); // Auto-save after generating codes
                     
                 } catch (error) {
                     console.error('Generate codes error:', error);
+                    showStatus('error', `Error: ${error.message}`);
+                    const button = document.getElementById('generate-codes-btn');
+                    button.textContent = 'Generate Codes';
+                    button.disabled = false;
+                }
+            }
+            
+            // Generate Codes button click handler
+            document.getElementById('generate-codes-btn').addEventListener('click', function() {
+                // Show code length selector if hidden
+                const codeLengthSelector = document.getElementById('code-length-selector');
+                if (codeLengthSelector.classList.contains('hidden')) {
+                    codeLengthSelector.classList.remove('hidden');
+                    showStatus('info', 'Please select the desired code length.');
+                    return;
+                }
+                
+                // If already visible, trigger generation
+                performCodeGeneration();
+            });
+            
+            // Auto-generate when code length is selected
+            document.getElementById('code-length').addEventListener('change', function() {
+                const codeLengthSelector = document.getElementById('code-length-selector');
+                // Only auto-generate if the selector is visible (meaning user clicked Generate Codes first)
+                if (!codeLengthSelector.classList.contains('hidden')) {
+                    performCodeGeneration();
+                }
+            });
+            
+            // Import Codes button handler (for codelists)
+            document.getElementById('import-codes-btn').addEventListener('click', async function() {
+                try {
+                    // Fetch available columns from the dataset
+                    showStatus('info', 'Loading available columns...');
+                    
+                    const response = await fetch(`/api/get-dataset-columns/${index}`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load dataset columns');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.error || 'Unknown error');
+                    }
+                    
+                    // Populate the modal with column options
+                    const codeColumnSelect = document.getElementById('code-column-select');
+                    codeColumnSelect.innerHTML = '<option value="">-- Select a column --</option>';
+                    
+                    result.columns.forEach(columnName => {
+                        const option = document.createElement('option');
+                        option.value = columnName;
+                        option.textContent = columnName;
+                        option.dataset.preview = JSON.stringify(result.previews[columnName] || []);
+                        codeColumnSelect.appendChild(option);
+                    });
+                    
+                    // Show the modal
+                    document.getElementById('code-import-modal').classList.add('active');
+                    
+                    // Store the previews for later use
+                    window.codeColumnPreviews = result.previews;
+                    
+                    hideStatus();
+                } catch (error) {
+                    console.error('Error loading columns:', error);
+                    showStatus('error', `Error: ${error.message}`);
+                }
+            });
+            
+            // Code column selection change handler
+            document.getElementById('code-column-select').addEventListener('change', function() {
+                const selectedColumn = this.value;
+                const importBtn = document.getElementById('code-modal-import-btn');
+                const previewContainer = document.getElementById('code-column-preview');
+                const previewList = document.getElementById('code-preview-list');
+                
+                if (selectedColumn && window.codeColumnPreviews) {
+                    // Enable import button
+                    importBtn.disabled = false;
+                    
+                    // Show preview
+                    const preview = window.codeColumnPreviews[selectedColumn] || [];
+                    previewList.innerHTML = '';
+                    
+                    preview.forEach(value => {
+                        const li = document.createElement('li');
+                        li.textContent = value;
+                        li.style.padding = '0.25rem 0';
+                        li.style.borderBottom = '1px solid #e5e7eb';
+                        previewList.appendChild(li);
+                    });
+                    
+                    if (preview.length === 0) {
+                        previewList.innerHTML = '<li style="color: #999;">No preview available</li>';
+                    }
+                    
+                    previewContainer.classList.remove('hidden');
+                } else {
+                    importBtn.disabled = true;
+                    previewContainer.classList.add('hidden');
+                }
+            });
+            
+            // Code import modal close handlers
+            document.getElementById('code-modal-close-btn').addEventListener('click', function() {
+                document.getElementById('code-import-modal').classList.remove('active');
+            });
+            
+            document.getElementById('code-modal-cancel-btn').addEventListener('click', function() {
+                document.getElementById('code-import-modal').classList.remove('active');
+            });
+            
+            // Code import button handler
+            document.getElementById('code-modal-import-btn').addEventListener('click', async function() {
+                const button = this;
+                const originalText = button.textContent;
+                const selectedColumn = document.getElementById('code-column-select').value;
+                
+                if (!selectedColumn) {
+                    showStatus('error', 'Please select a column');
+                    return;
+                }
+                
+                try {
+                    // Show loading state
+                    button.disabled = true;
+                    button.textContent = '🔄 Importing...';
+                    
+                    showStatus('info', 'Importing codes...');
+                    
+                    // Call the API to import codes
+                    const response = await fetch(`/api/import-codes/${index}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            codeColumn: selectedColumn
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to import codes');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.error || 'Unknown error');
+                    }
+                    
+                    // Hide the modal
+                    document.getElementById('code-import-modal').classList.remove('active');
+                    
+                    // Show codes container, hide placeholder
+                    document.getElementById('codelist-placeholder').classList.add('hidden');
+                    document.getElementById('generated-codes-container').classList.remove('hidden');
+                    
+                    // Display the imported codes
+                    const tbody = document.getElementById('codes-table-body');
+                    tbody.innerHTML = '';
+                    
+                    // Create a map to store codes and labels
+                    window.generatedCodes = {};
+                    window.generatedLabels = {};
+                    
+                    // First, detect languages for all values
+                    const detectedLanguages = {};
+                    const batchSize = 10;
+                    const uniqueValues = result.codes.map(item => item.value);
+                    
+                    for (let i = 0; i < uniqueValues.length; i += batchSize) {
+                        const batch = uniqueValues.slice(i, i + batchSize);
+                        await Promise.all(batch.map(async (value) => {
+                            try {
+                                const textToDetect = value.toString();
+                                if (!textToDetect.trim()) return;
+                                
+                                const lang = await detectLanguage(textToDetect);
+                                detectedLanguages[value] = lang.toLowerCase();
+                            } catch (err) {
+                                console.error(`Language detection error for "${value}":`, err);
+                                detectedLanguages[value] = 'de';
+                            }
+                        }));
+                    }
+                    
+                    result.codes.forEach(item => {
+                        // Determine which language column to prefill
+                        const detectedLang = detectedLanguages[item.value] || 'de';
+                        
+                        // Store code and initialize empty labels
+                        window.generatedCodes[item.value] = item.code;
+                        window.generatedLabels[item.value] = {
+                            de: '',
+                            fr: '',
+                            it: '',
+                            en: ''
+                        };
+                        
+                        // Only fill the detected language column
+                        window.generatedLabels[item.value][detectedLang] = item.value;
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <input type="text" class="code-edit" 
+                                       data-value="${item.value}" 
+                                       value="${item.code}">
+                            </td>
+                            <td>
+                                <input type="text" class="label-edit label-de" 
+                                       data-value="${item.value}" 
+                                       value="${detectedLang === 'de' ? item.value : ''}">
+                            </td>
+                            <td>
+                                <input type="text" class="label-edit label-fr" 
+                                       data-value="${item.value}" 
+                                       value="${detectedLang === 'fr' ? item.value : ''}">
+                            </td>
+                            <td>
+                                <input type="text" class="label-edit label-it" 
+                                       data-value="${item.value}" 
+                                       value="${detectedLang === 'it' ? item.value : ''}">
+                            </td>
+                            <td>
+                                <input type="text" class="label-edit label-en" 
+                                       data-value="${item.value}" 
+                                       value="${detectedLang === 'en' ? item.value : ''}">
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    
+                    // Set up inputs to automatically update the stored values when changed
+                    document.querySelectorAll('.code-edit').forEach(input => {
+                        input.addEventListener('change', function() {
+                            const value = this.getAttribute('data-value');
+                            window.generatedCodes[value] = this.value;
+                            autoSaveData();
+                        });
+                    });
+                    
+                    document.querySelectorAll('.label-edit').forEach(input => {
+                        input.addEventListener('change', function() {
+                            const value = this.getAttribute('data-value');
+                            const lang = this.classList.contains('label-de') ? 'de' : 
+                                         this.classList.contains('label-fr') ? 'fr' :
+                                         this.classList.contains('label-it') ? 'it' : 'en';
+                            
+                            if (!window.generatedLabels[value]) {
+                                window.generatedLabels[value] = {de: '', fr: '', it: '', en: ''};
+                            }
+                            window.generatedLabels[value][lang] = this.value;
+                            autoSaveData();
+                        });
+                    });
+                    
+                    let message = `Successfully imported ${result.codes.length} codes from column "${selectedColumn}".`;
+                    if (result.warning) {
+                        message += ` ${result.warning}`;
+                    }
+                    message += ' Labels have been placed in their detected language columns. Use the translate buttons (🌐) in column headers to translate to other languages.';
+                    
+                    showStatus('success', message);
+                    
+                    // Change the import button to green after successful import
+                    const importCodesBtn = document.getElementById('import-codes-btn');
+                    importCodesBtn.classList.remove('btn-secondary');
+                    importCodesBtn.classList.add('btn-success');
+                    
+                    // Sort table by code (default)
+                    sortTable('code');
+                    
+                    autoSaveData();
+                    
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    
+                } catch (error) {
+                    console.error('Import codes error:', error);
                     showStatus('error', `Error: ${error.message}`);
                     button.textContent = originalText;
                     button.disabled = false;
@@ -1871,20 +2218,21 @@
                                 window.generatedLabels[value] = {de: '', fr: '', it: '', en: ''};
                             }
                             
-                            const germanLabel = document.querySelector(`.label-de[data-value="${value}"]`).value;
+                            const germanLabel = document.querySelector(`.label-de[data-value="${value}"]`)?.value || '';
                             
-                            // Only update the specific target language
-                            if (trans[targetLang] && trans[targetLang].trim()) {
+                            // Only update the specific target language if translation exists
+                            if (trans[targetLang] && trans[targetLang].trim() && trans[targetLang] !== germanLabel) {
                                 window.generatedLabels[value][targetLang] = trans[targetLang];
                                 const targetInput = document.querySelector(`.label-${targetLang}[data-value="${value}"]`);
                                 if (targetInput) {
                                     targetInput.value = trans[targetLang];
                                 }
                             } else {
-                                console.log(`Empty ${targetLang.toUpperCase()} translation for "${germanLabel}", keeping original`);
+                                console.warn(`No valid ${targetLang.toUpperCase()} translation for "${germanLabel}". Received:`, trans[targetLang]);
                             }
                         }
                         
+                        showStatus('success', `Translated ${Object.keys(translations).length} labels to ${targetLang.toUpperCase()}`);
                         button.textContent = originalText;
                         button.disabled = false;
                     } catch (error) {
@@ -2115,6 +2463,70 @@
             });
             
             {% endif %}
+            
+            // Table sorting functionality
+            let currentSortColumn = 'code';
+            let currentSortDirection = 'asc';
+            
+            function sortTable(column) {
+                const tbody = document.getElementById('codes-table-body');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                
+                // Toggle direction if clicking the same column, otherwise default to ascending
+                if (column === currentSortColumn) {
+                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSortDirection = 'asc';
+                }
+                currentSortColumn = column;
+                
+                // Get column index for sorting
+                const columnIndex = {
+                    'code': 0,
+                    'label-de': 1,
+                    'label-fr': 2,
+                    'label-it': 3,
+                    'label-en': 4
+                }[column];
+                
+                // Sort rows
+                rows.sort((a, b) => {
+                    const aValue = a.querySelectorAll('input')[columnIndex].value.toLowerCase();
+                    const bValue = b.querySelectorAll('input')[columnIndex].value.toLowerCase();
+                    
+                    if (currentSortDirection === 'asc') {
+                        return aValue.localeCompare(bValue);
+                    } else {
+                        return bValue.localeCompare(aValue);
+                    }
+                });
+                
+                // Clear and re-append sorted rows
+                tbody.innerHTML = '';
+                rows.forEach(row => tbody.appendChild(row));
+                
+                // Update sort indicators
+                document.querySelectorAll('.sortable-header').forEach(header => {
+                    const indicator = header.querySelector('.sort-indicator');
+                    if (header.dataset.column === column) {
+                        indicator.style.opacity = '1';
+                        indicator.textContent = currentSortDirection === 'asc' ? '▼' : '▲';
+                    } else {
+                        indicator.style.opacity = '0';
+                    }
+                });
+            }
+            
+            // Add click handlers to sortable headers
+            document.querySelectorAll('.sortable-header').forEach(header => {
+                header.addEventListener('click', function(e) {
+                    // Don't sort if clicking on a button inside the header
+                    if (e.target.closest('button')) {
+                        return;
+                    }
+                    sortTable(this.dataset.column);
+                });
+            });
             
             // Track if we've already submitted this concept to prevent duplicates
             let conceptSubmitted = false;
