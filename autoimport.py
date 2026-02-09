@@ -20,6 +20,10 @@ import openai
 import io
 import threading
 import time
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Create the Flask app first, before any circular imports might occur
 app = Flask(__name__)
@@ -35,8 +39,7 @@ def request_entity_too_large(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     """Handle internal server errors"""
-    import traceback
-    traceback.print_exc()
+    logging.exception(f"Internal server error on {request.path}: {error}")
     # Check if this is an API request (JSON expected)
     if request.path.startswith('/api/') or request.is_json or request.accept_mimetypes.accept_json:
         return jsonify({'error': 'Internal server error. Please try again or contact support.'}), 500
@@ -46,11 +49,10 @@ def internal_server_error(error):
 @app.errorhandler(Exception)
 def handle_exception(error):
     """Handle any unhandled exceptions"""
-    import traceback
-    traceback.print_exc()
+    logging.exception(f"Unhandled exception on {request.path}: {error}")
     # Check if this is an API request or file upload
     if request.path.startswith('/api/') or request.is_json or request.accept_mimetypes.accept_json or request.path == '/':
-        return jsonify({'error': f'An error occurred: {str(error)}'}), 500
+        return jsonify({'error': 'An error occurred. Please try again or contact support.'}), 500
     # Otherwise re-raise to let Flask handle it
     raise error
 
@@ -578,8 +580,7 @@ def fetch_user_agencies_from_api(token):
             print(f"Failed to fetch agencies from API: {response.status_code}")
             print(f"Response: {response.text}")
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        logging.exception(f"Error fetching agencies: {e}")
     
     return []
 
@@ -637,8 +638,7 @@ def fetch_user_agencies(token):
                 return agencies
     except Exception as e:
         # Log the error for debugging
-        import traceback
-        traceback.print_exc()
+        logging.exception(f"Error fetching user agencies: {e}")
     
     return []
 
@@ -726,12 +726,10 @@ def upload_file():
             else:
                 return jsonify({'error': 'Unsupported file type. Please upload a .xlsx, .xls, or .csv file'}), 400
         except ValueError as e:
-            import traceback
-            traceback.print_exc()
-            return jsonify({'error': f'Failed to read the file: {str(e)}. Please check the file format and encoding.'}), 400
+            logging.exception(f"ValueError reading file: {e}")
+            return jsonify({'error': 'Failed to read the file. Please check the file format and encoding.'}), 400
         except Exception as e:
-            import traceback
-            traceback.print_exc()
+            logging.exception(f"Exception reading file: {e}")
         
         session_id = str(uuid.uuid4())
         dataset_path = os.path.join(SESSION_DATA_DIR, f"{session_id}{dataset_suffix}")
@@ -1013,17 +1011,17 @@ def submit_concept():
             }), response.status_code
     
     except requests.RequestException as e:
+        logging.exception(f"Network error: {e}")
         return jsonify({
             'success': False,
-            'message': f'Network error: {str(e)}'
+            'message': 'Network error occurred. Please try again or contact support.'
         }), 500
     
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        logging.exception(f"Error in import process: {e}")
         return jsonify({
             'success': False,
-            'message': f'Internal error: {str(e)}'
+            'message': 'Internal error occurred. Please try again or contact support.'
         }), 500
 
 @app.route('/results', methods=['GET'])
@@ -1739,9 +1737,8 @@ def add_codelist_entries(concept_guid):
             payload['data'] = translated_entries
     except ImportError:
         pass
-    except Exception:
-        import traceback
-        traceback.print_exc()
+    except Exception as e:
+        logging.exception(f"Error in concept import setup: {e}")
     
     # Make the request to the I14Y API
     url = f'https://api.i14y.admin.ch/api/partner/v1/concepts/{concept_guid}/codelist-entries/imports/json'
@@ -1795,9 +1792,8 @@ def add_codelist_entries(concept_guid):
         })
         
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'error': str(e)}), 500
+        logging.exception(f"Error publishing draft: {e}")
+        return jsonify({'error': 'Failed to publish draft. Please try again or contact support.'}), 500
 
 @app.before_request
 def cleanup_old_sessions():
@@ -2271,7 +2267,8 @@ def translate_text():
         try:
             from utils.translator import create_multilingual_text
         except ImportError as e:
-            return jsonify({'success': False, 'error': f'Translator module not available: {str(e)}'}), 500
+            logging.error(f"Translator import error: {e}")
+            return jsonify({'success': False, 'error': 'Translator module not available'}), 500
             
         source_lang = data.get('source_lang', 'DE')
         
@@ -2287,11 +2284,10 @@ def translate_text():
                     translations = create_multilingual_text(text, source_lang)
                     response_data['translations'] = translations
                 except Exception as e:
-                    import traceback
-                    traceback.print_exc()
+                    logging.exception(f"Translation error: {e}")
                     return jsonify({
                         'success': False,
-                        'error': f'Translation failed: {str(e)}'
+                        'error': 'Translation failed. Please try again or contact support.'
                     }), 500
         
         # Process 'title' field if present            
@@ -2350,11 +2346,10 @@ def translate_text():
         return jsonify(response_data)
             
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        logging.exception(f"Translation request error: {e}")
         return jsonify({
             'success': False,
-            'error': f'Translation failed: {str(e)}'
+            'error': 'Translation failed. Please try again or contact support.'
         }), 500
 
 @app.route('/api/verify-token', methods=['POST'])
@@ -2405,9 +2400,7 @@ def verify_token():
                 elif len(parts) == 1:
                     token_agency_identifier = parts[0]  # Only identifier provided
     except Exception as e:
-        print(f"Error extracting agency from token: {e}")
-        import traceback
-        traceback.print_exc()
+        logging.exception(f"Error extracting agency from token: {e}")
         pass
     
     # Fetch agencies from the I14Y API (authoritative source)
