@@ -2251,9 +2251,10 @@ def translate_text():
         try:
             data = request.get_json()
         except Exception as json_error:
+            logging.exception(f"JSON parsing error: {json_error}")
             return jsonify({
                 'success': False, 
-                'error': f'Invalid JSON format: {str(json_error)}'
+                'error': 'Invalid JSON format'
             }), 400
         
         # Validate request data
