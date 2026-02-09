@@ -1138,19 +1138,22 @@ def generate_concept_json(column, form_data, description, params=None, translati
         # Find the maximum number of keywords across all languages
         max_keywords = max(len(keywords_by_lang[lang]) for lang in keywords_by_lang)
         
-        # Create multilingual keyword objects
+        # Create multilingual keyword objects with proper structure (label + uri)
         for i in range(max_keywords):
-            keyword_obj = {}
+            keyword_label = {}
             for lang in ['de', 'en', 'fr', 'it', 'rm']:
                 if i < len(keywords_by_lang[lang]):
-                    keyword_obj[lang] = keywords_by_lang[lang][i]
+                    keyword_label[lang] = keywords_by_lang[lang][i]
                 else:
                     # If a language has fewer keywords, use the German one as fallback
-                    keyword_obj[lang] = keywords_by_lang['de'][i] if i < len(keywords_by_lang['de']) else ''
+                    keyword_label[lang] = keywords_by_lang['de'][i] if i < len(keywords_by_lang['de']) else ''
             
             # Only add if at least one language has content
-            if any(keyword_obj.values()):
-                concept_keywords.append(keyword_obj)
+            if any(keyword_label.values()):
+                concept_keywords.append({
+                    "label": keyword_label,
+                    "uri": None
+                })
         
         print(f"DEBUG - Final concept_keywords: {concept_keywords}")
     elif keywords and keywords.strip():
@@ -1159,7 +1162,10 @@ def generate_concept_json(column, form_data, description, params=None, translati
         for kw in keywords.split(','):
             kw = kw.strip()
             if kw:
-                keyword_list.append(simple_multilingual(kw))
+                keyword_list.append({
+                    "label": simple_multilingual(kw),
+                    "uri": None
+                })
         concept_keywords = keyword_list
     else:
         # Generate keywords from column name parts (fallback)
@@ -1167,11 +1173,17 @@ def generate_concept_json(column, form_data, description, params=None, translati
         for word in column['name'].split('_'):
             if word:
                 # Only use simple keywords without translations by default
-                concept_keywords.append(simple_multilingual(word))
+                concept_keywords.append({
+                    "label": simple_multilingual(word),
+                    "uri": None
+                })
     
     # Ensure we have at least one keyword
     if not concept_keywords:
-        concept_keywords = [simple_multilingual(column['name'])]
+        concept_keywords = [{
+            "label": simple_multilingual(column['name']),
+            "uri": None
+        }]
     
     # Determine concept type - using correct I14Y API enum values
     concept_type = "String"  # Default - changed from "Text" to "String"
