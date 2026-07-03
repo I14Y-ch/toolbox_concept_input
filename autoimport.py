@@ -30,6 +30,11 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_LENGTH
 app.secret_key = config.FLASK_SECRET_KEY  # Use config value from environment
 
+
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok'}), 200
+
 # Add error handlers to return JSON instead of HTML for API requests
 @app.errorhandler(413)
 def request_entity_too_large(error):
