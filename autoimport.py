@@ -30,7 +30,7 @@ logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(leve
 # Create the Flask app first, before any circular imports might occur
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_LENGTH
-app.secret_key = config.FLASK_SECRET_KEY  # Use config value from environment
+app.secret_key = config.SECRET_KEY  # Use config value from environment
 
 
 @app.route('/health')
