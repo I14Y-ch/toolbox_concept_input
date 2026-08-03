@@ -58,7 +58,7 @@ def create_multilingual_text(text, source_lang='DE'):
             }
             
             # Make request with header-based authentication
-            response = requests.post(url, headers=headers, data=data)
+            response = requests.post(url, headers=headers, data=data, timeout=15)
             
             # Parse response if successful
             if response.status_code == 200:

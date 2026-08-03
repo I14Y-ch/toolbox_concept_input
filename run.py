@@ -14,4 +14,4 @@ if __name__ == '__main__':
     os.makedirs(session_dir, exist_ok=True)
     
     # Run the app
-    app.run(debug=debug_mode, host='0.0.0.0', port=port)
+    app.run(debug=debug_mode, host='0.0.0.0', port=port)  # nosec B104  # nosemgrep: python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host

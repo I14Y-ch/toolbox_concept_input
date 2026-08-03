@@ -5,6 +5,8 @@ import os
 import re
 import json
 import base64
+import hmac
+import hashlib
 import jwt
 from pandas.api.types import is_numeric_dtype, is_object_dtype
 import requests
@@ -110,16 +112,46 @@ cleanup_thread = threading.Thread(target=periodic_cleanup_worker, daemon=True)
 cleanup_thread.start()
 
 # Helper functions to save and load session data
+#
+# Session files are signed with HMAC-SHA256 to prevent tampering. On disk each
+# file has the layout:
+#     [32 bytes: HMAC-SHA256(payload) using app.secret_key][pickle payload]
+#
+# pickle.load() executes code from the byte stream during deserialization, so an
+# attacker who can write to SESSION_DATA_DIR could otherwise achieve RCE. The
+# HMAC prefix ensures that only payloads produced by this application (which
+# knows the secret key) are ever passed to pickle.load().
+
+def _hmac_key():
+    key = app.secret_key
+    if isinstance(key, str):
+        key = key.encode('utf-8')
+    if not key:
+        raise RuntimeError('Cannot sign session data: app.secret_key is not configured')
+    return key
+
+
+def _compute_session_mac(payload_bytes):
+    return hmac.new(_hmac_key(), payload_bytes, hashlib.sha256).digest()
+
+
 def save_session_data(data, session_id=None):
-    """Save session data to a file and return the session identifier."""
+    """Save session data to a file and return the session identifier.
+
+    The file is signed with HMAC-SHA256 so that load_session_data() can refuse
+    to pickle.load() any bytes that were not produced by this process.
+    """
     if not session_id:
         session_id = str(uuid.uuid4())
     file_path = os.path.join(SESSION_DATA_DIR, f"{session_id}.pkl")
     # Use atomic write: write to temp file first, then rename
     temp_path = file_path + '.tmp'
     try:
+        payload = pickle.dumps(data)
+        mac = _compute_session_mac(payload)
         with open(temp_path, 'wb') as f:
-            pickle.dump(data, f)
+            f.write(mac)
+            f.write(payload)
         # Atomic rename
         os.replace(temp_path, file_path)
     except Exception as e:
@@ -134,13 +166,24 @@ def save_session_data(data, session_id=None):
     return session_id
 
 def load_session_data(session_id):
-    """Load session data from a file based on ID"""
+    """Load session data from a file based on ID, verifying its HMAC signature."""
     file_path = os.path.join(SESSION_DATA_DIR, f"{session_id}.pkl")
     if not os.path.exists(file_path):
         return None
     try:
         with open(file_path, 'rb') as f:
-            return pickle.load(f)
+            raw = f.read()
+        if len(raw) < 32:
+            print(f"Session file {session_id} is too short to contain a valid signature")
+            return None
+        stored_mac = raw[:32]
+        payload = raw[32:]
+        expected_mac = _compute_session_mac(payload)
+        if not hmac.compare_digest(stored_mac, expected_mac):
+            # Signature mismatch: refuse to deserialize (potentially tampered file)
+            print(f"Session file {session_id} failed signature verification; refusing to load")
+            return None
+        return pickle.loads(payload)
     except (EOFError, pickle.UnpicklingError) as e:
         # File is corrupted or empty
         print(f"Error loading session data {session_id}: {e}")
@@ -554,7 +597,7 @@ def fetch_user_agencies_from_api(token):
             'Authorization': f'Bearer {clean_token}'
         }
         
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=(5, 30))
         
         if response.status_code == 200:
             agents_data = response.json()
@@ -956,7 +999,7 @@ def submit_concept():
     }
     
     try:
-        response = requests.post(url, headers=headers, json=concept_json)
+        response = requests.post(url, headers=headers, json=concept_json, timeout=(5, 30))
         
         # Handle different response codes
         if response.status_code == 201:  # Created
@@ -1776,7 +1819,7 @@ def add_codelist_entries(concept_guid):
         with open(temp_path, 'rb') as f:
             files = {'file': ('payload.json', f, 'application/json')}
             # Make the actual API call
-            response = requests.post(url, headers=headers, files=files)
+            response = requests.post(url, headers=headers, files=files, timeout=(10, 60))
         
         # Delete the temporary file
         import os
@@ -1828,8 +1871,11 @@ def cleanup_old_sessions():
             file_path = os.path.join(SESSION_DATA_DIR, filename)
             if os.path.getmtime(file_path) < one_hour_ago:
                 try:
-                    with open(file_path, 'rb') as stored_session:
-                        stored_data = pickle.load(stored_session)
+                    # Reuse the signed loader so we never pickle.load() an
+                    # untrusted / tampered file even during cleanup.
+                    session_id = filename[:-4]  # strip '.pkl'
+                    stored_data = load_session_data(session_id)
+                    if stored_data:
                         dataset_info = stored_data.get('dataset_file', {})
                         dataset_path = dataset_info.get('path') if isinstance(dataset_info, dict) else dataset_info
                         if dataset_path and os.path.exists(dataset_path):
@@ -2532,4 +2578,5 @@ def get_submission_info():
 if __name__ == '__main__':
     print("Starting I14Y AutoImport application...")
     print("Server will be available at: http://127.0.0.1:5000")
-    app.run(host='0.0.0.0', port=5000)
+    # Bind all interfaces: required in containerized deployments where the platform's ingress reaches the app via the container network.
+    app.run(host='0.0.0.0', port=5000)  # nosec B104  # nosemgrep: python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host
