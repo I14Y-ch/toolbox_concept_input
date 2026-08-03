@@ -183,7 +183,8 @@ def load_session_data(session_id):
             # Signature mismatch: refuse to deserialize (potentially tampered file)
             print(f"Session file {session_id} failed signature verification; refusing to load")
             return None
-        return pickle.loads(payload)
+        # Payload authenticity verified via HMAC above; safe to unpickle.
+        return pickle.loads(payload)  # nosec B301
     except (EOFError, pickle.UnpicklingError) as e:
         # File is corrupted or empty
         print(f"Error loading session data {session_id}: {e}")
