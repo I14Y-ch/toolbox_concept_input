@@ -1820,7 +1820,9 @@ def add_codelist_entries(concept_guid):
         with open(temp_path, 'rb') as f:
             files = {'file': ('payload.json', f, 'application/json')}
             # Make the actual API call
-            response = requests.post(url, headers=headers, files=files, timeout=(10, 60))
+            # URL host/scheme are hardcoded to api.i14y.admin.ch (allowlisted); only
+            # the path segment {concept_guid} varies. Not user-controlled SSRF.
+            response = requests.post(url, headers=headers, files=files, timeout=(10, 60))  # nosemgrep: python.flask.security.injection.ssrf-requests.ssrf-requests
         
         # Delete the temporary file
         import os
