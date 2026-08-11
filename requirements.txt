@@ -10,5 +10,5 @@ cryptography==49.0.0
 gunicorn==25.1.0
 python-dotenv==1.2.2
 chardet==5.2.0
-openai==2.3.0
+openai==2.53.0
 xlrd==2.0.1
